@@ -49,23 +49,23 @@ def mark_layer() -> Image.Image:
     layer = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(layer)
     c = S / 2
-    w = 70
+    w = 58
     white = (255, 255, 255, 255)
-    my = c - 90  # vertical centre of the code mark
-    h, span = 190, 150  # half height of the chevrons, their depth
-    left = [(c - 210, my - h), (c - 210 - span, my), (c - 210, my + h)]
-    right = [(c + 210, my - h), (c + 210 + span, my), (c + 210, my + h)]
-    slash = [(c + 80, my - h - 30), (c - 80, my + h + 30)]
+    my = c - 125  # vertical centre of the code mark
+    h, span = 150, 118  # half height of the chevrons, their depth
+    left = [(c - 165, my - h), (c - 165 - span, my), (c - 165, my + h)]
+    right = [(c + 165, my - h), (c + 165 + span, my), (c + 165, my + h)]
+    slash = [(c + 62, my - h - 24), (c - 62, my + h + 24)]
     for pts in (left, right, slash):
         d.line(pts, fill=white, width=w, joint="curve")
         for px, py in (pts[0], pts[-1]):
             d.ellipse([px - w / 2, py - w / 2, px + w / 2, py + w / 2], fill=white)
-    font = ImageFont.truetype(FONT, 170)
-    text, track = "PDCA", 46
+    font = ImageFont.truetype(FONT, 225)
+    text, track = "PDCA", 52
     widths = [d.textlength(ch, font=font) for ch in text]
     x = c - (sum(widths) + track * (len(text) - 1)) / 2
     for ch, cw in zip(text, widths):
-        d.text((x, c + 300), ch, font=font, fill=white, anchor="lm")
+        d.text((x, c + 255), ch, font=font, fill=white, anchor="lm")
         x += cw + track
     return layer
 
