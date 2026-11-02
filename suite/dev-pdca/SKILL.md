@@ -6,17 +6,14 @@ description_zh: "让 AI 写代码，不再“说做完了，其实没做到”�
 description_en: "Stop AI agents saying “done” when it isn't. dev-pdca runs development as a PDCA loop of five skills that hand work to each other: [Plan · planner] sets requirements, architecture and M0–M3 gates before code, tracking decisions, assumptions and open questions. [Do · tasker] defines done and an executable check before each change, confirms side effects, and closes with evidence, not “looks fine”. [Check · auditor] scales the audit to risk and reports only verified findings, with severity, confidence and gaps. [Check · bugfixer] reproduces, proves the cause, fixes the smallest causal chain, verifies the symptom is gone, and adds a regression test that fails without the fix. [Act · evolver] turns verified lessons into tests, rules and a ledger for the next plan. A failed check routes to bugfixer and back; a second correction starts a retrospective. Just say “audit this” or “fix this error”."
 examples_zh:
   - "我想实现一个这样的项目，帮我梳理需求和计划，我们先一起讨论出一个框架"
-  - "按规划开始做下一个开发任务"
   - "接口返回还是报 500，你要着重从后端服务器交互上找问题并修复"
-  - "帮我做一次审计，重点看安全和部署风险"
   - "把这次修好的问题复盘一下，固化成规则，防止再犯"
 examples_en:
   - "I want to build a project like this. Help me sort out the requirements and plan, and let's agree on a framework first"
-  - "Start the next development task from the plan"
   - "The API still returns 500. Focus on the backend server interactions, find the cause and fix it"
-  - "Run an audit for me, focusing on security and deployment risk"
   - "Run a retrospective on this fix and turn the lesson into a rule so it doesn't recur"
 author: Tealun
+category: developer
 description: "PDCA development loop for AI coding agents: one entry that routes to five evidence-first sub-skills. Plan = planner, Do = tasker, Check = auditor (and bugfixer when a check fails), Act = evolver. Use for software development work: project planning, requirements, architecture, M0/M1; implementing or changing code and docs with verification; bugs, errors, 500s, regressions, wrong-looking screenshots, 'still wrong'; audits, code review, security or release checks; retrospectives, preventing recurrence, persisting lessons. 开发闭环（PDCA）：项目规划、需求梳理、技术方案；任务执行、代码实现；修 bug、报错、还是不对；审计、代码评审、安全检查；复盘、防止复发、经验固化。Once active, keep its routing rules for the rest of the session."
 argument-hint: "Optional: name a stage or skill, then the task. e.g. 审计 当前项目 / 修复 这个 500 报错 / planner M0 计划"
 user-invocable: true

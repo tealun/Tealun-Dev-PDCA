@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- `dev-pdca` 示例按 WorkBuddy 上限减为每种语言 3 条（规划、修复、复盘），新增 `category: developer`；`build_suite.py` 一并校验 WorkBuddy 已知限制：`name` 格式、`display_name_en` ≤ 60、`description_zh` ≤ 500、`description_en` ≤ 1000、示例 1–3 条。
 - `dev-pdca` 补充 `examples_zh` / `examples_en`（WorkBuddy「试试这样问我」示例，各 5 条，覆盖五个子技能，按实际使用场景改写）和 `author`；`build_suite.py` 校验示例字段存在。
 - `description_en` 压缩到 WorkBuddy 上限 1000 字符以内；`build_suite.py` 校验 `description_zh` / `description_en` 不超过 1000 字符。
 - `dev-pdca` 的 `description_zh` / `description_en` 改写为完整的能力介绍：逐个说明五个子技能各自守住什么，以及它们之间如何自动接力。
