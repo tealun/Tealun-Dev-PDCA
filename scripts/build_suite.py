@@ -2,19 +2,21 @@
 """Build the dev-pdca suite package: one skill folder that bundles all five skills.
 
 Usage:
-    python3 scripts/build_suite.py            # build into dist/
-    python3 scripts/build_suite.py --check    # validate only, write nothing
+    python3 scripts/build_suite.py            # rebuild dev-pdca.zip and dist/
+    python3 scripts/build_suite.py --check    # validate, and fail if dev-pdca.zip is stale
 
 Output:
+    dev-pdca.zip                   committed at the repository root; folder dev-pdca/ inside
     dist/dev-pdca/                 unpacked package (inspect before uploading)
-    dist/dev-pdca-<version>.zip    the folder dev-pdca/ inside the zip
-    dist/dev-pdca-<version>-flat.zip  SKILL.md at the zip root
+    dist/dev-pdca-<version>-flat.zip  SKILL.md at the zip root, for platforms that need it
 
-Platforms differ on which zip layout they accept; try the first, fall back to -flat.
+The build is deterministic (sorted entries, fixed timestamps, LF line endings), so
+--check can compare the committed zip byte for byte with a fresh build.
 """
 from __future__ import annotations
 
 import argparse
+import io
 import re
 import shutil
 import sys
@@ -24,6 +26,9 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 SUITE_SRC = REPO / "suite" / "dev-pdca"
 DIST = REPO / "dist"
+ROOT_ZIP = REPO / "dev-pdca.zip"
+TEXT_SUFFIXES = {".md", ".py", ".yaml", ".yml", ".json", ".txt", ""}
+FIXED_TIME = (2020, 1, 1, 0, 0, 0)
 NAME = "dev-pdca"
 SKILLS = ["planner", "tasker", "bugfixer", "auditor", "evolver"]
 DESCRIPTION_LIMIT = 1024
@@ -87,24 +92,57 @@ def excluded(name: str) -> bool:
     return any(p.search(name) for p in EXCLUDE_PATTERNS)
 
 
-def build(version: str) -> None:
+def package_files() -> list[tuple[str, Path]]:
+    """(path inside the package, source file), sorted."""
+    entries = [("SKILL.md", SUITE_SRC / "SKILL.md"), ("LICENSE", REPO / "LICENSE")]
+    for skill in SKILLS:
+        for f in (REPO / skill).rglob("*"):
+            rel = f.relative_to(REPO)
+            if f.is_file() and not any(excluded(part) for part in rel.parts):
+                entries.append((rel.as_posix(), f))
+    return sorted(entries)
+
+
+def read_normalized(src: Path) -> bytes:
+    data = src.read_bytes()
+    if src.suffix in TEXT_SUFFIXES:
+        data = data.replace(b"\r\n", b"\n")
+    return data
+
+
+def make_zip(entries: list[tuple[str, Path]], prefix: str) -> bytes:
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
+        for rel, src in entries:
+            info = zipfile.ZipInfo(prefix + rel, FIXED_TIME)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o644 << 16
+            zf.writestr(info, read_normalized(src))
+    return buf.getvalue()
+
+
+def check_fresh(entries: list[tuple[str, Path]]) -> None:
+    if not ROOT_ZIP.is_file():
+        raise SystemExit("dev-pdca.zip is missing: run python3 scripts/build_suite.py and commit it")
+    if ROOT_ZIP.read_bytes() != make_zip(entries, f"{NAME}/"):
+        raise SystemExit("dev-pdca.zip is stale: run python3 scripts/build_suite.py and commit it")
+    print("ok: dev-pdca.zip matches the sources")
+
+
+def build(version: str, entries: list[tuple[str, Path]]) -> None:
+    ROOT_ZIP.write_bytes(make_zip(entries, f"{NAME}/"))
+    print(f"wrote dev-pdca.zip ({ROOT_ZIP.stat().st_size // 1024} KB, {len(entries)} files, version {version})")
+
     out = DIST / NAME
     if out.exists():
         shutil.rmtree(out)
-    out.mkdir(parents=True)
-    shutil.copy2(SUITE_SRC / "SKILL.md", out / "SKILL.md")
-    shutil.copy2(REPO / "LICENSE", out / "LICENSE")
-    for skill in SKILLS:
-        shutil.copytree(REPO / skill, out / skill, ignore=lambda _d, names: [n for n in names if excluded(n)])
-
-    files = sorted(p for p in out.rglob("*") if p.is_file())
-    for flat, zip_name in ((False, f"{NAME}-{version}.zip"), (True, f"{NAME}-{version}-flat.zip")):
-        target = DIST / zip_name
-        with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as zf:
-            for f in files:
-                rel = f.relative_to(out).as_posix()
-                zf.write(f, rel if flat else f"{NAME}/{rel}")
-        print(f"wrote {target.relative_to(REPO)} ({target.stat().st_size // 1024} KB, {len(files)} files)")
+    for rel, src in entries:
+        dest = out / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(read_normalized(src))
+    flat = DIST / f"{NAME}-{version}-flat.zip"
+    flat.write_bytes(make_zip(entries, ""))
+    print(f"wrote {flat.relative_to(REPO).as_posix()} and dist/{NAME}/")
 
 
 def main() -> int:
@@ -112,8 +150,11 @@ def main() -> int:
     ap.add_argument("--check", action="store_true", help="validate only")
     args = ap.parse_args()
     version = validate()
-    if not args.check:
-        build(version)
+    entries = package_files()
+    if args.check:
+        check_fresh(entries)
+    else:
+        build(version, entries)
     return 0
 
 

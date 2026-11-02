@@ -5,7 +5,8 @@
 ## Unreleased
 
 - 新增套件包 `dev-pdca` 1.0.0（`suite/dev-pdca/SKILL.md`）：一个入口技能按 PDCA 分派到 5 个子技能，面向 WorkBuddy 等只能上传单个技能的平台。子技能文件按 `./<name>/SKILL.md`、`../<name>/SKILL.md` 顺序解析，套件包与仓库/插件两种目录结构都能用；原本分散在各技能描述里的自动转交条件，集中为会话级规则。
-- 新增 `scripts/build_suite.py`：校验入口描述长度、版本号和子技能完整性，生成 `dist/dev-pdca-<版本>.zip` 与 `-flat.zip` 两种结构。
+- 新增 `scripts/build_suite.py`：校验入口描述长度、版本号和子技能完整性，生成仓库根目录的 `dev-pdca.zip`（可直接下载上传）和 `dist/` 下的 `-flat.zip`。构建结果逐字节可复现，`--check` 用来发现成品与源码不一致。
+- 新增 CI `.github/workflows/suite-package.yml`：每次推送校验 `dev-pdca.zip` 与技能源码一致。
 - README（中英文）与插件清单改为以 PDCA 开发闭环介绍技能分工与衔接，并增加套件包安装方式。
 - 新增面向开源用户的项目 README。
 - 新增快速开始、支持、贡献、行为准则、安全策略和许可证文件。
