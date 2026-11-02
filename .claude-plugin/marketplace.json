@@ -1,6 +1,6 @@
 {
   "name": "tealun-skills",
-  "description": "Tealun Skills: planner, tasker, bugfixer, auditor and evolver, evidence-first workflows for AI coding agents.",
+  "description": "Tealun Skills: a PDCA development loop for AI coding agents. planner (Plan), tasker (Do), auditor and bugfixer (Check), evolver (Act), evidence-first and handing off to each other.",
   "owner": {
     "name": "Tealun",
     "url": "https://github.com/tealun"
@@ -10,7 +10,7 @@
       "name": "tealun-skills",
       "displayName": "Tealun Skills",
       "source": "./",
-      "description": "Five skills: planner (plan before code), tasker (checkable changes with evidence), bugfixer (reproduce, prove the cause, fix, guard), auditor (evidence-backed audits), evolver (turn verified lessons into guards and ledger records).",
+      "description": "Five skills forming a PDCA loop: planner (plan before code), tasker (checkable changes with evidence), bugfixer (reproduce, prove the cause, fix, guard), auditor (evidence-backed audits), evolver (turn verified lessons into guards and ledger records).",
       "author": {
         "name": "Tealun",
         "url": "https://github.com/tealun"
@@ -18,7 +18,7 @@
       "homepage": "https://github.com/tealun/Tealun-Skills",
       "repository": "https://github.com/tealun/Tealun-Skills",
       "license": "MIT",
-      "keywords": ["planning", "task-execution", "debugging", "audit", "retrospective"],
+      "keywords": ["pdca", "planning", "task-execution", "debugging", "audit", "retrospective"],
       "category": "development-workflow",
       "skills": [
         "./planner",
