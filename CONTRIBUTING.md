@@ -37,3 +37,5 @@ PR 描述建议包含：
 ## 行为准则
 
 参与本项目即表示你同意遵守 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
+
+修改任何技能目录或 `suite/dev-pdca/SKILL.md` 后，运行 `python3 scripts/build_suite.py` 重新生成 `dev-pdca.zip`，与改动一起提交；CI 会用 `--check` 拦下未更新的成品。

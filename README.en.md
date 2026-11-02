@@ -4,7 +4,7 @@
 
 Less "I think I did it" from your AI agent, more "here is the proof I did it".
 
-Tealun Skills is a set of skills you can sync into the local skill folders of your agent tools, or install as a Claude Code plugin. It is for people who already use Codex, Claude Code, Cursor, Gemini, Kimi, OpenCode, or a shared `.agents/skills` folder. You keep your tools; the agent gets a few steadier ways of working.
+Tealun Skills organises AI-assisted development as a PDCA loop (Plan, Do, Check, Act): five skills, each owning one stage, handing work to one another so the loop closes. You can sync them into the local skill folders of your agent tools, install them as a Claude Code plugin, or build a single suite package (`dev-pdca`) for platforms that accept only one skill per upload. It is for people who already use Codex, Claude Code, Cursor, Gemini, Kimi, OpenCode, or a shared `.agents/skills` folder. You keep your tools; the agent gets a few steadier ways of working.
 
 ## The problems it targets
 
@@ -16,14 +16,31 @@ If you build projects with AI agents, you have probably seen these:
 - You ask for a bug fix. It edits without reproducing, and afterwards you have to work out whether it got better by luck.
 - A problem gets settled in one conversation, and the next session makes the same mistake from scratch.
 
-This repository splits those situations into five skills: plan first, then execute, audit, repair, and finally keep the lessons. The point is not to make the agent talk more. It is to make it guess less, skip fewer steps, and turn results into evidence you can check.
+Each of these is a missing stage: acting before thinking it through, not checking the result, not tracing a failure to its cause, not keeping what was learned. So this repository splits development into five skills along PDCA.
+
+## The PDCA development loop
+
+| Stage | Skill | What it does |
+| --- | --- | --- |
+| Plan | `planner` | Settles requirements, architecture, acceptance criteria and stage gates before code is written |
+| Do | `tasker` | Every change starts with a done-definition and an executable check, and ends with evidence |
+| Check | `auditor` | Audits before a merge, a release or on request, reporting only findings with evidence |
+| Check → fix | `bugfixer` | When a check fails or a symptom appears: reproduce, prove the cause, make the smallest fix, add a regression test |
+| Act | `evolver` | Turns verified lessons into tests, rules and ledger records that feed the next plan |
+
+The skills hand off to each other: when a check fails during execution, `tasker` routes to `bugfixer` and resumes once the fix is verified; changes touching security or deployment go through `auditor` first; a second correction in one cycle starts `evolver` tracking, and at the end of the cycle the lessons are recorded and fed into the next `planner` round. Each skill works on its own; the full set is what closes the loop.
+
+The point is not to make the agent talk more. It is to make it guess less, skip fewer steps, and turn the result of every stage into evidence you can check.
 
 ## Quick start
 
-There are two ways to install. Pick one:
+Each of the three routes installs the whole set at once. Pick the one that fits your platform:
 
 - Claude Code: the plugin marketplace is recommended. Two commands to install, one to update.
 - Codex, Cursor, Gemini, Kimi, OpenCode, or a shared `.agents/skills` folder: use the sync script.
+- WorkBuddy and other platforms that accept a single skill zip: use the `dev-pdca` suite package.
+
+With the first two routes the five skills are installed separately and each triggers from its own description, which gives the sharpest triggering from a cold start. The suite package puts all five inside one skill; its entry routes requests and keeps the hand-off rules in force for the whole session.
 
 In Claude Code, do not use both routes, or each skill appears twice (`tasker` and `tealun-skills:tasker`). The sync script also writes to `~/.claude/skills` whenever it detects Claude; if you installed the plugin, you can delete those five folders under `~/.claude/skills` after running the script.
 
@@ -88,6 +105,22 @@ bash ./sync-skills.sh tasker planner
 ```
 
 After installing, reopen your agent CLI or start a new session so the tool reloads its skill folders.
+
+### Option 3: the dev-pdca suite package
+
+Download [`dev-pdca.zip`](dev-pdca.zip) from the repository root and choose it in the platform's skill import or upload dialog. It holds the entry skill and all five sub-skills, and CI checks on every push that it matches the skill sources.
+
+If the platform wants `SKILL.md` at the zip root, run `python3 scripts/build_suite.py` in the repository (Python 3, no third-party packages) and upload `dist/dev-pdca-<version>-flat.zip`.
+
+Once installed there are no skill names to remember. Say what you want done:
+
+```text
+Audit this project, focus on deployment risk
+Fix this 500 error, reproduce it first
+Draft the M0 plan
+```
+
+Or name the stage: `/dev-pdca audit this project`, `/dev-pdca bugfixer this error`. `/dev-pdca` on its own lists the whole set.
 
 ## Make the agent actually invoke the skills
 
@@ -194,6 +227,9 @@ git pull
 ├── evolver/          # Turns lessons into lasting guards
 ├── planner/          # Early project planning
 ├── tasker/           # General task-execution discipline
+├── suite/dev-pdca/   # Suite package entry: PDCA routing rules
+├── scripts/          # build_suite.py: builds the dev-pdca suite package
+├── dev-pdca.zip      # Built suite package, for WorkBuddy and other single-skill platforms
 ├── docs/             # Instruction snippet, case studies, this repo's evolution ledger
 ├── sync-skills.ps1   # Windows sync script
 └── sync-skills.sh    # macOS / Linux / WSL sync script

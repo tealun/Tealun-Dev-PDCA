@@ -4,7 +4,7 @@
 
 让 AI Agent 少一点"我以为我做了"，多一点"我证明我做到了"。
 
-Tealun Skills 是一组可以同步到本机 Agent 工具的技能包，也可以作为 Claude Code 插件安装。它面向已经在用 Codex、Claude Code、Cursor、Gemini、Kimi、OpenCode 或共享 `.agents/skills` 目录的用户：你不用换工具，只是给代理加上几套更稳的工作方式。
+Tealun Skills 用 PDCA（计划、执行、检查、改进）的方法组织 AI 辅助开发：5 个技能各管一个环节，彼此衔接成一个闭环。它可以同步到本机 Agent 工具，可以作为 Claude Code 插件安装，也可以打成一个套件包（`dev-pdca`）上传到只支持单个技能的平台。它面向已经在用 Codex、Claude Code、Cursor、Gemini、Kimi、OpenCode 或共享 `.agents/skills` 目录的用户：你不用换工具，只是给代理加上几套更稳的工作方式。
 
 ## 先解决这些问题
 
@@ -16,14 +16,31 @@ Tealun Skills 是一组可以同步到本机 Agent 工具的技能包，也可�
 - 让它修 bug，它没复现就改，改完以后你还得自己判断是不是碰巧好了。
 - 一个问题这次聊明白了，下个会话又从头犯。
 
-这个仓库把这些场景拆成 5 个技能：先规划、再执行、会审计、能修复、最后把经验沉淀下来。技能的重点不是让 Agent 多说，而是让它少猜、少跳步，并把结果变成可检查的证据。
+这些问题的共同点是缺了一个环节：没想清楚就动手，做完不检查，检查出问题不追根，修好了不沉淀。所以这个仓库按 PDCA 把开发拆成 5 个技能。
+
+## PDCA 开发闭环
+
+| 环节 | 技能 | 做什么 |
+| --- | --- | --- |
+| Plan 计划 | `planner` | 写代码之前，把需求、架构、验收标准和阶段门槛定下来 |
+| Do 执行 | `tasker` | 每次改动先定完成标准和可执行的检查，做完给出证据 |
+| Check 检查 | `auditor` | 合并、发布前或按需审计，只报告有证据的问题 |
+| Check → 修复 | `bugfixer` | 检查失败或出现症状时，复现、证明原因、最小修复、补回归测试 |
+| Act 改进 | `evolver` | 把验证过的经验变成测试、规则、台账，作为下一轮计划的输入 |
+
+技能之间会自动衔接：执行中检查失败，`tasker` 转交 `bugfixer`，修好后回到执行；改动涉及安全或部署时，先交给 `auditor`；同一个周期里第二次被纠正，`evolver` 开始跟踪，周期结束时把经验沉淀下来，喂给下一轮 `planner`。单个技能也能用，整套装上才是完整的闭环。
+
+技能的重点不是让 Agent 多说，而是让它少猜、少跳步，并把每个环节的结果变成可检查的证据。
 
 ## 快速开始
 
-有两种安装方式，选一种即可：
+三种安装方式都是一次装齐整套，按平台选一种即可：
 
 - 用 Claude Code：推荐走插件市场，两条命令装好，以后一条命令更新。
 - 用 Codex、Cursor、Gemini、Kimi、OpenCode 或共享 `.agents/skills` 目录：用同步脚本。
+- 用 WorkBuddy 等只能上传单个技能压缩包的平台：用套件包 `dev-pdca`。
+
+前两种方式下，5 个技能独立安装，各自按描述自动触发，冷启动时触发最精准。套件包把 5 个技能放进一个技能里，由入口统一分派，联动规则在整个会话里生效。
 
 Claude Code 里不要两种方式都装，否则同一个技能会出现两份（`tasker` 和 `tealun-skills:tasker`）。同步脚本只要检测到 Claude 也会写入 `~/.claude/skills`，已经用插件安装的话，跑完脚本后可以删掉 `~/.claude/skills` 下这五个目录。
 
@@ -88,6 +105,22 @@ bash ./sync-skills.sh tasker planner
 ```
 
 安装后，重新打开你的 Agent CLI 或新建会话，让工具重新加载技能目录。
+
+### 方式三：套件包 dev-pdca
+
+直接下载仓库根目录的 [`dev-pdca.zip`](dev-pdca.zip)，在平台的技能导入或上传入口选择它即可。它包含入口技能和全部 5 个子技能，与仓库里的技能源码保持同步（每次推送由 CI 校验）。
+
+如果平台要求 `SKILL.md` 直接位于压缩包根目录，在仓库里运行 `python3 scripts/build_suite.py`（需要 Python 3，无第三方依赖），上传生成的 `dist/dev-pdca-<版本>-flat.zip`。
+
+装好后不用记技能名，直接说要做的事：
+
+```text
+做一次审计，重点看部署风险
+修复这个 500 报错，先复现再改
+帮我梳理 M0 计划
+```
+
+也可以点名：`/dev-pdca 审计 当前项目`、`/dev-pdca bugfixer 这个报错`。只输入 `/dev-pdca` 会列出整套技能。
 
 ## 让 Agent 真的调用技能
 
@@ -194,6 +227,9 @@ git pull
 ├── evolver/          # 把经验固化为长期防线的复盘技能
 ├── planner/          # 项目前期规划技能
 ├── tasker/           # 通用任务执行纪律技能
+├── suite/dev-pdca/   # 套件包入口：PDCA 分派规则
+├── scripts/          # build_suite.py：构建 dev-pdca 套件包
+├── dev-pdca.zip      # 套件包成品，供 WorkBuddy 等单技能平台上传
 ├── docs/             # 指令片段、本仓库的演进台账
 ├── sync-skills.ps1   # Windows 同步脚本
 └── sync-skills.sh    # macOS / Linux / WSL 同步脚本
