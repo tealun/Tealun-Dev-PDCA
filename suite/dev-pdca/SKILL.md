@@ -17,7 +17,7 @@ category: developer
 description: "PDCA development loop for AI coding agents: one entry that routes to five evidence-first sub-skills. Plan = planner, Do = tasker, Check = auditor (and bugfixer when a check fails), Act = evolver. Use for software development work: project planning, requirements, architecture, M0/M1; implementing or changing code and docs with verification; bugs, errors, 500s, regressions, wrong-looking screenshots, 'still wrong'; audits, code review, security or release checks; retrospectives, preventing recurrence, persisting lessons. 开发闭环（PDCA）：项目规划、需求梳理、技术方案；任务执行、代码实现；修 bug、报错、还是不对、CI 失败、上传或审核被拒；审计、代码评审、安全检查；复盘、防止复发、经验固化。Once active, keep its routing rules for the rest of the session."
 argument-hint: "Optional: name a stage or skill, then the task. e.g. 审计 当前项目 / 修复 这个 500 报错 / planner M0 计划"
 user-invocable: true
-version: 1.0.1
+version: 1.0.2
 ---
 
 # dev-pdca
@@ -34,8 +34,8 @@ One entry for the Tealun Skills suite. It runs software work as a PDCA loop and 
 
 ## Loading a sub-skill
 
-1. Resolve the file: `./<name>/SKILL.md` (suite package layout) first, then `../<name>/SKILL.md` (repository or plugin layout, where the skills are siblings).
-2. Read the whole file and follow it as written. Files it mentions are relative to that sub-skill's own folder. In the suite package its supporting files sit directly beside its `SKILL.md`; if a path such as `references/x.md` does not resolve, look for `x.md` in the same folder.
+1. Resolve the file: `./<name>/<name>.md` (suite package layout, e.g. `./tasker/tasker.md`) first, then `../<name>/SKILL.md` (repository or plugin layout, where the skills are siblings).
+2. Read the whole file and follow it as written. Files it mentions are relative to that sub-skill's own folder. In the suite package its supporting files sit directly beside its entry file; if a path such as `references/x.md` does not resolve, look for `x.md` in the same folder.
 3. Inside a sub-skill, `$planner`, `$tasker`, `$bugfixer`, `$auditor` and `$evolver` mean: load that sub-skill the same way.
 4. Never act from memory of a sub-skill or from its "spirit". If the file cannot be read, say which one is missing, then continue with the minimum it would require: state the done-definition, gather evidence, verify, report gaps.
 

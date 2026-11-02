@@ -143,13 +143,16 @@ def package_files() -> list[tuple[str, Path]]:
                 continue
             if len(inner.parts) > 2:
                 raise SystemExit(f"{skill}/{inner.as_posix()}: nested deeper than one folder, cannot flatten")
-            name = inner.name
+            # WorkBuddy rejects a zip holding more than one SKILL.md as a multi-skill package,
+            # so each sub-skill's entry file ships as <skill>/<skill>.md.
+            name = f"{skill}.md" if inner.as_posix() == "SKILL.md" else inner.name
             if name in seen:
                 raise SystemExit(f"{skill}: {inner.as_posix()} and {seen[name].as_posix()} collide when flattened")
             seen[name] = inner
             if len(inner.parts) == 2:
                 rewrites.append((inner.as_posix(), name))
             entries.append((f"{skill}/{name}", f))
+        rewrites.append(("SKILL.md", f"{skill}.md"))  # last, after the references/ rewrites
         REWRITES[skill] = rewrites
     for rel, _ in entries:
         if rel.count("/") > 1:
@@ -169,10 +172,29 @@ def content(rel: str, src: Path) -> bytes:
     skill = rel.split("/", 1)[0] if "/" in rel else None
     if skill in REWRITES and src.suffix in TEXT_SUFFIXES:
         text = data.decode("utf-8")
+        if rel == f"{skill}/{skill}.md":
+            # drop the sub-skill frontmatter so nothing in the package looks like a second skill
+            text = re.sub(r"\A---\n.*?\n---\n+", "", text, count=1, flags=re.S)
         for old, new in REWRITES[skill]:
             text = text.replace(old, new)
         data = text.encode("utf-8")
     return data
+
+
+def validate_package(entries: list[tuple[str, Path]]) -> None:
+    """The package must read as exactly one skill: one SKILL.md, at the root, and no other skill frontmatter."""
+    errors = []
+    skill_files = [rel for rel, _ in entries if rel.rsplit("/", 1)[-1].lower() == "skill.md"]
+    if skill_files != ["SKILL.md"]:
+        errors.append(f"package must hold exactly one SKILL.md at its root, found {skill_files}")
+    for rel, src in entries:
+        if src.read_bytes().startswith(b"\xef\xbb\xbf"):
+            errors.append(f"{rel} starts with a UTF-8 BOM")
+        if rel != "SKILL.md" and rel.endswith(".md"):
+            if re.match(r"\A---\n(?:.*\n)*?name:", content(rel, src).decode("utf-8")):
+                errors.append(f"{rel} still carries skill frontmatter")
+    if errors:
+        raise SystemExit("package check failed:\n  " + "\n  ".join(errors))
 
 
 def make_zip(entries: list[tuple[str, Path]], prefix: str) -> bytes:
@@ -216,6 +238,7 @@ def main() -> int:
     args = ap.parse_args()
     version = validate()
     entries = package_files()
+    validate_package(entries)
     if args.check:
         check_fresh(entries)
     else:
