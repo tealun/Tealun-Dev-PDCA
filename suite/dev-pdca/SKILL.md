@@ -14,10 +14,10 @@ examples_en:
   - "Run a retrospective on this fix and turn the lesson into a rule so it doesn't recur"
 author: Tealun
 category: developer
-description: "PDCA development loop for AI coding agents: one entry that routes to five evidence-first sub-skills. Plan = planner, Do = tasker, Check = auditor (and bugfixer when a check fails), Act = evolver. Use for software development work: project planning, requirements, architecture, M0/M1; implementing or changing code and docs with verification; bugs, errors, 500s, regressions, wrong-looking screenshots, 'still wrong'; audits, code review, security or release checks; retrospectives, preventing recurrence, persisting lessons. 开发闭环（PDCA）：项目规划、需求梳理、技术方案；任务执行、代码实现；修 bug、报错、还是不对；审计、代码评审、安全检查；复盘、防止复发、经验固化。Once active, keep its routing rules for the rest of the session."
+description: "PDCA development loop for AI coding agents: one entry that routes to five evidence-first sub-skills. Plan = planner, Do = tasker, Check = auditor (and bugfixer when a check fails), Act = evolver. Use for software development work: project planning, requirements, architecture, M0/M1; implementing or changing code and docs with verification; bugs, errors, 500s, regressions, wrong-looking screenshots, 'still wrong'; audits, code review, security or release checks; retrospectives, preventing recurrence, persisting lessons. 开发闭环（PDCA）：项目规划、需求梳理、技术方案；任务执行、代码实现；修 bug、报错、还是不对、CI 失败、上传或审核被拒；审计、代码评审、安全检查；复盘、防止复发、经验固化。Once active, keep its routing rules for the rest of the session."
 argument-hint: "Optional: name a stage or skill, then the task. e.g. 审计 当前项目 / 修复 这个 500 报错 / planner M0 计划"
 user-invocable: true
-version: 1.0.0
+version: 1.0.1
 ---
 
 # dev-pdca
@@ -69,7 +69,7 @@ Bare `/dev-pdca` with no task: print the five sub-skills as one line each (stage
 
 These stay in force for the whole session once this skill is active. They replace the cold-start triggers each sub-skill carries when installed on its own.
 
-- **To bugfixer, immediately**: a post-change check fails; the user says the result is still wrong or rejects it; a concrete runtime symptom appears; a previous repair missed its predicted outcome. Fallback: after roughly four substantive unresolved diagnostic exchanges with at least one concrete failure. Do not count greetings, confirmations, status checks or tool polling. After the symptom is verified gone, resume the interrupted sub-skill.
+- **To bugfixer, immediately**: a post-change check fails, including CI or an external platform rejecting an upload, publish or review; the user says the result is still wrong or rejects it; a concrete runtime symptom appears; a previous repair missed its predicted outcome. Fallback: after roughly four substantive unresolved diagnostic exchanges with at least one concrete failure. Do not count greetings, confirmations, status checks or tool polling. After the symptom is verified gone, resume the interrupted sub-skill.
 - **To auditor**: before pushing changes that touch auth, permissions, tenant isolation, payments, sensitive data, uploads, webhooks, database schema, deployment, URL parameters or shared state; before a release; on any audit request. Ordinary implementation does not become a full audit by default.
 - **Evolver, silent tracking**: start tracking after a second accepted correction, a failed attempt that changes the approach, a third work phase, three material candidates, or when closeout, commit or release begins. At an implicit closeout, exit silently if nothing durable is worthwhile; otherwise propose one action and wait for confirmation. Explicit requests authorize safe local writes.
 - **Back to planner**: when execution or audit exposes an unplanned decision about scope, architecture or data.

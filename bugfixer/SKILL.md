@@ -1,10 +1,10 @@
 ---
 name: bugfixer
-description: "Use for full-stack development-time bug fixing when the user reports broken behavior, UI regressions, screenshots that look wrong, console errors, API 400/401/500 failures, persistence problems, incorrect statistics, deployment/runtime failures, repeated correction, a failed post-change check, or a prior fix that missed the cause. Activate immediately on explicit failure evidence or 'still wrong' feedback; also activate after roughly four substantive unresolved diagnostic exchanges when at least one concrete failure exists. Reproduce or directly observe the symptom, collect runtime evidence, test competing hypotheses with discriminating checks, isolate the proven responsible layer, make the smallest safe fix, verify the original user-visible outcome, and lock it with a regression test that fails without the fix when the project has a test harness. Do not stop at plausible explanations or close merely because one attempted fix failed."
+description: "Use for full-stack development-time bug fixing when the user reports broken behavior, UI regressions, screenshots that look wrong, console errors, API 400/401/500 failures, persistence problems, incorrect statistics, deployment/runtime failures, CI failures, an external platform rejecting an upload, publish or review, repeated correction, a failed post-change check, or a prior fix that missed the cause. Activate immediately on explicit failure evidence or 'still wrong' feedback; also activate after roughly four substantive unresolved diagnostic exchanges when at least one concrete failure exists. Reproduce or directly observe the symptom, collect runtime evidence, test competing hypotheses with discriminating checks, isolate the proven responsible layer, make the smallest safe fix, verify the original user-visible outcome, and lock it with a regression test that fails without the fix when the project has a test harness. Do not stop at plausible explanations or close merely because one attempted fix failed."
 argument-hint: "Describe the symptom, screenshot/log/error, expected behavior, affected environment, and any recent change."
 user-invocable: true
 disable-model-invocation: false
-version: 1.6.0
+version: 1.6.1
 ---
 
 # Bugfixer
@@ -15,7 +15,7 @@ When the newest user message corrects the direction, treat the mismatch with tha
 
 ## Discussion-aware Activation
 
-Enter Bugfixer immediately when an explicit symptom, failing check after a change, runtime error, or user feedback such as “still wrong” appears during another workflow. Do not wait for the user to invoke the skill or for a turn threshold. If the symptom is less explicit, roughly four substantive user-assistant diagnostic exchanges with at least one concrete unresolved failure are a fallback activation signal. Do not count greetings, status requests, tool polling, repeated confirmations, or unrelated discussion.
+Enter Bugfixer immediately when an explicit symptom, failing check after a change (including CI, or an external platform rejecting an upload, publish or review), runtime error, or user feedback such as “still wrong” appears during another workflow. Do not wait for the user to invoke the skill or for a turn threshold. If the symptom is less explicit, roughly four substantive user-assistant diagnostic exchanges with at least one concrete unresolved failure are a fallback activation signal. Do not count greetings, status requests, tool polling, repeated confirmations, or unrelated discussion.
 
 When Tasker encounters these signals, preserve its task contract and route the defect investigation here. Bugfixer owns diagnosis and repair until the original observable outcome passes; then return control to the surrounding workflow for its remaining acceptance checks.
 
