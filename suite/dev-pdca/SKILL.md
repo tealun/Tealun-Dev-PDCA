@@ -21,7 +21,7 @@ One entry for the Tealun Skills suite. It runs software work as a PDCA loop and 
 ## Loading a sub-skill
 
 1. Resolve the file: `./<name>/SKILL.md` (suite package layout) first, then `../<name>/SKILL.md` (repository or plugin layout, where the skills are siblings).
-2. Read the whole file and follow it as written. Paths it mentions, such as `references/…` or `scripts/…`, are relative to that sub-skill's own folder.
+2. Read the whole file and follow it as written. Files it mentions are relative to that sub-skill's own folder. In the suite package its supporting files sit directly beside its `SKILL.md`; if a path such as `references/x.md` does not resolve, look for `x.md` in the same folder.
 3. Inside a sub-skill, `$planner`, `$tasker`, `$bugfixer`, `$auditor` and `$evolver` mean: load that sub-skill the same way.
 4. Never act from memory of a sub-skill or from its "spirit". If the file cannot be read, say which one is missing, then continue with the minimum it would require: state the done-definition, gather evidence, verify, report gaps.
 
