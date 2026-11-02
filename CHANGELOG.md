@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- `dev-pdca` 的 `description_zh` / `description_en` 改写为完整的能力介绍：逐个说明五个子技能各自守住什么，以及它们之间如何自动接力。
 - `dev-pdca` 入口补充 WorkBuddy 上架必填的 frontmatter：`display_name`、`display_name_en`、`description_zh`、`description_en`；`build_suite.py` 校验这四项。
 - `dev-pdca` 套件包改为最多三层目录（`dev-pdca/<子技能>/<文件>`），以满足 WorkBuddy 的层级限制：子技能的 `references/`、`scripts/` 文件在打包时移到子技能目录下，文中引用路径同步改写；不再打包 Codex 专用的 `agents/` 元数据。仓库内技能源码结构不变。
 - 新增套件包 `dev-pdca` 1.0.0（`suite/dev-pdca/SKILL.md`）：一个入口技能按 PDCA 分派到 5 个子技能，面向 WorkBuddy 等只能上传单个技能的平台。子技能文件按 `./<name>/SKILL.md`、`../<name>/SKILL.md` 顺序解析，套件包与仓库/插件两种目录结构都能用；原本分散在各技能描述里的自动转交条件，集中为会话级规则。
