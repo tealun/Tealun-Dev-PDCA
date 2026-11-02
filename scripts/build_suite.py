@@ -32,6 +32,7 @@ FIXED_TIME = (2020, 1, 1, 0, 0, 0)
 NAME = "dev-pdca"
 SKILLS = ["planner", "tasker", "bugfixer", "auditor", "evolver"]
 DESCRIPTION_LIMIT = 1024
+LISTING_LIMIT = 1000  # WorkBuddy cap on description_zh / description_en
 
 # Files that serve repository maintenance, not the agent at run time.
 EXCLUDE_PATTERNS = [re.compile(p) for p in (r"^RELEASE_.*\.md$", r"^INTRO\.md$", r"^__pycache__$", r"\.pyc$", r"^\.DS_Store$")]
@@ -73,6 +74,9 @@ def validate() -> str:
     for field in ("display_name", "display_name_en", "description_zh", "description_en"):
         if not fm.get(field):
             errors.append(f"suite frontmatter is missing {field}")
+    for field in ("description_zh", "description_en"):
+        if len(fm.get(field, "")) > LISTING_LIMIT:
+            errors.append(f"{field} is {len(fm[field])} chars, WorkBuddy allows {LISTING_LIMIT}")
     version = fm.get("version", "")
     if not re.fullmatch(r"\d+\.\d+\.\d+", version):
         errors.append(f"suite version must be MAJOR.MINOR.PATCH, got {version!r}")
