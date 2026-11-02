@@ -1,61 +1,84 @@
 """Draw the dev-pdca marketplace avatar (512x512 PNG).
 
-A PDCA ring around a code mark. The ring has four quadrants, Plan, Do, Check
-and Act; Check is split in two (auditor and bugfixer), so the five arcs are
-the five sub-skills.
-Usage: python3 scripts/make_avatar.py assets/dev-pdca-avatar.png   (needs Pillow, Inter Display)
+Background: five colours, one per sub-skill, swirled into each other like a
+rotating iridescent gradient. Foreground: a </> code mark with PDCA centred
+beneath it.
+Usage: python3 scripts/make_avatar.py assets/dev-pdca-avatar.png   (needs numpy, Pillow, Inter Display)
 """
-import math
 import sys
 
-from PIL import Image, ImageDraw, ImageFont
+import numpy as np
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
-S = 2048
-FONT_DIR = "/usr/share/fonts/opentype/inter/"
-BG_A, BG_B = (30, 27, 75), (15, 23, 42)  # deep indigo -> slate
-# (start angle, sweep, colour, label); angles clockwise from 3 o'clock
-ARCS = [
-    (180, 90, (96, 165, 250), "P"),   # Plan    planner
-    (270, 90, (52, 211, 153), "D"),   # Do      tasker
-    (0, 45, (251, 191, 36), "C"),     # Check   auditor
-    (45, 45, (251, 146, 60), None),   # Check   bugfixer
-    (90, 90, (167, 139, 250), "A"),   # Act     evolver
-]
-
-
-def background() -> Image.Image:
-    img = Image.new("RGB", (S, S))
-    px = img.load()
-    for y in range(S):
-        for x in range(S):
-            t = (x + y) / (2 * S - 2)
-            px[x, y] = tuple(round(a + (b - a) * t) for a, b in zip(BG_A, BG_B))
-    return img
+S = 1536  # draw large, downsample for smooth edges
+FONT = "/usr/share/fonts/opentype/inter/InterDisplay-Bold.otf"
+# planner, tasker, auditor, bugfixer, evolver
+COLOURS = np.array([
+    (59, 130, 246),   # blue
+    (16, 185, 129),   # green
+    (250, 204, 21),   # yellow
+    (249, 115, 22),   # orange
+    (168, 85, 247),   # violet
+], dtype=float)
 
 
-def arc(d, c, r, w, a0, a1, fill):
-    d.arc([c - r, c - r, c + r, c + r], a0, a1, fill=fill, width=w)
-    rm = r - w / 2
-    for a in (a0, a1):
-        x, y = c + rm * math.cos(math.radians(a)), c + rm * math.sin(math.radians(a))
-        d.ellipse([x - w / 2, y - w / 2, x + w / 2, y + w / 2], fill=fill)
+def swirl_background() -> Image.Image:
+    y, x = np.mgrid[0:S, 0:S].astype(float)
+    cx = cy = (S - 1) / 2
+    dx, dy = (x - cx) / S, (y - cy) / S
+    r = np.hypot(dx, dy)
+    theta = np.arctan2(dy, dx)
+    # twist: the angle shifts with distance from the centre, so the colours spiral
+    t = (theta / (2 * np.pi) + 0.55 * r + 0.08) % 1.0
+    pos = t * len(COLOURS)
+    i0 = np.floor(pos).astype(int) % len(COLOURS)
+    i1 = (i0 + 1) % len(COLOURS)
+    f = pos - np.floor(pos)
+    f = f * f * (3 - 2 * f)  # smoothstep, softer blends between colours
+    rgb = COLOURS[i0] * (1 - f)[..., None] + COLOURS[i1] * f[..., None]
+    # soft light centre for the mark to sit on, slight darkening at the edge
+    glow = np.clip(1 - r / 0.42, 0, 1) ** 2
+    rgb = rgb * (1 - 0.18 * glow[..., None]) + 255 * 0.18 * glow[..., None]
+    rgb = rgb * 0.9 + 255 * 0.06  # a touch softer, less neon
+    rgb *= (1 - 0.22 * np.clip((r - 0.35) / 0.4, 0, 1))[..., None]
+    img = Image.fromarray(np.clip(rgb, 0, 255).astype(np.uint8), "RGB")
+    return img.filter(ImageFilter.GaussianBlur(S / 22))
+
+
+def mark_layer() -> Image.Image:
+    layer = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    c = S / 2
+    w = 70
+    white = (255, 255, 255, 255)
+    my = c - 90  # vertical centre of the code mark
+    h, span = 190, 150  # half height of the chevrons, their depth
+    left = [(c - 210, my - h), (c - 210 - span, my), (c - 210, my + h)]
+    right = [(c + 210, my - h), (c + 210 + span, my), (c + 210, my + h)]
+    slash = [(c + 80, my - h - 30), (c - 80, my + h + 30)]
+    for pts in (left, right, slash):
+        d.line(pts, fill=white, width=w, joint="curve")
+        for px, py in (pts[0], pts[-1]):
+            d.ellipse([px - w / 2, py - w / 2, px + w / 2, py + w / 2], fill=white)
+    font = ImageFont.truetype(FONT, 170)
+    text, track = "PDCA", 46
+    widths = [d.textlength(ch, font=font) for ch in text]
+    x = c - (sum(widths) + track * (len(text) - 1)) / 2
+    for ch, cw in zip(text, widths):
+        d.text((x, c + 300), ch, font=font, fill=white, anchor="lm")
+        x += cw + track
+    return layer
 
 
 def main(out: str) -> None:
-    img = background()
-    d = ImageDraw.Draw(img)
-    c, r, w = S / 2, 700, 80
-    label = ImageFont.truetype(FONT_DIR + "InterDisplay-SemiBold.otf", 160)
-    mark = ImageFont.truetype(FONT_DIR + "InterDisplay-Bold.otf", 300)
-    gap = 9  # degrees between arcs, room for the round caps
-    for start, sweep, colour, text in ARCS:
-        arc(d, c, r, w, start + gap / 2, start + sweep - gap / 2, colour)
-        if text:
-            mid = math.radians(start + 45)
-            rl = r - w - 160
-            d.text((c + rl * math.cos(mid), c + rl * math.sin(mid)), text, font=label, fill=colour, anchor="mm")
-    d.text((c, c - 20), "</>", font=mark, fill=(255, 255, 255), anchor="mm")
-    img.resize((512, 512), Image.LANCZOS).save(out, "PNG", optimize=True)
+    base = swirl_background().convert("RGBA")
+    mark = mark_layer()
+    shadow = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    shadow.putalpha(mark.getchannel("A").point(lambda a: a * 0.35))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(18))
+    shadow = shadow.transform((S, S), Image.AFFINE, (1, 0, 0, 0, 1, -10))
+    img = Image.alpha_composite(Image.alpha_composite(base, shadow), mark)
+    img.convert("RGB").resize((512, 512), Image.LANCZOS).save(out, "PNG", optimize=True)
 
 
 if __name__ == "__main__":
