@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- `dev-pdca` 补充 `examples_zh` / `examples_en`（WorkBuddy「试试这样问我」示例，各 5 条，覆盖五个子技能）和 `author`；`build_suite.py` 校验示例字段存在。
 - `description_en` 压缩到 WorkBuddy 上限 1000 字符以内；`build_suite.py` 校验 `description_zh` / `description_en` 不超过 1000 字符。
 - `dev-pdca` 的 `description_zh` / `description_en` 改写为完整的能力介绍：逐个说明五个子技能各自守住什么，以及它们之间如何自动接力。
 - `dev-pdca` 入口补充 WorkBuddy 上架必填的 frontmatter：`display_name`、`display_name_en`、`description_zh`、`description_en`；`build_suite.py` 校验这四项。
