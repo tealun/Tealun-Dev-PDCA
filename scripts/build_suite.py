@@ -92,14 +92,38 @@ def excluded(name: str) -> bool:
     return any(p.search(name) for p in EXCLUDE_PATTERNS)
 
 
+# Platforms such as WorkBuddy accept at most root/second-level/file. Each sub-skill is
+# flattened into one folder: references/x.md and scripts/y.py move up beside its
+# SKILL.md, and the paths that point at them are rewritten to match.
+DROP_DIRS = {"agents"}  # Codex UI metadata, not used by the suite entry
+REWRITES: dict[str, list[tuple[str, str]]] = {}
+
+
 def package_files() -> list[tuple[str, Path]]:
-    """(path inside the package, source file), sorted."""
+    """(path inside the package, source file), sorted. At most one folder level."""
     entries = [("SKILL.md", SUITE_SRC / "SKILL.md"), ("LICENSE", REPO / "LICENSE")]
+    REWRITES.clear()
     for skill in SKILLS:
-        for f in (REPO / skill).rglob("*"):
-            rel = f.relative_to(REPO)
-            if f.is_file() and not any(excluded(part) for part in rel.parts):
-                entries.append((rel.as_posix(), f))
+        root = REPO / skill
+        seen: dict[str, Path] = {}
+        rewrites: list[tuple[str, str]] = []
+        for f in sorted(root.rglob("*")):
+            inner = f.relative_to(root)
+            if not f.is_file() or any(excluded(part) for part in inner.parts) or inner.parts[0] in DROP_DIRS:
+                continue
+            if len(inner.parts) > 2:
+                raise SystemExit(f"{skill}/{inner.as_posix()}: nested deeper than one folder, cannot flatten")
+            name = inner.name
+            if name in seen:
+                raise SystemExit(f"{skill}: {inner.as_posix()} and {seen[name].as_posix()} collide when flattened")
+            seen[name] = inner
+            if len(inner.parts) == 2:
+                rewrites.append((inner.as_posix(), name))
+            entries.append((f"{skill}/{name}", f))
+        REWRITES[skill] = rewrites
+    for rel, _ in entries:
+        if rel.count("/") > 1:
+            raise SystemExit(f"{rel}: deeper than root/second-level/file")
     return sorted(entries)
 
 
@@ -110,6 +134,17 @@ def read_normalized(src: Path) -> bytes:
     return data
 
 
+def content(rel: str, src: Path) -> bytes:
+    data = read_normalized(src)
+    skill = rel.split("/", 1)[0] if "/" in rel else None
+    if skill in REWRITES and src.suffix in TEXT_SUFFIXES:
+        text = data.decode("utf-8")
+        for old, new in REWRITES[skill]:
+            text = text.replace(old, new)
+        data = text.encode("utf-8")
+    return data
+
+
 def make_zip(entries: list[tuple[str, Path]], prefix: str) -> bytes:
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as zf:
@@ -117,7 +152,7 @@ def make_zip(entries: list[tuple[str, Path]], prefix: str) -> bytes:
             info = zipfile.ZipInfo(prefix + rel, FIXED_TIME)
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o644 << 16
-            zf.writestr(info, read_normalized(src))
+            zf.writestr(info, content(rel, src))
     return buf.getvalue()
 
 
@@ -139,7 +174,7 @@ def build(version: str, entries: list[tuple[str, Path]]) -> None:
     for rel, src in entries:
         dest = out / rel
         dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_bytes(read_normalized(src))
+        dest.write_bytes(content(rel, src))
     flat = DIST / f"{NAME}-{version}-flat.zip"
     flat.write_bytes(make_zip(entries, ""))
     print(f"wrote {flat.relative_to(REPO).as_posix()} and dist/{NAME}/")
