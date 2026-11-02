@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- `description_en` 压缩到 WorkBuddy 上限 1000 字符以内；`build_suite.py` 校验 `description_zh` / `description_en` 不超过 1000 字符。
 - `dev-pdca` 的 `description_zh` / `description_en` 改写为完整的能力介绍：逐个说明五个子技能各自守住什么，以及它们之间如何自动接力。
 - `dev-pdca` 入口补充 WorkBuddy 上架必填的 frontmatter：`display_name`、`display_name_en`、`description_zh`、`description_en`；`build_suite.py` 校验这四项。
 - `dev-pdca` 套件包改为最多三层目录（`dev-pdca/<子技能>/<文件>`），以满足 WorkBuddy 的层级限制：子技能的 `references/`、`scripts/` 文件在打包时移到子技能目录下，文中引用路径同步改写；不再打包 Codex 专用的 `agents/` 元数据。仓库内技能源码结构不变。
