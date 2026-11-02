@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- `tasker` 1.8.4、`bugfixer` 1.6.1、`dev-pdca` 1.0.1：CI 失败、外部平台上传/发布/审核被拒明确列为转入 bugfixer 的触发信号（描述与正文同步）；`tasker` 的 Acceptance Gate 要求交付给外部系统时，先收集其验收规则并尽量写成本地检查，不再靠逐次被拒来发现规则。
+- 新增仓库根目录 `AGENTS.md` 与 `CLAUDE.md`：本仓库自己的工作也按触发条件调用这五个技能，并写入发布前先查清平台规则、改技能后重建套件包等仓库规则。
 - `dev-pdca` 示例按 WorkBuddy 上限减为每种语言 3 条（规划、修复、复盘），新增 `category: developer`；`build_suite.py` 一并校验 WorkBuddy 已知限制：`name` 格式、`display_name_en` ≤ 60、`description_zh` ≤ 500、`description_en` ≤ 1000、示例 1–3 条。
 - `dev-pdca` 补充 `examples_zh` / `examples_en`（WorkBuddy「试试这样问我」示例，各 5 条，覆盖五个子技能，按实际使用场景改写）和 `author`；`build_suite.py` 校验示例字段存在。
 - `description_en` 压缩到 WorkBuddy 上限 1000 字符以内；`build_suite.py` 校验 `description_zh` / `description_en` 不超过 1000 字符。
@@ -27,7 +29,7 @@
 ## 现有技能
 
 - `planner` 2.0.0
-- `tasker` 1.8.3
+- `tasker` 1.8.4
 - `auditor` 4.1.0
-- `bugfixer` 1.6.0
+- `bugfixer` 1.6.1
 - `evolver` 当前技能文件未声明版本
