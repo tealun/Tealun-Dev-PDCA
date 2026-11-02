@@ -1,6 +1,6 @@
 {
   "name": "tealun-skills",
-  "description": "Tealun Skills: a PDCA development loop for AI coding agents. planner (Plan), tasker (Do), auditor and bugfixer (Check), evolver (Act), evidence-first and handing off to each other.",
+  "description": "Tealun Skills: a PDCA development loop for AI coding agents. planner (Plan), tasker (Do), auditor and bugfixer (Check), evolver (Act), evidence-first and handing off to each other, plus explainer, which explains the code in plain language.",
   "owner": {
     "name": "Tealun",
     "url": "https://github.com/tealun"
@@ -10,7 +10,7 @@
       "name": "tealun-skills",
       "displayName": "Tealun Skills",
       "source": "./",
-      "description": "Five skills forming a PDCA loop: planner (plan before code), tasker (checkable changes with evidence), bugfixer (reproduce, prove the cause, fix, guard), auditor (evidence-backed audits), evolver (turn verified lessons into guards and ledger records).",
+      "description": "Five skills forming a PDCA loop: planner (plan before code), tasker (checkable changes with evidence), bugfixer (reproduce, prove the cause, fix, guard), auditor (evidence-backed audits), evolver (turn verified lessons into guards and ledger records); plus explainer (read-only, plain-language explanations of the codebase with file paths).",
       "author": {
         "name": "Tealun",
         "url": "https://github.com/tealun"
@@ -18,14 +18,23 @@
       "homepage": "https://github.com/tealun/Tealun-Skills",
       "repository": "https://github.com/tealun/Tealun-Skills",
       "license": "MIT",
-      "keywords": ["pdca", "planning", "task-execution", "debugging", "audit", "retrospective"],
+      "keywords": [
+        "pdca",
+        "planning",
+        "task-execution",
+        "debugging",
+        "audit",
+        "retrospective",
+        "code-explanation"
+      ],
       "category": "development-workflow",
       "skills": [
         "./planner",
         "./tasker",
         "./bugfixer",
         "./auditor",
-        "./evolver"
+        "./evolver",
+        "./explainer"
       ]
     }
   ]
