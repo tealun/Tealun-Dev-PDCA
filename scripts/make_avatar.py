@@ -1,29 +1,51 @@
 """Draw the dev-pdca marketplace avatar (512x512 PNG).
 
-Usage: python3 scripts/make_avatar.py assets/dev-pdca-avatar.png
-Needs Pillow; uses Inter Display Bold if installed, else DejaVu Sans Bold.
+A closed loop that resolves into a check mark: iterate, then prove it.
+Usage: python3 scripts/make_avatar.py assets/dev-pdca-avatar.png   (needs Pillow)
 """
-import math, sys
-from PIL import Image, ImageDraw, ImageFont
-S=2048; out=sys.argv[1]
-img=Image.new("RGB",(S,S),"#0F1B2D"); d=ImageDraw.Draw(img)
-cx=cy=S/2; R=640; W=150
-segs=[("P",180,"#3B82F6"),("D",270,"#10B981"),("C",0,"#F59E0B"),("A",90,"#A78BFA")]
-gap=7; head=16
-font=ImageFont.truetype("/usr/share/fonts/opentype/inter/InterDisplay-Bold.otf" if __import__('os').path.exists("/usr/share/fonts/opentype/inter/InterDisplay-Bold.otf") else "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",300)
-for letter,start,col in segs:
-    a0=start+gap; a1=start+90-gap-head
-    d.arc([cx-R,cy-R,cx+R,cy+R],a0,a1,fill=col,width=W)
-    # arrow head at a1 pointing clockwise
-    t=math.radians(a1); tip=math.radians(a1+head)
-    rm=R-W/2
-    p1=(cx+(R+W*0.35)*math.cos(t),cy+(R+W*0.35)*math.sin(t))
-    p2=(cx+(R-W*1.35)*math.cos(t),cy+(R-W*1.35)*math.sin(t))
-    p3=(cx+rm*math.cos(tip),cy+rm*math.sin(tip))
-    d.polygon([p1,p2,p3],fill=col)
-    # letter inside quadrant
-    mid=math.radians(start+45); rl=R-W-250
-    x,y=cx+rl*math.cos(mid),cy+rl*math.sin(mid)
-    d.text((x,y),letter,font=font,fill=col,anchor="mm")
-img=img.resize((512,512),Image.LANCZOS)
-img.save(out,"PNG",optimize=True)
+import math
+import sys
+
+from PIL import Image, ImageDraw
+
+S = 2048  # draw large, downsample for smooth edges
+TOP, BOTTOM = (79, 70, 229), (14, 165, 233)  # indigo -> sky
+
+
+def gradient() -> Image.Image:
+    img = Image.new("RGB", (S, S))
+    px = img.load()
+    for y in range(S):
+        for x in range(S):
+            t = (x + y) / (2 * S - 2)
+            px[x, y] = tuple(round(a + (b - a) * t) for a, b in zip(TOP, BOTTOM))
+    return img
+
+
+def round_arc(d, c, r, w, a0, a1, fill):
+    d.arc([c - r, c - r, c + r, c + r], a0, a1, fill=fill, width=w)
+    rm = r - w / 2
+    for a in (a0, a1):
+        x, y = c + rm * math.cos(math.radians(a)), c + rm * math.sin(math.radians(a))
+        d.ellipse([x - w / 2, y - w / 2, x + w / 2, y + w / 2], fill=fill)
+
+
+def main(out: str) -> None:
+    base = gradient().convert("RGBA")
+    layer = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(layer)
+    c, r, w = S / 2, 640, 112
+    # loop: open at the upper right, where the check mark leaves it
+    round_arc(d, c, r, w, -18, 278, (255, 255, 255, 115))
+    # check mark, rising out through the gap in the loop
+    pts = [(c - 330, c + 60), (c - 100, c + 290), (c + 470, c - 540)]
+    d.line(pts, fill=(255, 255, 255, 255), width=w + 16, joint="curve")
+    for x, y in (pts[0], pts[-1]):
+        h = (w + 16) / 2
+        d.ellipse([x - h, y - h, x + h, y + h], fill=(255, 255, 255, 255))
+    img = Image.alpha_composite(base, layer).convert("RGB").resize((512, 512), Image.LANCZOS)
+    img.save(out, "PNG", optimize=True)
+
+
+if __name__ == "__main__":
+    main(sys.argv[1])
