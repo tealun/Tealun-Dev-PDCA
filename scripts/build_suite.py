@@ -69,6 +69,10 @@ def validate() -> str:
         errors.append("suite description is empty")
     elif len(desc) > DESCRIPTION_LIMIT:
         errors.append(f"suite description is {len(desc)} chars, limit {DESCRIPTION_LIMIT}")
+    # WorkBuddy refuses a package whose SKILL.md lacks these.
+    for field in ("display_name", "display_name_en", "description_zh", "description_en"):
+        if not fm.get(field):
+            errors.append(f"suite frontmatter is missing {field}")
     version = fm.get("version", "")
     if not re.fullmatch(r"\d+\.\d+\.\d+", version):
         errors.append(f"suite version must be MAJOR.MINOR.PATCH, got {version!r}")
