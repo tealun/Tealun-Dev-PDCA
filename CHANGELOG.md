@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- 新增只读技能 `explainer` 1.0.0：面向用 AI 开发、但不读代码的人，把代码库翻译成白话说明。四种模式：全局导览、功能追踪、改动影响、读懂变更；默认中文，术语附白话解释并汇总成术语表，用 Mermaid 画模块关系与流程，每条结论标注文件路径，密钥、支付、用户数据、数据库结构、登录与权限单独标出。产出写入目标项目的 `docs/explainer/`，按基线提交增量更新；绝不修改代码，疑点转交 auditor / bugfixer。规划见 `docs/88_planning/explainer-skill.md`。
+- `dev-pdca` 1.1.0：加入 `explainer` 子技能的路由与会话规则（tasker / bugfixer 动手前可先用它看懂要改的地方，功能完成或审计后可刷新项目地图）；入口描述同步更新并仍满足 WorkBuddy 长度限制。插件清单、README（中英）、指令片段、`AGENTS.md` 与 issue 模板同步加入 `explainer`。
 - `tasker` 1.8.4、`bugfixer` 1.6.1、`dev-pdca` 1.0.1：CI 失败、外部平台上传/发布/审核被拒明确列为转入 bugfixer 的触发信号（描述与正文同步）；`tasker` 的 Acceptance Gate 要求交付给外部系统时，先收集其验收规则并尽量写成本地检查，不再靠逐次被拒来发现规则。
 - 新增仓库根目录 `AGENTS.md` 与 `CLAUDE.md`：本仓库自己的工作也按触发条件调用这五个技能，并写入发布前先查清平台规则、改技能后重建套件包等仓库规则。
 - `dev-pdca` 示例按 WorkBuddy 上限减为每种语言 3 条（规划、修复、复盘），新增 `category: developer`；`build_suite.py` 一并校验 WorkBuddy 已知限制：`name` 格式、`display_name_en` ≤ 60、`description_zh` ≤ 500、`description_en` ≤ 1000、示例 1–3 条。
@@ -33,3 +35,5 @@
 - `auditor` 4.1.0
 - `bugfixer` 1.6.1
 - `evolver` 当前技能文件未声明版本
+- `explainer` 1.0.0
+- `dev-pdca` 1.1.0
