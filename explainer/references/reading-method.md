@@ -9,6 +9,8 @@ How to read a codebase for each mode, and how to cite what was read.
 - Names, comments, README text, and folder names are leads. Confirm them in code before stating them as fact.
 - When a link cannot be found, write `未找到：<what was searched, where>`. When something was found but not followed to the end, write `未核实：<what remains>`. Never bridge a gap with a typical pattern.
 - Use repository-relative paths with `/`. Line numbers come from the recorded baseline commit.
+- A config key cites its file and key: `wrangler.jsonc`（`SUPABASE_URL`）, or `path:line` when the line is stable. A URL or route is written as text, not as a path citation.
+- Parts that were not read go under `未找到 / 未核实` as `未读：<folder> — <why>`.
 
 ## Fingerprint the project (all modes)
 
@@ -39,9 +41,9 @@ what the user does → UI element → event handler → request sent
   → outside services → response → what the user sees
 ```
 
-1. Find the trigger: search the UI for the visible text of the button or page, then the handler bound to it.
+1. Find the trigger: search the UI for the visible text of the button or page, then the handler bound to it. When the same user goal has several entries (a quick-add bar, a form on a list page, a calendar), list them all, trace the one the user named or else the most central one (present on most screens, described first in the project's README, or covered by end-to-end tests), and state the choice and reason at the top of the page. Other entries get a short route at the end.
 2. Follow each hop by reading the called function, not by guessing from its name. Record `path:line` per hop.
-3. Note branches that change what the user sees: not logged in, validation fails, network error, empty result. One line each.
+3. Note branches that change what the user sees: not logged in, validation fails, network error, empty result. One line each. A branch you saw but did not follow (an alternate version, a feature flag, a fallback) goes under `未核实` with the condition that selects it.
 4. Note every hop that crosses a sensitive area.
 5. If the chain leaves the repository (a third-party API, a database trigger defined elsewhere), say so and stop there.
 
@@ -69,4 +71,4 @@ what the user does → UI element → event handler → request sent
 
 - Prefer search over reading whole trees. Read the files on the path; skim neighbors only to confirm a role.
 - When a part is too large to read in the session, describe it from its entry file and say what was not read.
-- For long traces, cap at about 15 hops; summarize repetitive middle hops with a citation range.
+- When a trace runs past about 15 steps, split it into phases the user would recognize (e.g. 提交 → 确认 → 保存), each with its own table; summarize repetitive middle hops with a citation range.

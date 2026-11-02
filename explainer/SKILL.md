@@ -23,9 +23,9 @@ Copy the matching skeleton for each page: [templates/index.md](templates/index.m
 
 ## Boundary
 
-- **Read-only on the project.** The only place this skill writes is `docs/explainer/` in the target project. Never edit code, configuration, tests, other docs, or git history. Commit or push only when the user asks.
+- **Read-only on the project.** The only place this skill writes is `docs/explainer/` in the target project. Never edit code, configuration, tests, other docs, or git history. Commit or push only when the user asks. If the user wants the project left untouched, write the same structure to a folder they name and record that location in the report.
 - **Evidence or silence.** Every conclusion cites `path` or `path:line`. If a link in the chain was not found, write `未找到` or `未核实` and say what was searched. Do not fill gaps with what such projects usually do.
-- **No secret values.** Name the file and the variable; never copy a key, token, password, connection string, or personal record into output.
+- **No secret values.** Name the file and the variable; never copy a key, token, password, connection string, or personal record into output, even when the value is meant to be public.
 - **Explain, do not judge.** No defect verdicts, severity ratings, or fixes. A suspected bug goes in a `需要确认的疑点` list with its evidence and a pointer to `$auditor` (risk review) or `$bugfixer` (a concrete symptom).
 - **Derived, not authoritative.** `docs/explainer/` describes the code at a recorded commit. When it disagrees with the code or with the project's authoritative docs, the code wins and the page is stale.
 
@@ -40,7 +40,7 @@ Copy the matching skeleton for each page: [templates/index.md](templates/index.m
 | Change impact | 我想改 X，会牵连哪里，风险多大 | `impact/<date>-<topic>.md` |
 | Change explanation | AI 刚才这次提交改了什么 / 读懂这个 PR | `changes/<date>-<short-sha>.md` |
 
-Bare `/explainer` with no task: list the four modes in one line each, then stop. If the request is ambiguous between modes, pick the one that answers the literal question and mention the others in one line.
+Bare `/explainer` with no task: list the four modes in one line each, then stop. A request may combine modes (e.g. a tour, then a trace): run them in the order asked, sharing one baseline and one glossary. If the request is ambiguous between modes, pick the one that answers the literal question and mention the others in one line.
 
 ### 2. Record the baseline
 
@@ -58,7 +58,8 @@ Default to Chinese unless the user writes in another language. Lead with the ans
 
 Write the pages under `docs/explainer/` from the templates, update `README.md` (index and baseline), and merge new terms into `glossary.md` and new sensitive spots into `sensitive-areas.md`. Then verify:
 
-- every cited path exists, and sampled `path:line` citations point at the code described;
+- every cited path exists (extract them with a script and test each one);
+- every `path:line` in a step-by-step table is re-opened and matches the sentence it supports; take line numbers from `grep -n` or `sed -n` output at the time of writing, never from memory;
 - no secret value appears in the output;
 - each Mermaid block has matching brackets and quoted labels where needed;
 - the baseline commit is recorded on every page written.
