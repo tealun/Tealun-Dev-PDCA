@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- `dev-pdca` 1.0.2：WorkBuddy 审核以“zip 内含 6 个 SKILL.md，属多 skill 包”驳回。打包时子技能入口改名为 `<名称>/<名称>.md` 并去掉 frontmatter，入口技能按新路径查找子技能；`build_suite.py` 校验包内只有根目录一个 `SKILL.md`、其他 `.md` 不带技能 frontmatter、文件无 UTF-8 BOM。新增 `docs/workbuddy-rules.md`，逐条列出 WorkBuddy 已知规则、来源和对应的本地检查。
 - `tasker` 1.8.4、`bugfixer` 1.6.1、`dev-pdca` 1.0.1：CI 失败、外部平台上传/发布/审核被拒明确列为转入 bugfixer 的触发信号（描述与正文同步）；`tasker` 的 Acceptance Gate 要求交付给外部系统时，先收集其验收规则并尽量写成本地检查，不再靠逐次被拒来发现规则。
 - 新增仓库根目录 `AGENTS.md` 与 `CLAUDE.md`：本仓库自己的工作也按触发条件调用这五个技能，并写入发布前先查清平台规则、改技能后重建套件包等仓库规则。
 - `dev-pdca` 示例按 WorkBuddy 上限减为每种语言 3 条（规划、修复、复盘），新增 `category: developer`；`build_suite.py` 一并校验 WorkBuddy 已知限制：`name` 格式、`display_name_en` ≤ 60、`description_zh` ≤ 500、`description_en` ≤ 1000、示例 1–3 条。

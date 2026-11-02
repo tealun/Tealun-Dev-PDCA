@@ -14,6 +14,6 @@
 
 ## 本仓库的硬规则
 
-- **发布到外部平台之前，先查清它的全部规则。** 字段、长度、数量、目录结构等要求先汇总，写进 `scripts/build_suite.py` 的本地校验，本地通过后再上传。不要用平台的报错来逐条试规则。
+- **发布到外部平台之前，先查清它的全部规则。** 字段、长度、数量、目录结构等要求逐条登记到对照表（WorkBuddy 见 `docs/workbuddy-rules.md`），每条要么写进 `scripts/build_suite.py` 的本地校验，要么写明不校验的原因；本地通过后再上传。不要用平台的报错来逐条试规则，也不要只挑带数字的规则做校验。
 - **改了任何技能目录或 `suite/dev-pdca/SKILL.md`，** 运行 `python3 scripts/build_suite.py` 重新生成 `dev-pdca.zip` 并一起提交；CI 会用 `--check` 拦下未更新的成品。
 - **改了技能的行为或触发描述，** 同步更新该技能的 `version` 和 `CHANGELOG.md`。
