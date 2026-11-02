@@ -1,5 +1,9 @@
 ---
 name: dev-pdca
+display_name: "开发闭环 dev-pdca"
+display_name_en: "Dev PDCA Loop"
+description_zh: "用 PDCA 方法让 AI 高效、有效地做开发：规划（planner）、执行（tasker）、审计（auditor）、修复（bugfixer）、复盘（evolver）五个技能一包装齐，环环相扣，每一步都要拿出证据。直接说要做的事即可自动分派，也可点名调用。"
+description_en: "A PDCA development loop for AI agents: plan (planner), do (tasker), audit (auditor), fix (bugfixer) and learn (evolver), five evidence-first skills in one package that hand off to each other. Say what you need and it routes automatically, or name a stage directly."
 description: "PDCA development loop for AI coding agents: one entry that routes to five evidence-first sub-skills. Plan = planner, Do = tasker, Check = auditor (and bugfixer when a check fails), Act = evolver. Use for software development work: project planning, requirements, architecture, M0/M1; implementing or changing code and docs with verification; bugs, errors, 500s, regressions, wrong-looking screenshots, 'still wrong'; audits, code review, security or release checks; retrospectives, preventing recurrence, persisting lessons. 开发闭环（PDCA）：项目规划、需求梳理、技术方案；任务执行、代码实现；修 bug、报错、还是不对；审计、代码评审、安全检查；复盘、防止复发、经验固化。Once active, keep its routing rules for the rest of the session."
 argument-hint: "Optional: name a stage or skill, then the task. e.g. 审计 当前项目 / 修复 这个 500 报错 / planner M0 计划"
 user-invocable: true
