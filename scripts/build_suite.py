@@ -32,7 +32,8 @@ FIXED_TIME = (2020, 1, 1, 0, 0, 0)
 NAME = "dev-pdca"
 SKILLS = ["planner", "tasker", "bugfixer", "auditor", "evolver"]
 DESCRIPTION_LIMIT = 1024
-LISTING_LIMIT = 1000  # WorkBuddy cap on description_zh / description_en
+WORKBUDDY_TEXT_LIMITS = {"display_name_en": 60, "description_zh": 500, "description_en": 1000}
+MAX_EXAMPLES = 3  # per language, examples_zh / examples_en
 
 # Files that serve repository maintenance, not the agent at run time.
 EXCLUDE_PATTERNS = [re.compile(p) for p in (r"^RELEASE_.*\.md$", r"^INTRO\.md$", r"^__pycache__$", r"\.pyc$", r"^\.DS_Store$")]
@@ -60,6 +61,20 @@ def frontmatter(path: Path) -> dict[str, str]:
     return fields
 
 
+def examples_count(path: Path) -> dict[str, int]:
+    """Count the list items under examples_zh / examples_en in the frontmatter."""
+    counts: dict[str, int] = {}
+    key = None
+    text = path.read_text(encoding="utf-8").split("\n---", 1)[0]
+    for line in text.splitlines():
+        km = re.match(r"^([A-Za-z][\w-]*):", line)
+        if km:
+            key = km.group(1)
+        elif key and re.match(r"^\s+- ", line):
+            counts[key] = counts.get(key, 0) + 1
+    return counts
+
+
 def validate() -> str:
     errors: list[str] = []
     fm = frontmatter(SUITE_SRC / "SKILL.md")
@@ -74,9 +89,16 @@ def validate() -> str:
     for field in ("display_name", "display_name_en", "description_zh", "description_en", "examples_zh", "examples_en"):
         if not fm.get(field):
             errors.append(f"suite frontmatter is missing {field}")
-    for field in ("description_zh", "description_en"):
-        if len(fm.get(field, "")) > LISTING_LIMIT:
-            errors.append(f"{field} is {len(fm[field])} chars, WorkBuddy allows {LISTING_LIMIT}")
+    # WorkBuddy limits, from upload errors and published skills' metadata.
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,39}", fm.get("name", "")):
+        errors.append("name must match ^[a-z0-9][a-z0-9-]{0,39}$")
+    for field, limit in WORKBUDDY_TEXT_LIMITS.items():
+        if len(fm.get(field, "")) > limit:
+            errors.append(f"{field} is {len(fm[field])} chars, WorkBuddy allows {limit}")
+    examples = examples_count(SUITE_SRC / "SKILL.md")
+    for field in ("examples_zh", "examples_en"):
+        if not 1 <= examples.get(field, 0) <= MAX_EXAMPLES:
+            errors.append(f"{field} has {examples.get(field, 0)} items, WorkBuddy allows 1-{MAX_EXAMPLES}")
     version = fm.get("version", "")
     if not re.fullmatch(r"\d+\.\d+\.\d+", version):
         errors.append(f"suite version must be MAJOR.MINOR.PATCH, got {version!r}")
