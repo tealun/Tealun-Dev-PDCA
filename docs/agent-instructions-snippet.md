@@ -21,13 +21,14 @@ English version: [below](#english-snippet).
 ```markdown
 ## 配套技能：要调用，不要只“照着精神做”
 
-本项目使用 Tealun Skills（planner、tasker、bugfixer、auditor、evolver）。触发条件满足时，通过技能工具调用对应技能（或读取它的 SKILL.md 并按步骤执行）；只按“大意”去做不算调用。每个会话的第一条回复，先说明这五个技能里哪些可用；缺哪个就直说。
+本项目使用 Tealun Skills（planner、tasker、bugfixer、auditor、evolver、explainer）。触发条件满足时，通过技能工具调用对应技能（或读取它的 SKILL.md 并按步骤执行）；只按“大意”去做不算调用。每个会话的第一条回复，先说明这六个技能里哪些可用；缺哪个就直说。
 
 - **planner：任何规划意图，不论大小。** 功能、页面、URL 或站点结构调整、数据或 schema 变更、重构、发布、路线图、文档体系或流程。在写代码或内容之前调用，先把决定写进对应文档。
 - **tasker：任何对文件或状态的改动。** 动手前写清完成定义和一个可执行的检查；收尾时给出证据（命令输出、截图），不要只给描述。只读的问答不需要。
 - **bugfixer：用户说有问题或“还是不对”、截图里能看到缺陷、或者某个检查失败时。** 先复现或直接观察，证明原因，只修这个原因，再验证最初的症状已经消失。
 - **auditor：推送安全、部署、URL 参数或共享状态相关的改动之前，发布之前，以及任何审计请求。**
 - **evolver：用户报告的问题修好并验证之后、同一周期内第二次被纠正之后、以及每个工作周期结束时。** 把经验和对应的防线记到 `docs/98_evolution/evolution-ledger.md`。
+- **explainer：用户看不懂要改的地方，或想知道项目由哪几块组成、某个按钮点了之后发生什么、改一处会牵连哪里、AI 刚才改了什么时。** 只读，不改代码；白话说明写进 `docs/explainer/`，每条结论附文件路径。tasker 或 bugfixer 动手前先用它确认要改的地方；功能完成或审计之后用它刷新项目地图。
 ```
 
 ## English snippet
@@ -35,13 +36,14 @@ English version: [below](#english-snippet).
 ```markdown
 ## Companion skills: invoke them, do not just follow their spirit
 
-This project uses the Tealun Skills (planner, tasker, bugfixer, auditor, evolver). When a trigger below applies, invoke the matching skill through the skill tool (or read its SKILL.md and follow it). Following the general idea without invoking it does not count. In the first reply of every session, state which of the five skills are available; if one is missing, say so.
+This project uses the Tealun Skills (planner, tasker, bugfixer, auditor, evolver, explainer). When a trigger below applies, invoke the matching skill through the skill tool (or read its SKILL.md and follow it). Following the general idea without invoking it does not count. In the first reply of every session, state which of the six skills are available; if one is missing, say so.
 
 - **planner: every planning intent, whatever its size.** A feature, a page, a URL or site-structure change, a data or schema change, a refactor, a release, a roadmap, a doc system or process. Invoke it before writing code or content, and record the decisions in the relevant doc first.
 - **tasker: every change to files or state.** Set the done definition and an executable check before editing; finish with evidence (command output, screenshots), not a description. Read-only answers are exempt.
 - **bugfixer: when the user says something is wrong or still wrong, a screenshot shows a defect, or a check fails.** Reproduce or observe first, prove the cause, fix only that, and verify the original symptom.
 - **auditor: before pushing changes to security, deployment, URL parameters or shared state, before a release, and on any audit request.**
 - **evolver: after a verified fix of a user-reported problem, after a second correction in a cycle, and at the close of each work cycle.** Record the lesson and its guard in `docs/98_evolution/evolution-ledger.md`.
+- **explainer: when the user cannot follow the code about to change, or asks what the project is made of, what happens after a click, what a change would affect, or what the AI just changed.** Read-only; it writes plain-language pages with file paths under `docs/explainer/`. Use it before tasker or bugfixer change an area the user does not understand, and refresh the project map after a feature or an audit.
 ```
 
 ## 云端会话里没有技能怎么办：把技能放进项目

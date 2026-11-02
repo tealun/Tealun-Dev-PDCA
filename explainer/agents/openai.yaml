@@ -1,0 +1,7 @@
+interface:
+  display_name: "Explainer"
+  short_description: "Explain an AI-written codebase in plain language, with file paths."
+  default_prompt: "Use $explainer to give me a plain-language project tour with diagrams and file paths, saved under docs/explainer/, without modifying any code."
+
+policy:
+  allow_implicit_invocation: true

@@ -8,7 +8,7 @@ assignees: ""
 
 ## 涉及技能
 
-例如：`tasker`、`planner`、`auditor`、`bugfixer`、`evolver`
+例如：`tasker`、`planner`、`auditor`、`bugfixer`、`evolver`、`explainer`
 
 ## 使用场景
 
