@@ -4,7 +4,7 @@ description: 'Use for task execution, debugging, implementation, analysis, revie
 argument-hint: 'Describe the task goal, constraints, expected output, and validation method.'
 user-invocable: true
 disable-model-invocation: false
-version: 1.8.4
+version: 1.9.0
 ---
 
 # Tasker
@@ -213,6 +213,18 @@ Lead with the result. Keep simple tasks short.
 - Multiple deliverables — add an Artifact Map: `file → role → path → status`.
 
 For `M/L`, include verdict, confidence, requirement coverage, and a concise evidence ledger. End major deliveries with: “交付完成。是否符合预期？[是/需调整]”
+
+### Delivery Gate
+
+Run this gate on every reply that delivers a result, summary, conclusion, status report, or question to the user, at every level including `S`.
+
+- **Timing** — run it on the final draft, after the last tool call of the turn. Any later tool call or rewrite invalidates the result; run it again. A check done before the work finished does not count.
+- **Whole message** — scan every sentence, including the last paragraph and the last sentence. A statement that the reply was checked is not a check.
+- **Best step done** — identify the highest-value next step the reply itself names or implies. If it is within the confirmed scope and authority and a tool can do it, do it before replying. Otherwise state the concrete blocker. Do not present it as optional or deferred (“如需…告诉我”“你定”“回头再说”“不阻塞”, “if you want”, “let me know”).
+- **Questions** — ask the user only when the answer requires new authority, material scope expansion, destructive risk, input no tool can obtain, the user's acceptance of a delivered result, or a preference or tradeoff that the evidence cannot settle and the user has not already stated. Any other question, or a question whose answer the user already gave, fails the gate. This gate never waives the confirmation required for `M/L` side effects.
+- **Rule text** — when the reply or a deliverable contains constraint text (rules, skill instructions, agent instructions, checklists, guards), remove escape hatches: prohibitions conditioned on motive (“do not do X in order to Y”; anchor the prohibition on the behavior itself), pre-planted excuses (“users rarely need…”, “usually fine to…”), and exemptions the agent defines for itself.
+
+On failure, do not send. Do the hidden step or remove the deferral, rewrite the reply, and rerun the gate. For `M/L` structured output, add one evidence-ledger line that states what the reply's ending and next step actually are; a bare “passed” is not evidence. For `S`, apply the gate without printing it.
 
 ## Dissatisfaction and Self-Correction
 

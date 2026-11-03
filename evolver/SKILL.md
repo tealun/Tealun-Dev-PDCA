@@ -194,6 +194,8 @@ For every action identify:
 - observable guard verification;
 - rollback/removal condition when relevant.
 
+When the guard is written text (a rule, checklist, instruction, or skill change), remove escape hatches before writing it: anchor each prohibition on the behavior, not on a motive (“do not do X in order to Y” leaves “that was not my aim” as an exit); delete pre-planted excuses (“users rarely need…”, “usually fine to…”); add no exemption the agent can claim for itself. This is the same rule-text check as `$tasker`'s Delivery Gate.
+
 Preserve existing repository conventions and one source of truth. Ask for a decision only when evidence cannot safely determine architecture, schema, permissions, production behavior, or domain intent.
 
 ### 4. Apply within authorization

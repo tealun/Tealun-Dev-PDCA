@@ -4,7 +4,7 @@ description: "Use when a user wants an AI agent to guide early-stage project pla
 argument-hint: "Describe the project idea, current context, constraints, target users, expected planning artifacts, and what is already decided."
 user-invocable: true
 disable-model-invocation: false
-version: 2.0.0
+version: 2.1.0
 ---
 
 # Planner
@@ -56,7 +56,7 @@ Create or adapt a docs index and assign one authoritative location per domain: p
 
 ### 3. Record architecture and engineering boundaries
 
-Document the selected stack and versions, module ownership, runtime/deployment model, environments, package manager, integration contracts, verification commands, and local/production differences. State future-agent rules: read authoritative docs first, preserve scope, synchronize affected docs, and verify edits.
+Document the selected stack and versions, module ownership, runtime/deployment model, environments, package manager, integration contracts, verification commands, and local/production differences. State future-agent rules: read authoritative docs first, preserve scope, synchronize affected docs, and verify edits. Write each rule without escape hatches: anchor prohibitions on the behavior, not on a motive; leave out pre-planted excuses and exemptions the agent can claim for itself (the same rule-text check as `$tasker`'s Delivery Gate).
 
 Make constraints explicit for high-risk surfaces such as authentication, payments, webhooks, uploads, AI output validation, tenant isolation, rate limits, secrets, logging, backup, and rollback.
 

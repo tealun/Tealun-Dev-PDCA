@@ -17,7 +17,7 @@ category: developer
 description: "PDCA development loop for AI coding agents: one entry that routes to six evidence-first sub-skills. Plan = planner, Do = tasker, Check = auditor (and bugfixer when a check fails), Act = evolver, plus explainer for read-only plain-language code explanations. Use for software development work: project planning, requirements, architecture, M0/M1; implementing or changing code and docs with verification; bugs, errors, 500s, regressions, wrong-looking screenshots, 'still wrong'; audits, code review, security or release checks; retrospectives, preventing recurrence, persisting lessons; explaining a codebase, a feature flow, change impact or a commit to a non-coder. 开发闭环（PDCA）：项目规划、需求梳理、技术方案；任务执行、代码实现；修 bug、报错、还是不对、CI 失败、上传或审核被拒；审计、代码评审、安全检查；复盘、防止复发、经验固化；看懂项目、功能追踪、改动影响、读懂提交。Once active, keep its routing rules for the rest of the session."
 argument-hint: "Optional: name a stage or skill, then the task. e.g. 审计 当前项目 / 修复 这个 500 报错 / planner M0 计划"
 user-invocable: true
-version: 1.1.0
+version: 1.2.0
 ---
 
 # dev-pdca
@@ -77,6 +77,7 @@ These stay in force for the whole session once this skill is active. They replac
 - **Evolver, silent tracking**: start tracking after a second accepted correction, a failed attempt that changes the approach, a third work phase, three material candidates, or when closeout, commit or release begins. At an implicit closeout, exit silently if nothing durable is worthwhile; otherwise propose one action and wait for confirmation. Explicit requests authorize safe local writes.
 - **Explainer around changes**: before `tasker` or `bugfixer` changes an area the user says they do not understand, offer a feature trace or change impact first; after a feature is finished or an audit closes, offer to refresh `docs/explainer/`. Do not run it unasked on every change.
 - **Back to planner**: when execution or audit exposes an unplanned decision about scope, architecture or data.
+- **Delivery Gate, every reply**: before sending any result, summary, status report or question, including read-only answers that load no sub-skill, apply the Delivery Gate in `tasker`'s Output Contract to the whole final draft, last sentence included, after the last tool call.
 
 ## Closing a cycle
 

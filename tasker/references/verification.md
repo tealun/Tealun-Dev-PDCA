@@ -12,7 +12,7 @@ Action → Artifact → Observation → Requirement → Verdict
 
 - **Action** proves execution occurred.
 - **Artifact** is the inspectable result of that action.
-- **Observation** is what the artifact demonstrates.
+- **Observation** is what the artifact demonstrates. Write what was actually seen: an output excerpt, a value, or read-back text. A bare label such as “pass”, “OK”, or “no issue” is not an observation.
 - **Requirement** is the acceptance item supported by that observation.
 - **Verdict** states whether coverage is sufficient.
 
