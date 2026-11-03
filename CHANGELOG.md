@@ -4,7 +4,7 @@
 
 ## Unreleased
 
-- `tasker` 1.9.0、`planner` 2.1.0、`evolver`、`dev-pdca` 1.2.0：吸收外部技能 delivery-no-pseudoblock 的四点（规划见 `docs/88_planning/delivery-gate.md`）。`tasker` 新增 Delivery Gate，适用于每条回复（含只读问答、状态汇报和提问）：在最后一次工具调用之后对整条草稿检查，结尾一句同样受检；回复中已判明的最优下一步在授权和范围内就先做完，不包装成“如需 / 你定 / 回头再说”；只在需要新授权、扩大范围、破坏性风险、工具拿不到的输入或属于用户的取舍时提问，不放宽 M/L 副作用确认；约束性文本去掉以动机为条件的禁止、预埋借口和自拟豁免。`tasker` 验证协议要求 Observation 写出实际看到的内容，单独的“通过”不算观察。`evolver` 写防线、`planner` 写开发指引时套用同一条规则文本检查。`dev-pdca` 会话规则要求每条回复过 Delivery Gate。
+- `tasker` 1.9.0、`planner` 2.1.0、`evolver` 1.0.0（首次声明版本）、`dev-pdca` 1.2.0：吸收外部技能 delivery-no-pseudoblock 的四点（规划见 `docs/88_planning/delivery-gate.md`）。`tasker` 新增 Delivery Gate，适用于每条回复（含只读问答、状态汇报和提问）：在最后一次工具调用之后对整条草稿检查，结尾一句同样受检；回复中已判明的最优下一步在授权和范围内就先做完，不包装成“如需 / 你定 / 回头再说”；只在需要新授权、扩大范围、破坏性风险、工具拿不到的输入或属于用户的取舍时提问，不放宽 M/L 副作用确认；约束性文本去掉以动机为条件的禁止、预埋借口和自拟豁免。`tasker` 验证协议要求 Observation 写出实际看到的内容，单独的“通过”不算观察。`evolver` 写防线、`planner` 写开发指引时套用同一条规则文本检查。`dev-pdca` 会话规则要求每条回复过 Delivery Gate。
 - 新增 `scripts/check_ledger.py` 并接入 CI：演进台账编号必须唯一、格式正确、每行 8 列，防止并行分支各自追加同一编号后被合并进 main。
 - `dev-pdca` 1.0.2：WorkBuddy 审核以“zip 内含 6 个 SKILL.md，属多 skill 包”驳回。打包时子技能入口改名为 `<名称>/<名称>.md` 并去掉 frontmatter，入口技能按新路径查找子技能；`build_suite.py` 校验包内只有根目录一个 `SKILL.md`、其他 `.md` 不带技能 frontmatter、文件无 UTF-8 BOM。新增 `docs/workbuddy-rules.md`，逐条列出 WorkBuddy 已知规则、来源和对应的本地检查。
 - 新增只读技能 `explainer` 1.0.0：面向用 AI 开发、但不读代码的人，把代码库翻译成白话说明。四种模式：全局导览、功能追踪、改动影响、读懂变更；默认中文，术语附白话解释并汇总成术语表，用 Mermaid 画模块关系与流程，每条结论标注文件路径，密钥、支付、用户数据、数据库结构、登录与权限单独标出。产出写入目标项目的 `docs/explainer/`，按基线提交增量更新；绝不修改代码，疑点转交 auditor / bugfixer。规划见 `docs/88_planning/explainer-skill.md`。发布前用全新 agent 在真实项目上试跑一次，按反馈补齐：多模式请求按顺序执行、同一功能多入口时说明选择、公开配置与机密分开、行号必须取自当时的搜索输出、长链路分段、Mermaid 时序图规模上限、配置项引用格式、项目需保持不动时的产出位置。
@@ -38,6 +38,6 @@
 - `tasker` 1.9.0
 - `auditor` 4.1.0
 - `bugfixer` 1.6.1
-- `evolver` 当前技能文件未声明版本
+- `evolver` 1.0.0
 - `explainer` 1.0.0
 - `dev-pdca` 1.2.0

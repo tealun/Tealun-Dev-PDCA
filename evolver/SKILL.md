@@ -1,6 +1,7 @@
 ---
 name: evolver
 description: "Track verified fixes, findings, corrections, decisions, failed attempts, and delivery lessons across a work cycle; distill worthwhile items into durable guards, mandatory project evolution-ledger records, planning gates, rules, skill refinements, and next-cycle inputs. Use when the user invokes $evolver, asks to follow the conversation, close the PDCA loop, prevent recurrence, persist/落盘/固化 lessons, or improve future work. Also engage silent implicit tracking after a second accepted correction, a failed attempt changes the approach, a third work phase begins, three material candidates accumulate, or closeout/commit/release begins. At implicit closeout, exit silently if no durable action is worthwhile; otherwise propose one and await confirmation. Explicit invocation or persistence requests authorize safe local writes. Do not use for unresolved symptoms or broad discovery audits."
+version: 1.0.0
 ---
 
 # Evolver

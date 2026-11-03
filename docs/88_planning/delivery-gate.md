@@ -1,6 +1,6 @@
 # 规划：吸收 delivery-no-pseudoblock 的四点
 
-状态：已实现（tasker 1.9.0、planner 2.1.0、dev-pdca 1.2.0；台账 EV-20261103-001）· 2026-11-03
+状态：已实现（tasker 1.9.0、planner 2.1.0、evolver 1.0.0、dev-pdca 1.2.0；台账 EV-20261103-001）· 2026-11-03
 
 ## 1. 理解卡
 
@@ -30,7 +30,7 @@
 | D6 | 不要求贴快照。M/L 的结构化输出在证据账里加一行交付检查，写出结尾和下一步实际是什么；S 级不输出检查过程 | 写实但不冗长，符合用户对简洁的要求 |
 | D7 | 观察写实规则放进 `tasker/references/verification.md` 的 Evidence Model：Observation 必须写出看到的内容（输出片段、数值、读回的文字），单独的“通过 / OK / 未命中”不算观察 | 对应“核对清单写实”，落在已有的证据账上 |
 | D8 | 规则文本逃逸口检查（D11）定义一次，放在 tasker Delivery Gate；evolver 写防线、planner 写开发指引前引用同一条规则。检查三类：以动机为条件的禁止（应锚定行为本身）、预埋的开脱理由、自拟的豁免条件 | 三处都会产出约束性文本；单一定义避免分叉 |
-| D9 | 版本：tasker 1.9.0、planner 2.1.0、dev-pdca 1.2.0；evolver 未声明版本，保持不加，变更记入 CHANGELOG | 行为变化需同步版本；不为 evolver 新引入版本字段 |
+| D9 | 版本：tasker 1.9.0、planner 2.1.0、evolver 1.0.0（首次声明）、dev-pdca 1.2.0 | AGENTS.md 要求改了技能行为就同步版本；evolver 原先未声明版本，按用户确认补为 1.0.0 |
 | D10 | 不派全新 agent 试跑 | 本次是在现有流程上增加一个收尾检查，不是新增技能或改写工作流；AGENTS.md 的试跑规则不适用。若后续把 Delivery Gate 扩成独立技能，再按该规则试跑 |
 
 ## 4. 假设
