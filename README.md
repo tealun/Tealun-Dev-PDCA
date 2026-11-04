@@ -36,9 +36,10 @@ Tealun Skills 用 PDCA（计划、执行、检查、改进）的方法组织 AI 
 
 ## 快速开始
 
-三种安装方式都是一次装齐整套，按平台选一种即可：
+四种安装方式都是一次装齐整套，按平台选一种即可：
 
 - 用 Claude Code：推荐走插件市场，两条命令装好，以后一条命令更新。
+- 用 claude.ai（网页、桌面端）：从 Release 下载插件包，上传即可安装。
 - 用 Codex、Cursor、Gemini、Kimi、OpenCode 或共享 `.agents/skills` 目录：用同步脚本。
 - 用 WorkBuddy 等只能上传单个技能压缩包的平台：用套件包 `dev-pdca`。
 
@@ -65,6 +66,13 @@ claude plugin install tealun-skills@tealun-skills
 装好后新建会话，六个技能都会加载。插件里的技能名带前缀，手动调用时写 `/tealun-skills:tasker`、`/tealun-skills:bugfixer` 这样的形式；自动触发不受影响。
 
 更新：`/plugin marketplace update tealun-skills`。也可以在 `/plugin` 的 Marketplaces 里给这个市场打开自动更新。
+
+### claude.ai 一键安装
+
+1. 打开 [最新 Release](https://github.com/tealun/Tealun-Skills/releases/latest)，下载 `tealun-skills-<版本>.zip`。同一个包也以 `.plugin` 为后缀附上，内容完全相同。
+2. 在 claude.ai 打开 Customize > Plugins > Add > Upload plugin，上传这个 zip。
+
+同一个工具里只保留一种安装方式，否则技能会出现两份。如果之前单独上传过 planner、tasker、bugfixer、auditor、evolver 这五个技能，先在技能设置里删掉它们，再装插件。插件发布新版本后，重新下载并上传。
 
 ### 方式二：同步脚本
 
