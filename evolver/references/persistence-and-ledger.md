@@ -58,6 +58,10 @@ Entries must distinguish confirmed evidence from inference, link their source wh
 
 Prefer `scripts/append_evolution_ledger.py` for deterministic creation, schema validation, duplicate-ID rejection, append, and read-back.
 
+### Upgrading an open row
+
+Rows at `Corrected` or `Guarded` are open. When later evidence verifies the guard of an existing row (the guard caught the failure class, or the planned verification ran), edit that row in place: update `Guard Verification` with the new evidence and date, and raise `Closure Level`. Do not append a second row for the same lesson. Read the row back after editing and run the ledger check the project uses (for example `scripts/check_ledger.py`).
+
 The candidate register is a working source, not automatically a durable ledger. Persist only selected, verified lessons. When the user explicitly requests a running journal, place it in an existing task-state convention or a clearly labeled draft artifact, retain source turn/artifact references, and keep unverified candidates out of authoritative rules until closeout.
 
 ## Audit and Status Coordination

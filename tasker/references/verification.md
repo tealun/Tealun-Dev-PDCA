@@ -1,6 +1,6 @@
 # Verification Protocol
 
-Read this file for every `M/L` task. It defines how Tasker proves outcomes without turning checks into ceremony.
+Read this file for every `M/L` task outside Tasker's small-change fast path. It defines how Tasker proves outcomes without turning checks into ceremony.
 
 ## Evidence Model
 

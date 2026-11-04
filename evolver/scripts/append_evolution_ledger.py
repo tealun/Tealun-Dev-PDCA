@@ -16,14 +16,18 @@ HEADER = (
 LEVELS = {"Corrected", "Guarded", "Institutionalized", "Fed forward"}
 
 
-def resolve_git_root(root: Path) -> Path:
-    result = subprocess.run(
-        ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return Path(result.stdout.strip()).resolve()
+def resolve_project_root(root: Path) -> tuple[Path, bool]:
+    """Return the Git top level when available, else the given root as-is."""
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "--show-toplevel"],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return root, False
+    return Path(result.stdout.strip()).resolve(), True
 
 
 def cell(value: str) -> str:
@@ -47,7 +51,9 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    root = resolve_git_root(args.root.resolve())
+    root, in_git = resolve_project_root(args.root.resolve())
+    if not root.is_dir():
+        raise SystemExit(f"Project root does not exist: {root}")
     ledger = args.ledger or Path("docs/98_evolution/evolution-ledger.md")
     ledger = (root / ledger).resolve() if not ledger.is_absolute() else ledger.resolve()
 
@@ -82,6 +88,7 @@ def main() -> int:
         raise SystemExit(f"Ledger read-back failed: {ledger}")
 
     print(f"ledger={ledger}")
+    print(f"git={'yes' if in_git else 'unavailable'}")
     print(f"id={entry_id}")
     print("status=appended-and-verified")
     return 0

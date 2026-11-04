@@ -1,10 +1,10 @@
 ---
 name: evolver
-description: "Track verified fixes, findings, corrections, decisions, failed attempts, and delivery lessons across a work cycle; distill worthwhile items into durable guards, mandatory project evolution-ledger records, planning gates, rules, skill refinements, and next-cycle inputs. Use when the user invokes $evolver, asks for a retrospective or to learn from what happened, asks to follow the conversation, close the PDCA loop, prevent recurrence, or persist lessons, or when a work cycle closes. Also engage silent implicit tracking after a second accepted correction, a failed attempt changes the approach, a third work phase begins, three material candidates accumulate, or closeout/commit/release begins. Do not use for unresolved symptoms or broad discovery audits. 复盘、总结经验、吸取教训、下次别再犯、防止再犯、沉淀经验、落盘、固化规则、闭环。"
+description: "Track verified fixes, findings, corrections, decisions, failed attempts, and delivery lessons across a work cycle; distill worthwhile items into durable guards, mandatory project evolution-ledger records, planning gates, rules, skill refinements, and next-cycle inputs. Use when the user invokes $evolver, asks for a retrospective or to learn from what happened, asks to follow the conversation, close the PDCA loop, prevent recurrence, or persist lessons, or when a work cycle closes. Without explicit invocation, run one advisory check after the user's second accepted correction and one at closeout (summary, handoff, commit, release). Do not use for unresolved symptoms or broad discovery audits. 复盘、总结经验、吸取教训、下次别再犯、防止再犯、沉淀经验、落盘、固化规则、闭环。"
 argument-hint: "Name the lesson, fix or correction to close, its evidence, and whether to persist now or only propose."
 user-invocable: true
 disable-model-invocation: false
-version: 1.1.0
+version: 1.2.0
 ---
 
 # Evolver
@@ -68,17 +68,14 @@ Candidate ID | event/turn | confirmed fact or correction | evidence | possible f
 
 Capture accepted user corrections, changed decisions, failed attempts, verified fixes, scope changes that invalidate earlier learning, and evidence that proves or disproves a candidate. Merge duplicates and mark superseded items; do not prematurely turn candidates into conclusions. Keep the register available across planning, implementation, verification, and closeout. If context compaction or a handoff is imminent, preserve it in the conversation summary or established task-state mechanism. Do not create a repository artifact merely to hold unverified candidates unless the user explicitly requests a durable running journal.
 
-Enter implicit tracking silently when the earliest applicable threshold is reached:
+### Implicit checkpoints
 
-1. a second accepted user correction occurs in the cycle;
-2. a failed attempt changes the implementation or decision path;
-3. work enters a third distinct phase, such as planning, implementation, then verification;
-4. three material candidates exist;
-5. the user or workflow begins summary, handoff, commit, release, or other closeout.
+Without an explicit invocation, Evolver does not track the conversation as it goes. It runs one advisory evaluation at each of two points:
 
-As a fallback, consider roughly six substantive user-assistant exchanges only when at least one material correction, decision, failure, scope change, or verification result already exists. Do not count greetings, status checks, tool polling, repeated confirmations, or incidental chat. Turn count alone must never activate tracking or manufacture candidates.
+1. after the user's second correction in the same cycle has been applied and the user has not rejected the result (a cycle runs from the user's goal or accepted plan to its closeout);
+2. at closeout: when the user or workflow begins a summary, handoff, commit, release, or the cycle ends.
 
-Implicit tracking produces no user-facing Evolver message and grants no write authority. Continue the primary task normally. At closeout, evaluate the accumulated register under Advisory mode unless the user explicitly invoked Evolver or requested persistence.
+At each point, run the Cycle-wide Evidence Sweep over the turns and artifacts available, then apply Advisory mode: exit silently when a condition fails, otherwise present the three-line proposal. An implicit checkpoint grants no write authority, and its working list is discarded afterward; only tracking mode keeps a candidate register between events. A silent exit at the first checkpoint does not suppress the closeout checkpoint; a refused proposal is not raised again (see Advisory mode).
 
 ## Operating Boundary
 
@@ -116,11 +113,11 @@ The newest user correction invalidates affected learning and downstream actions.
 
 ## Cycle-wide Evidence Sweep
 
-Before reconstructing lessons in direct-mode closeout, build the candidate source from the whole relevant work cycle, not merely the newest exchange.
+Before reconstructing lessons in direct mode or at an implicit checkpoint, build the candidate source from the whole relevant work cycle, not merely the newest exchange.
 
 1. Define the cycle boundary at the earliest user goal, accepted plan, incident, audit, or delivery request that led to this closeout.
 2. Scan every available turn inside that boundary, plus relevant diffs, tests, logs, screenshots, task state, and persisted artifacts.
-3. Extract material corrections, decisions, failed attempts, verification results, recurrence risks, and invalidated assumptions into the candidate register.
+3. Extract material corrections, decisions, failed attempts, verification results, recurrence risks, and invalidated assumptions into a working list (the candidate register, in tracking mode).
 4. Reconcile later evidence against earlier candidates. Mark each `Confirmed`, `Inference`, `Unknown`, `Superseded`, or `Rejected`.
 5. Group confirmed candidates by shared failed control and rank them by recurrence credibility, impact, breadth, and guard value.
 6. Only then select what deserves persistence. Recentness is not a selection criterion.
@@ -206,7 +203,7 @@ Preserve existing repository conventions and one source of truth. Ask for a deci
 
 In direct mode, safe local persistence is limited to directly relevant non-production tests, documentation, checklists, planning gates, project rules, skills, and the established evolution ledger. Advisory mode must receive confirmation first. Use `$tasker` for broader implementation.
 
-For ledger writes, prefer `scripts/append_evolution_ledger.py` so directory creation, schema checks, escaping, duplicate-ID rejection, and read-back are deterministic. If the script cannot be used, follow the persistence reference exactly; do not silently invent another destination.
+When later evidence verifies the guard of an existing open ledger row, upgrade that row in place as the persistence reference describes instead of appending a new one. For ledger writes, prefer `scripts/append_evolution_ledger.py` so directory creation, schema checks, escaping, duplicate-ID rejection, and read-back are deterministic. If the script cannot be used, follow the persistence reference exactly; do not silently invent another destination.
 
 Every persistence claim requires an actual write and read-back verification. No verified write means `待确认` or `未落盘`, never `已落盘`. Do not commit, push, deploy, migrate, or contact external systems unless separately requested.
 

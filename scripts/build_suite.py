@@ -34,6 +34,10 @@ SKILLS = ["planner", "tasker", "bugfixer", "auditor", "evolver", "explainer"]
 DESCRIPTION_LIMIT = 1024
 WORKBUDDY_TEXT_LIMITS = {"display_name_en": 60, "description_zh": 500, "description_en": 1000}
 MAX_EXAMPLES = 3  # per language, examples_zh / examples_en
+# Sub-skill frontmatter: the Agent Skills spec fields we use, the Claude Code
+# extensions we rely on, and a top-level version (WorkBuddy requires one; see
+# docs/workbuddy-rules.md). Decision: docs/88_planning/review-followup-2-20261104.md F7.
+SUBSKILL_FIELDS = {"name", "description", "argument-hint", "user-invocable", "disable-model-invocation", "version"}
 
 # Files that serve repository maintenance, not the agent at run time.
 EXCLUDE_PATTERNS = [re.compile(p) for p in (r"^RELEASE_.*\.md$", r"^INTRO\.md$", r"^__pycache__$", r"\.pyc$", r"^\.DS_Store$")]
@@ -108,8 +112,15 @@ def validate() -> str:
         if not sk.is_file():
             errors.append(f"missing {skill}/SKILL.md")
             continue
-        if frontmatter(sk).get("name") != skill:
+        sfm = frontmatter(sk)
+        if sfm.get("name") != skill:
             errors.append(f"{skill}/SKILL.md: name does not match folder")
+        if set(sfm) != SUBSKILL_FIELDS:
+            errors.append(f"{skill}/SKILL.md: frontmatter fields {sorted(sfm)}, expected {sorted(SUBSKILL_FIELDS)}")
+        if not 1 <= len(sfm.get("description", "")) <= DESCRIPTION_LIMIT:
+            errors.append(f"{skill}/SKILL.md: description is {len(sfm.get('description', ''))} chars, limit {DESCRIPTION_LIMIT}")
+        if not re.fullmatch(r"\d+\.\d+\.\d+", sfm.get("version", "")):
+            errors.append(f"{skill}/SKILL.md: version must be MAJOR.MINOR.PATCH")
         if f"`{skill}`" not in body:
             errors.append(f"suite SKILL.md does not route to {skill}")
     if errors:
