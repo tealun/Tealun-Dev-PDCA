@@ -4,7 +4,7 @@ description: 'Use to carry out a change to files or state as a checkable contrac
 argument-hint: 'Describe the task goal, constraints, expected output, and validation method.'
 user-invocable: true
 disable-model-invocation: false
-version: 1.11.0
+version: 1.12.0
 ---
 
 # Tasker
@@ -49,13 +49,13 @@ intake → clarify → plan → confirm → execute → verify → close
 4. **Confirm** — pass the Acceptance Gate before any side effect.
 5. **Execute** — use tools; keep changes within the confirmed scope and leave artifacts.
 6. **Verify** — connect observations to every acceptance requirement and preserved invariant.
-7. **Close** — report an evidence-calibrated verdict, residual gaps, and one useful next action.
+7. **Close** — report an evidence-calibrated verdict, residual gaps, and the next action when one remains.
 
 Retreat when evidence invalidates the current stage: execution failure → `plan`; incomplete verification → `execute`; rejected confirmation → `clarify`. State the reason. Bare `/tasker` triggers a one-line handshake and stops.
 
 ### Bugfixer route
 
-Route from Tasker to `$bugfixer` immediately when a post-change check fails (including CI, or an external platform rejecting an upload, publish or review), the user reports “still wrong” or equivalent rejected behavior, a concrete runtime symptom appears, or a previous repair missed its predicted outcome. When none of these is explicit but diagnosis keeps going around, apply the fallback threshold defined once in Bugfixer's Discussion-aware Activation; Tasker does not keep its own count.
+Route from Tasker to `$bugfixer` immediately when a post-change check fails (including CI, or an external platform rejecting an upload, publish or review), the user reports that delivered behavior is still wrong (as Bugfixer's Discussion-aware Activation defines it), a concrete runtime symptom appears, or a previous repair missed its predicted outcome. When none of these is explicit but diagnosis keeps going around, apply the fallback threshold defined once in Bugfixer's Discussion-aware Activation; Tasker does not keep its own count.
 
 Preserve Tasker's `done_definition`, scope, target identity, and protected invariants across the route. Let Bugfixer run the evidence-led diagnosis and verify the reported symptom; then resume Tasker at `verify` or the earliest invalidated stage. Do not run both workflows as duplicate parallel commentary.
 
@@ -85,12 +85,12 @@ Confirmation policy:
 
 An `M` change takes the fast path only when every condition holds:
 
-1. the user's message already names the exact change, so that before editing you can state the resulting text or value exactly; formatting details follow the neighboring lines' existing convention;
-2. it touches one file, or two files that must change together (such as a value and its single reference);
+1. the user's message already names the exact change, so that before editing you can state the resulting text or value exactly. Text the user supplied goes in verbatim: add, drop, or restyle none of its characters (no added punctuation, quotes, or code formatting). Only what the user left unspecified, such as placement or surrounding blank lines, follows the neighboring lines' convention;
+2. it touches one file, or two files that must change together (such as a value and its single reference, or a line moved from one file to another);
 3. it touches no shared contract, configuration, dependency, schema, install or release script, build output, credential, permission, or production surface;
 4. it is undone by reverting the edit.
 
-On the fast path, write the contract as one line before the first write: `Fast path: <change> | check: <command or read-back> | target: <absolute root> (<repo>@<branch>)`. Such an instruction already states the outcome and authorizes the edit, so under the confirmation policy it is the confirmation; skip the separate understanding check. Skip loading the verification reference. Close in at most three lines: the verdict, the check's actual output or read-back text, and any residual gap. The `M/L` evidence ledger and the closing delivery question do not apply.
+On the fast path, write the contract as one line before the first write: `Fast path: <change> | check: <command or read-back> | target: <absolute root> (<repo>@<branch>)`, where `<repo>` is the remote repository name or, without a remote, the directory name. Such an instruction already states the outcome and authorizes the edit, so under the confirmation policy it is the confirmation; skip the separate understanding check. Skip loading the verification reference. Close in at most three lines: the verdict with the check's actual output or read-back text, any residual gap, and a next action only when one remains (otherwise leave that line out). The `M/L` evidence ledger and the closing delivery question do not apply.
 
 These still apply on the fast path: target identity, Post-Tool Verification, Scope and Initiative, and the Delivery Gate. When any condition stops holding during the work, or the check fails, leave the fast path: state why, then continue from `plan` under the full `M` flow.
 
@@ -131,7 +131,7 @@ For deictic corrections such as “这个项目不对”“另一个项目”“
 
 ### Post-Error Restraint Gate
 
-Discovering or being told that the target may be wrong authorizes containment only, not corrective mutation. The agent may stop processes and collect read-only status, but must not immediately commit, revert, delete, move, cherry-pick, restore, or “undo its own work.” First report:
+Here “target” means the confirmed `target_identity` (workspace, repository, or project). A correction that names a different file inside the confirmed target is a scope correction: retreat to `plan` and continue. Undoing your own edit in the wrong file is part of the corrected change, not a recovery action; name it in the new contract. Refinements the user already gave (such as “no trailing period”) carry over to the new file unless the user says otherwise. Discovering or being told that the target may be wrong authorizes containment only, not corrective mutation. The agent may stop processes and collect read-only status, but must not immediately commit, revert, delete, move, cherry-pick, restore, or “undo its own work.” First report:
 
 - what target had been confirmed or assumed;
 - every repository and path touched;
@@ -203,6 +203,8 @@ If progress remains possible, retreat instead of closing with a weaker verdict. 
 Lead with the result. Keep simple tasks short.
 
 - `compact` — result, key evidence, residual gap, next action.
+
+Write a next action only when real work remains: a step blocked on the user (state the blocker) or a step outside the confirmed scope. When nothing remains, write `下一步：无` or leave the line out; never invent an optional step to fill the slot.
 - `structured` — Result → Changes/Findings → Artifacts → Validation → Risk & Residual → Next Action.
 - Reviews — findings first, ordered by severity, with impact, location, and recommendation.
 - Multiple deliverables — add an Artifact Map: `file → role → path → status`.

@@ -1,10 +1,10 @@
 ---
 name: evolver
-description: "Track verified fixes, findings, corrections, decisions, failed attempts, and delivery lessons across a work cycle; distill worthwhile items into durable guards, mandatory project evolution-ledger records, planning gates, rules, skill refinements, and next-cycle inputs. Use when the user invokes $evolver, asks for a retrospective or to learn from what happened, asks to follow the conversation, close the PDCA loop, prevent recurrence, or persist lessons, or when a work cycle closes. Without explicit invocation, run one advisory check after the user's second accepted correction and one at closeout (summary, handoff, commit, release). Do not use for unresolved symptoms or broad discovery audits. 复盘、总结经验、吸取教训、下次别再犯、防止再犯、沉淀经验、落盘、固化规则、闭环。"
+description: "Track verified fixes, findings, corrections, decisions, failed attempts, and delivery lessons across a work cycle; distill worthwhile items into durable guards, mandatory project evolution-ledger records, planning gates, rules, skill refinements, and next-cycle inputs. Use when the user invokes $evolver, asks for a retrospective or to learn from what happened, asks to follow the conversation, close the PDCA loop, prevent recurrence, or persist lessons, or when a work cycle closes. Without explicit invocation, run one advisory check once the user's second correction in a cycle has been applied without being rejected, and one at closeout (summary, handoff, commit, release). Do not use for unresolved symptoms or broad discovery audits. 复盘、总结经验、吸取教训、下次别再犯、防止再犯、沉淀经验、落盘、固化规则、闭环。"
 argument-hint: "Name the lesson, fix or correction to close, its evidence, and whether to persist now or only propose."
 user-invocable: true
 disable-model-invocation: false
-version: 1.2.0
+version: 1.2.1
 ---
 
 # Evolver
@@ -72,7 +72,7 @@ Capture accepted user corrections, changed decisions, failed attempts, verified 
 
 Without an explicit invocation, Evolver does not track the conversation as it goes. It runs one advisory evaluation at each of two points:
 
-1. after the user's second correction in the same cycle has been applied and the user has not rejected the result (a cycle runs from the user's goal or accepted plan to its closeout);
+1. after the user's second correction in the same cycle has been applied and the user has not rejected the result (a cycle runs from the user's goal or accepted plan to its closeout; a reply that finishes one step while the goal is still open is not a closeout);
 2. at closeout: when the user or workflow begins a summary, handoff, commit, release, or the cycle ends.
 
 At each point, run the Cycle-wide Evidence Sweep over the turns and artifacts available, then apply Advisory mode: exit silently when a condition fails, otherwise present the three-line proposal. An implicit checkpoint grants no write authority, and its working list is discarded afterward; only tracking mode keeps a candidate register between events. A silent exit at the first checkpoint does not suppress the closeout checkpoint; a refused proposal is not raised again (see Advisory mode).
