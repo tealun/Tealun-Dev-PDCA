@@ -39,6 +39,7 @@ The point is not to make the agent talk more. It is to make it guess less, skip 
 Each of the three routes installs the whole set at once. Pick the one that fits your platform:
 
 - Claude Code: the plugin marketplace is recommended. Two commands to install, one to update.
+- claude.ai (web and desktop): download the plugin package from the latest Release and upload it.
 - Codex, Cursor, Gemini, Kimi, OpenCode, or a shared `.agents/skills` folder: use the sync script.
 - WorkBuddy and other platforms that accept a single skill zip: use the `dev-pdca` suite package.
 
@@ -65,6 +66,13 @@ claude plugin install tealun-skills@tealun-skills
 Start a new session afterwards and all six skills load. Plugin skills carry a prefix, so to call one by hand you type `/tealun-skills:tasker`, `/tealun-skills:bugfixer` and so on. Automatic selection works the same as before.
 
 To update: `/plugin marketplace update tealun-skills`. You can also turn on auto-update for this marketplace under Marketplaces in `/plugin`.
+
+### claude.ai: one-click install
+
+1. Open the [latest Release](https://github.com/tealun/Tealun-Skills/releases/latest) and download `tealun-skills-<version>.zip`. The same package is also attached with a `.plugin` suffix; the contents are identical.
+2. In claude.ai, open Customize > Plugins > Add > Upload plugin and upload the zip.
+
+Keep one install route per tool, or each skill appears twice. If you uploaded planner, tasker, bugfixer, auditor and evolver as separate skills before, delete those five in your skill settings first, then install the plugin. When a new plugin version is released, download it and upload it again.
 
 ### Option 2: sync script
 

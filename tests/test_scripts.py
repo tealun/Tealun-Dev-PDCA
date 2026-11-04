@@ -4,6 +4,7 @@ from __future__ import annotations
 import contextlib
 import importlib.util
 import io
+import json
 import subprocess
 import sys
 import tempfile
@@ -23,6 +24,7 @@ def load(name: str, path: Path):
 
 check_ledger = load("check_ledger", REPO / "scripts" / "check_ledger.py")
 build_suite = load("build_suite", REPO / "scripts" / "build_suite.py")
+build_plugin = load("build_plugin", REPO / "scripts" / "build_plugin.py")
 APPEND = REPO / "evolver" / "scripts" / "append_evolution_ledger.py"
 
 LEDGER_HEADER = (
@@ -175,6 +177,106 @@ class BuildSuiteTest(unittest.TestCase):
         finally:
             build_suite.frontmatter = original
         self.assertIn("evolver/SKILL.md: frontmatter fields", str(caught.exception))
+
+
+def plugin_fixture(tmp: Path) -> Path:
+    """A copy of the plugin-relevant parts of the repository."""
+    import shutil
+    root = tmp / "repo"
+    for part in [".claude-plugin", "README.md", "LICENSE", "CHANGELOG.md", "assets"] + build_plugin.skill_dirs(
+            json.loads((REPO / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))):
+        src = REPO / part
+        (shutil.copytree if src.is_dir() else shutil.copy2)(src, root / part)
+    return root
+
+
+def git(root: Path, *args: str) -> None:
+    subprocess.run(["git", "-C", str(root), *args], check=True, capture_output=True,
+                   env={"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t",
+                        "GIT_COMMITTER_EMAIL": "t@t", "PATH": "/usr/bin:/bin:/usr/local/bin"})
+
+
+class BuildPluginTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(lambda: __import__("shutil").rmtree(self.tmp))
+        self.root = plugin_fixture(self.tmp)
+        self.manifest_path = self.root / ".claude-plugin" / "plugin.json"
+
+    def manifest(self) -> dict:
+        return json.loads(self.manifest_path.read_text(encoding="utf-8"))
+
+    def write_manifest(self, data: dict) -> None:
+        self.manifest_path.write_text(json.dumps(data), encoding="utf-8")
+
+    def test_repository_passes(self):
+        self.assertEqual(build_plugin.check(REPO), [])
+        self.assertEqual(build_plugin.check(self.root), [])
+
+    def test_skill_list_must_match_marketplace(self):
+        data = self.manifest()
+        data["skills"] = data["skills"][:-1]
+        self.write_manifest(data)
+        self.assertTrue(any("skills differ" in e for e in build_plugin.check(self.root)))
+
+    def test_missing_reference_file(self):
+        (self.root / "tasker" / "references" / "verification.md").unlink()
+        errors = build_plugin.check(self.root)
+        self.assertTrue(any("references missing file references/verification.md" in e for e in errors), errors)
+
+    def test_deleted_tracked_reference_reports_instead_of_crashing(self):
+        git(self.root, "init", "-q")
+        git(self.root, "add", "-A")
+        git(self.root, "commit", "-qm", "base")
+        (self.root / "tasker" / "references" / "verification.md").unlink()
+        errors = build_plugin.check(self.root)
+        self.assertTrue(any("references missing file references/verification.md" in e for e in errors), errors)
+
+    def test_tag_must_match_version(self):
+        self.assertEqual(build_plugin.check(self.root, tag="v1.0.0"), [])
+        self.assertTrue(any("does not match" in e for e in build_plugin.check(self.root, tag="v1.0.1")))
+
+    def test_tag_needs_changelog_section(self):
+        changelog = self.root / "CHANGELOG.md"
+        changelog.write_text(changelog.read_text(encoding="utf-8").replace("## tealun-skills 1.0.0", "## old"), encoding="utf-8")
+        errors = build_plugin.check(self.root, tag="v1.0.0")
+        self.assertTrue(any("no '## tealun-skills 1.0.0' section" in e for e in errors), errors)
+        self.assertEqual(build_plugin.check(self.root), [])
+
+    def test_skill_change_needs_version_bump(self):
+        git(self.root, "init", "-q")
+        git(self.root, "add", "-A")
+        git(self.root, "commit", "-qm", "base")
+        git(self.root, "tag", "v1.0.0")
+        self.assertEqual(build_plugin.check(self.root, since="v1.0.0"), [])
+        with (self.root / "planner" / "SKILL.md").open("a", encoding="utf-8") as f:
+            f.write("\nchanged\n")
+        self.assertTrue(any("is not higher" in e for e in build_plugin.check(self.root, since="v1.0.0")))
+        data = self.manifest()
+        data["version"] = "1.0.1"
+        self.write_manifest(data)
+        self.assertEqual(build_plugin.check(self.root, since="v1.0.0"), [])
+
+    def test_directory_naming_rules(self):
+        for bad in ("claude-tools", "Tealun", "plugin", "-x"):
+            with self.subTest(name=bad):
+                data = self.manifest()
+                data["name"] = bad
+                self.write_manifest(data)
+                self.assertTrue(any("naming rules" in e for e in build_plugin.check(self.root)))
+
+    def test_build_is_reproducible_and_scoped(self):
+        _, first = build_plugin.make_plugin(self.root)
+        _, second = build_plugin.make_plugin(self.root)
+        self.assertEqual(first, second)
+        with zipfile.ZipFile(io.BytesIO(first)) as zf:
+            names = zf.namelist()
+            packaged = json.loads(zf.read(".claude-plugin/plugin.json"))
+        self.assertEqual(sum(n.endswith("/SKILL.md") for n in names), 6)
+        self.assertTrue(all(s.startswith("./skills/") for s in packaged["skills"]))
+        for forbidden in ("CLAUDE.md", "AGENTS.md", "docs/", "tests/", "/agents/", ".github/", "RELEASE_", "INTRO.md"):
+            self.assertFalse(any(forbidden in n for n in names), forbidden)
+        self.assertIn(packaged["icon"].lstrip("./"), names)
 
 
 if __name__ == "__main__":

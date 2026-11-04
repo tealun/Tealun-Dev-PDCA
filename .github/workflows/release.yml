@@ -1,0 +1,49 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: dev-pdca.zip matches the skill sources
+        run: python3 scripts/build_suite.py --check
+      - name: evolution ledger and compliance log are well-formed
+        run: python3 scripts/check_ledger.py
+      - name: script unit tests
+        run: python3 -m unittest discover -s tests
+      - name: plugin checks for this tag
+        run: |
+          previous=$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)
+          python3 scripts/build_plugin.py --check --tag "$GITHUB_REF_NAME" ${previous:+--since "$previous"}
+      - name: build the plugin
+        run: python3 scripts/build_plugin.py
+      - name: validate with the Claude Code CLI (no skip when it is unavailable)
+        run: npx -y @anthropic-ai/claude-code@2.1.318 plugin validate dist/tealun-skills/.claude-plugin/plugin.json
+      - name: release notes from CHANGELOG
+        run: python3 scripts/build_plugin.py --notes "$RUNNER_TEMP/notes.md"
+      - name: create the GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          gh release create "$GITHUB_REF_NAME" \
+            "dist/tealun-skills-${version}.plugin" \
+            "dist/tealun-skills-${version}.zip" \
+            dev-pdca.zip \
+            --title "Tealun Skills ${version}" \
+            --notes-file "$RUNNER_TEMP/notes.md"

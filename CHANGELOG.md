@@ -35,8 +35,17 @@
 - 新增 Claude Code 插件市场清单 `.claude-plugin/marketplace.json`：`/plugin marketplace add tealun/Tealun-Skills` 后 `/plugin install tealun-skills@tealun-skills` 即可安装五个技能。技能目录位置不变，同步脚本照常可用。
 - README 增加插件安装方式、「让 Agent 真的调用技能」指令片段；新增英文版 `README.en.md`，两份 README 顶部互相链接。
 
+## tealun-skills 1.0.0（2026-11-04）
+
+首个插件版本：仓库本身是一个合规的 Claude 插件，发布由推送 `v<版本>` tag 触发，CI 自动生成 GitHub Release。
+
+- 包含六个技能：`planner` 2.3.0、`tasker` 1.12.0、`bugfixer` 1.7.0、`auditor` 4.1.0、`evolver` 1.2.1、`explainer` 1.0.0。
+- 安装：在 claude.ai 打开 Customize > Plugins > Add > Upload plugin，上传 Release 里的 `tealun-skills-1.0.0.zip`（同一内容另附 `tealun-skills-1.0.0.plugin`）；在 Claude Code 里用 `/plugin marketplace add tealun/Tealun-Skills` 安装。同一个工具里只保留一种安装方式；从早先单独上传的技能升级时，先删掉旧的五个。
+- 新增 `.claude-plugin/plugin.json`，插件版本只在这一处记录。新增 `scripts/build_plugin.py`：校验插件清单、技能引用的文件、插件目录的提交规则，以及“技能改了就要升版本”，再可复现地打包。新增 `.github/workflows/release.yml`。新增 `docs/claude-directory-rules.md`。规划见 `docs/88_planning/plugin-release-20261104.md`。
+
 ## 现有技能
 
+- 插件 `tealun-skills` 1.0.0（六个技能的组合版本，见 `.claude-plugin/plugin.json`）
 - `planner` 2.3.0
 - `tasker` 1.12.0
 - `auditor` 4.1.0
