@@ -4,7 +4,7 @@ description: "Use for full-stack development-time bug fixing when the user repor
 argument-hint: "Describe the symptom, screenshot/log/error, expected behavior, affected environment, and any recent change."
 user-invocable: true
 disable-model-invocation: false
-version: 1.6.2
+version: 1.7.0
 ---
 
 # Bugfixer
@@ -15,7 +15,11 @@ When the newest user message corrects the direction, treat the mismatch with tha
 
 ## Discussion-aware Activation
 
-Enter Bugfixer immediately when an explicit symptom, failing check after a change (including CI, or an external platform rejecting an upload, publish or review), runtime error, or user feedback such as “still wrong” appears during another workflow. Do not wait for the user to invoke the skill or for a turn threshold. If the symptom is less explicit, this is the fallback threshold, and the only definition of it in the suite (Tasker and dev-pdca refer here): activate on the fourth diagnostic exchange that ends with the same concrete failure still unresolved. One diagnostic exchange is an assistant attempt to explain or change the failing behavior, followed by a user message or check result showing the failure remains. Greetings, status requests, tool polling, repeated confirmations, and unrelated discussion are not exchanges. Without a concrete failure, no count starts.
+Enter Bugfixer immediately when an explicit symptom, failing check after a change (including CI, or an external platform rejecting an upload, publish or review), runtime error, or user feedback such as “still wrong” appears during another workflow. Do not wait for the user to invoke the skill or for a turn threshold.
+
+What counts as “still wrong”: the user reports that delivered behavior is broken or does not do what was already agreed (“还是不对”, “doesn't work”, “same error”, a screenshot of the old symptom). A correction that changes or refines what was asked (wording, punctuation, style, naming, a different file inside the confirmed target, or scope) is a requirement change, not a defect: it stays with the surrounding workflow, which retreats to `clarify` or `plan` and reworks. When a message mixes both, the defect part comes here.
+
+If reproduction or direct observation shows the agreed result is actually in place (no defect), stop: report what you observed, with the command output, and hand back to the surrounding workflow without editing. When the report conflicts with an instruction the user gave earlier, quote both and ask which one stands; that is input no tool can obtain. If the symptom is less explicit, this is the fallback threshold, and the only definition of it in the suite (Tasker and dev-pdca refer here): activate on the fourth diagnostic exchange that ends with the same concrete failure still unresolved. One diagnostic exchange is an assistant attempt to explain or change the failing behavior, followed by a user message or check result showing the failure remains. Greetings, status requests, tool polling, repeated confirmations, and unrelated discussion are not exchanges. Without a concrete failure, no count starts.
 
 When Tasker encounters these signals, preserve its task contract and route the defect investigation here. Bugfixer owns diagnosis and repair until the original observable outcome passes; then return control to the surrounding workflow for its remaining acceptance checks.
 

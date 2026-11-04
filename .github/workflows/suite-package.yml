@@ -14,5 +14,7 @@ jobs:
           python-version: "3.12"
       - name: dev-pdca.zip matches the skill sources
         run: python3 scripts/build_suite.py --check
-      - name: evolution ledger IDs are unique
+      - name: evolution ledger and compliance log are well-formed
         run: python3 scripts/check_ledger.py
+      - name: script unit tests
+        run: python3 -m unittest discover -s tests
