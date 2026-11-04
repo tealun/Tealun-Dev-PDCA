@@ -1,6 +1,6 @@
 # 规划：遵守率监测与第三批修正
 
-状态：实现中 · 2026-11-04 · 前两批见 `review-followup-20261104.md`、`review-followup-2-20261104.md`
+状态：已实现（tasker 1.12.0、bugfixer 1.7.0、evolver 1.2.1、dev-pdca 1.5.0；台账 EV-20261104-003，EV-20261104-002 升级为 Institutionalized） · 2026-11-04 · 前两批见 `review-followup-20261104.md`、`review-followup-2-20261104.md`
 
 ## 1. 理解卡
 
