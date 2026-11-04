@@ -1,6 +1,6 @@
 # 规划：评审遗留项（第二批）
 
-状态：实现中 · 2026-11-04 · 上一批见 `review-followup-20261104.md`
+状态：已实现（tasker 1.11.0、evolver 1.2.0、planner 2.3.0、dev-pdca 1.4.0；台账 EV-20261104-002） · 2026-11-04 · 上一批见 `review-followup-20261104.md`
 
 ## 1. 理解卡
 
@@ -37,4 +37,35 @@
 | 项 | 证据形式 | 何时 |
 |---|---|---|
 | V1：Agent Skills 规范和 Claude Code 分别认哪些顶层字段，严格校验器是否拒绝规范外字段 | 已核实：agentskills.io/specification 字段表；skills-ref `validator.py` 的 `ALLOWED_FIELDS`；code.claude.com/docs/en/skills（这一页的字段表来自摘要，不是原文） | 已完成 |
-| V2：F9 试跑报告 | scratchpad 里的报告 | 发布前 |
+| V2：F9 试跑报告 | 已完成，见 §6 | 已完成 |
+
+## 6. 试跑结果（F9）
+
+全新 agent 只拿到 tasker 和 evolver 的 SKILL.md，在 scratchpad 的本仓库副本上跑了 4 个场景，判断结果都符合预期：
+- 在 SUPPORT.md 末尾加一行：走了快速通道，检查输出了 diff；
+- 修改 `build_suite.py` 的常量：判定为构建脚本，不走快速通道；
+- “把 README 改一改”：用户没指明具体改动，不走快速通道；
+- 两次纠正：evolver 在两个检查点各运行一次，都静默退出。
+
+它列出了 20 处指令问题。由本次改动引入的已经修复：
+- 快速通道与 `verification.md` 里“每个 M/L 任务都要读”冲突；
+- 快速通道收尾格式与 M/L 结构化输出冲突，“major deliveries”没有定义；
+- target 一栏比 Workspace Identity Gate 的要求少；
+- “不留设计选择”没有可判定的标准；
+- 快速通道确认和通用确认规则的关系不清楚；
+- evolver 检查点的时机，以及“周期”“被接受的纠正”没有定义；
+- Evidence Sweep 只写了 direct-mode 收尾，用的是只在 tracking mode 才有的候选登记；
+- 第一个检查点静默退出后，是否还影响收尾检查点。
+
+试跑还顺带发现 README 中英文第 33 行仍写着“开始跟踪”，已同步更新。
+
+改动之前就存在的问题，本次不处理，留作后续输入：
+- T5：写入前没有要求记录工作区里已有的未提交改动；
+- T6、T8：构建脚本的级别，以及“共享契约”没有定义；
+- T9：中英文平行文档是否属于必须同步的工作；
+- T10：没有下一步时，compact 输出要求的 next action 和 Delivery Gate 冲突；
+- T11：“末尾不要句号”这类细节纠正在字面上符合转 bugfixer 的条件；
+- T12：第一条回复前要检查多少内容；
+- E4：advisory 提议前要不要先查台账路径；
+- E7：守住了但输入错了的防线该怎么归类；
+- E8：“存在权威产物或负责人”这个条件几乎总能满足，起不到过滤作用。

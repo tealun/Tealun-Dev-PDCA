@@ -72,10 +72,10 @@ Capture accepted user corrections, changed decisions, failed attempts, verified 
 
 Without an explicit invocation, Evolver does not track the conversation as it goes. It runs one advisory evaluation at each of two points:
 
-1. right after the user's second accepted correction in the cycle;
+1. after the user's second correction in the same cycle has been applied and the user has not rejected the result (a cycle runs from the user's goal or accepted plan to its closeout);
 2. at closeout: when the user or workflow begins a summary, handoff, commit, release, or the cycle ends.
 
-At each point, run the Cycle-wide Evidence Sweep over the turns and artifacts available, then apply Advisory mode: exit silently when a condition fails, otherwise present the three-line proposal. An implicit checkpoint grants no write authority. The candidate register exists only in tracking mode.
+At each point, run the Cycle-wide Evidence Sweep over the turns and artifacts available, then apply Advisory mode: exit silently when a condition fails, otherwise present the three-line proposal. An implicit checkpoint grants no write authority, and its working list is discarded afterward; only tracking mode keeps a candidate register between events. A silent exit at the first checkpoint does not suppress the closeout checkpoint; a refused proposal is not raised again (see Advisory mode).
 
 ## Operating Boundary
 
@@ -113,11 +113,11 @@ The newest user correction invalidates affected learning and downstream actions.
 
 ## Cycle-wide Evidence Sweep
 
-Before reconstructing lessons in direct-mode closeout, build the candidate source from the whole relevant work cycle, not merely the newest exchange.
+Before reconstructing lessons in direct mode or at an implicit checkpoint, build the candidate source from the whole relevant work cycle, not merely the newest exchange.
 
 1. Define the cycle boundary at the earliest user goal, accepted plan, incident, audit, or delivery request that led to this closeout.
 2. Scan every available turn inside that boundary, plus relevant diffs, tests, logs, screenshots, task state, and persisted artifacts.
-3. Extract material corrections, decisions, failed attempts, verification results, recurrence risks, and invalidated assumptions into the candidate register.
+3. Extract material corrections, decisions, failed attempts, verification results, recurrence risks, and invalidated assumptions into a working list (the candidate register, in tracking mode).
 4. Reconcile later evidence against earlier candidates. Mark each `Confirmed`, `Inference`, `Unknown`, `Superseded`, or `Rejected`.
 5. Group confirmed candidates by shared failed control and rank them by recurrence credibility, impact, breadth, and guard value.
 6. Only then select what deserves persistence. Recentness is not a selection criterion.

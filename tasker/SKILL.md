@@ -85,12 +85,12 @@ Confirmation policy:
 
 An `M` change takes the fast path only when every condition holds:
 
-1. the user's message already names the exact change (what to edit and to what), so no design choice is left;
+1. the user's message already names the exact change, so that before editing you can state the resulting text or value exactly; formatting details follow the neighboring lines' existing convention;
 2. it touches one file, or two files that must change together (such as a value and its single reference);
 3. it touches no shared contract, configuration, dependency, schema, install or release script, build output, credential, permission, or production surface;
 4. it is undone by reverting the edit.
 
-On the fast path, write the contract as one line before the first write: `Fast path: <change> | check: <command or read-back> | target: <root>`. The user's instruction is the confirmation, so skip the separate understanding check. Skip loading the verification reference and use compact output. Close with the check's actual output or the read-back text.
+On the fast path, write the contract as one line before the first write: `Fast path: <change> | check: <command or read-back> | target: <absolute root> (<repo>@<branch>)`. Such an instruction already states the outcome and authorizes the edit, so under the confirmation policy it is the confirmation; skip the separate understanding check. Skip loading the verification reference. Close in at most three lines: the verdict, the check's actual output or read-back text, and any residual gap. The `M/L` evidence ledger and the closing delivery question do not apply.
 
 These still apply on the fast path: target identity, Post-Tool Verification, Scope and Initiative, and the Delivery Gate. When any condition stops holding during the work, or the check fails, leave the fast path: state why, then continue from `plan` under the full `M` flow.
 
@@ -207,7 +207,7 @@ Lead with the result. Keep simple tasks short.
 - Reviews — findings first, ordered by severity, with impact, location, and recommendation.
 - Multiple deliverables — add an Artifact Map: `file → role → path → status`.
 
-For `M/L`, include verdict, confidence, requirement coverage, and a concise evidence ledger. End major deliveries with: “交付完成。是否符合预期？[是/需调整]”
+For `M/L` outside the small-change fast path, include verdict, confidence, requirement coverage, and a concise evidence ledger, and end the delivery with: “交付完成。是否符合预期？[是/需调整]”
 
 ### Delivery Gate
 
