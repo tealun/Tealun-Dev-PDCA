@@ -1,10 +1,10 @@
 ---
 name: tasker
-description: 'Use for task execution, debugging, implementation, analysis, review, planning, workflow execution, and user dissatisfaction handling. During execution, route automatically to $bugfixer when a post-change check fails (including CI, or an external platform rejecting an upload, publish or review), the user says the result is still wrong, an explicit runtime symptom appears, or roughly four substantive unresolved diagnostic exchanges accumulate with concrete failure evidence; resume the Tasker contract after the defect is verified. 任务执行、调试排难、代码实现、问题分析、代码评审、任务拆解、用户不满处理、升级处理；CI 失败、外部平台上传或审核被拒时转 bugfixer。'
+description: 'Use to carry out a change to files or state as a checkable contract: implementation, edits, configuration, refactors, scripted operations and multi-step workflow execution, including rework after the user is dissatisfied with a delivered result. Settle a done-definition and an executable check before acting, confirm side effects, and close with evidence. Route elsewhere instead: concrete failures, failing checks or "still wrong" go to $bugfixer (Tasker hands over itself when this happens mid-task); independent review or audit goes to $auditor; planning before code goes to $planner; explaining code goes to $explainer; retrospectives go to $evolver. 执行改动：代码实现、修改文件与配置、重构、脚本操作、多步任务执行；先定完成定义和可执行检查，收尾给证据。报错与“还是不对”用 bugfixer，评审审计用 auditor，前期规划用 planner，读懂代码用 explainer，复盘用 evolver。'
 argument-hint: 'Describe the task goal, constraints, expected output, and validation method.'
 user-invocable: true
 disable-model-invocation: false
-version: 1.9.0
+version: 1.10.0
 ---
 
 # Tasker
@@ -53,7 +53,7 @@ Retreat when evidence invalidates the current stage: execution failure → `plan
 
 ### Bugfixer route
 
-Route from Tasker to `$bugfixer` immediately when a post-change check fails (including CI, or an external platform rejecting an upload, publish or review), the user reports “still wrong” or equivalent rejected behavior, a concrete runtime symptom appears, or a previous repair missed its predicted outcome. As a fallback, route after roughly four substantive unresolved diagnostic exchanges only when at least one concrete failure is present. Do not count greetings, confirmations, status checks, tool polling, or unrelated discussion.
+Route from Tasker to `$bugfixer` immediately when a post-change check fails (including CI, or an external platform rejecting an upload, publish or review), the user reports “still wrong” or equivalent rejected behavior, a concrete runtime symptom appears, or a previous repair missed its predicted outcome. When none of these is explicit but diagnosis keeps going around, apply the fallback threshold defined once in Bugfixer's Discussion-aware Activation; Tasker does not keep its own count.
 
 Preserve Tasker's `done_definition`, scope, target identity, and protected invariants across the route. Let Bugfixer run the evidence-led diagnosis and verify the reported symptom; then resume Tasker at `verify` or the earliest invalidated stage. Do not run both workflows as duplicate parallel commentary.
 

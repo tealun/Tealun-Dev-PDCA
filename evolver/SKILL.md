@@ -1,7 +1,10 @@
 ---
 name: evolver
-description: "Track verified fixes, findings, corrections, decisions, failed attempts, and delivery lessons across a work cycle; distill worthwhile items into durable guards, mandatory project evolution-ledger records, planning gates, rules, skill refinements, and next-cycle inputs. Use when the user invokes $evolver, asks to follow the conversation, close the PDCA loop, prevent recurrence, persist/落盘/固化 lessons, or improve future work. Also engage silent implicit tracking after a second accepted correction, a failed attempt changes the approach, a third work phase begins, three material candidates accumulate, or closeout/commit/release begins. At implicit closeout, exit silently if no durable action is worthwhile; otherwise propose one and await confirmation. Explicit invocation or persistence requests authorize safe local writes. Do not use for unresolved symptoms or broad discovery audits."
-version: 1.0.0
+description: "Track verified fixes, findings, corrections, decisions, failed attempts, and delivery lessons across a work cycle; distill worthwhile items into durable guards, mandatory project evolution-ledger records, planning gates, rules, skill refinements, and next-cycle inputs. Use when the user invokes $evolver, asks for a retrospective or to learn from what happened, asks to follow the conversation, close the PDCA loop, prevent recurrence, or persist lessons, or when a work cycle closes. Also engage silent implicit tracking after a second accepted correction, a failed attempt changes the approach, a third work phase begins, three material candidates accumulate, or closeout/commit/release begins. Do not use for unresolved symptoms or broad discovery audits. 复盘、总结经验、吸取教训、下次别再犯、防止再犯、沉淀经验、落盘、固化规则、闭环。"
+argument-hint: "Name the lesson, fix or correction to close, its evidence, and whether to persist now or only propose."
+user-invocable: true
+disable-model-invocation: false
+version: 1.1.0
 ---
 
 # Evolver

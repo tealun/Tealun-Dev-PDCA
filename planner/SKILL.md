@@ -4,7 +4,7 @@ description: "Use when a user wants an AI agent to guide early-stage project pla
 argument-hint: "Describe the project idea, current context, constraints, target users, expected planning artifacts, and what is already decided."
 user-invocable: true
 disable-model-invocation: false
-version: 2.1.0
+version: 2.2.0
 ---
 
 # Planner
@@ -36,7 +36,7 @@ Use one short reverse-confirmation sentence when the work would create the first
 
 ## Interaction Loop
 
-1. **Inspect and summarize.** Identify whether the work is greenfield, migration, rewrite, or expansion. Read relevant README/agent instructions, docs, package/runtime files, database assets, deployment files, and recent audits.
+1. **Inspect and summarize.** Identify whether the work is greenfield, migration, rewrite, or expansion. Read relevant README/agent instructions, docs, package/runtime files, database assets, deployment files, and recent audits. If the project keeps an evolution ledger (the established one, or `docs/98_evolution/evolution-ledger.md`), read it before deciding anything: take every row whose `Next Planning Input` touches the area being planned, and carry each into `Decisions` or `To Verify`, or state in one line why it does not apply. A ledger that exists but was not read means the inspection step is incomplete.
 2. **Present an understanding card.** Summarize target users, problem, first-stage goal, main workflow, constraints, risks, and architecture-affecting unknowns. Ask for correction only where an error would change the plan.
 3. **Maintain three ledgers.** Keep `Decisions`, `Assumptions`, and `To Verify`. Give each `To Verify` item an evidence format and an M0/M1 owner; never leave it as loose chat or a hidden core-doc TODO.
 4. **Ask only blockers.** Prefer one to three questions per turn and state what each answer unlocks. If a reasonable default is safe, record it and continue.
@@ -82,6 +82,7 @@ Check consistency, architecture fit, schema viability, isolation/security, exter
 End with:
 
 - artifacts created or updated and the role of each;
+- evolution-ledger rows consumed (IDs) and where each landed, or `none relevant`;
 - remaining questions and the gate that owns each;
 - decisions and assumptions that materially shape implementation;
 - the exact next artifact or executable phase;
