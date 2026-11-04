@@ -30,7 +30,7 @@
 | M5 | 用 Python 标准库 `unittest` 给 `append_evolution_ledger.py`、`check_ledger.py`、`build_suite.py` 的校验函数写测试，接入 CI | 不新增依赖 |
 | M6 | `check_ledger.py` 同时检查 compliance-log：每行 7 列，Gate 只能是 G1–G5，适用、遵守、记录方式的取值限定在规定集合内 | 定时任务会自动追加，格式漂移必须被拦下 |
 | M7 | 版本：tasker 1.12.0、bugfixer 1.7.0、evolver 1.2.1、dev-pdca 1.5.0 | 改了触发和输出行为 |
-| M8 | 定时任务 `trig_01F223FXgcCZtDofjzVo9T7v`，每周一 02:17 UTC，首次 2026-11-09。创建时系统提示它不带 connector；读会话记录用的是云端会话自带的工具，开 PR 能否成功需要在首次运行时验证 | 见 §5 |
+| M8 | 定时审计改为绑定本会话（`trig_01LJbnpYL5EkX54SD6jBqTEY`，每周一 02:17 UTC，首次 2026-11-09），由本会话派独立 agent 打分。原先每次新开会话的任务 `trig_01F223FXgcCZtDofjzVo9T7v` 已停用 | 2026-11-04 手动验证：新开的会话（`cse_01MaaD3mGBattqaEHyKbark5`）的工具列表里没有 `list_sessions` / `list_events`，读不到会话记录，审计中止，没有写入任何内容。本会话有这两个工具，补录数据时已实际用过 |
 
 ## 5. 第二次试跑（全新 agent，只拿到 tasker、bugfixer、evolver 的 SKILL.md）
 
@@ -43,5 +43,5 @@
 
 | 项 | 证据形式 | 何时 |
 |---|---|---|
-| V1：定时审计首次运行能读到会话记录并开出 PR | 首次运行的会话和 PR | 2026-11-09，或合并后手动触发一次 |
+| V1：定时审计能读到会话记录并开出 PR | 新开会话的方案：未通过（缺少读会话的工具，见 M8）。改为绑定本会话后，读会话这一步已在补录时验证过；开 PR 这一步待首次运行 | 2026-11-09 |
 | V2：第二次试跑后的修正有没有引入新冲突 | 下一次试跑 | 下次修改 tasker 时 |
