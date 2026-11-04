@@ -4,7 +4,7 @@ description: 'Use to carry out a change to files or state as a checkable contrac
 argument-hint: 'Describe the task goal, constraints, expected output, and validation method.'
 user-invocable: true
 disable-model-invocation: false
-version: 1.10.0
+version: 1.11.0
 ---
 
 # Tasker
@@ -27,9 +27,11 @@ Default to compact output. Use structured output for `L`, reviews, or when the u
 
 Load supporting detail only when its trigger applies:
 
-- Read [references/verification.md](references/verification.md) before executing `M/L` work and use it through `verify` and `close`.
+- Read [references/verification.md](references/verification.md) before executing `M/L` work outside the small-change fast path, and use it through `verify` and `close`.
 - Read [references/recovery.md](references/recovery.md) after two failures of the same approach, when progress stalls, or before reporting `Blocked`.
 - Read [references/handoff.md](references/handoff.md) before proposing or preparing delegation.
+- Read [references/code-commenting.md](references/code-commenting.md) before development-code work that asks to add comments or documentation-style explanations, or to improve maintainability through comments.
+- Read [references/commit-closeout.md](references/commit-closeout.md) before any commit or push the user requested, and at checkpoint commits in multi-phase `M/L` work.
 
 Do not load these files for simple `S` tasks.
 
@@ -79,6 +81,19 @@ Confirmation policy:
 - `M/L` require an understanding check: “I understand the outcome is [X], validated by [Y], and failure means [Z]. Correct?”
 - A prior explicit user instruction counts as confirmation only when it already states the same outcome and authorizes the relevant side effect.
 
+### Small-change fast path
+
+An `M` change takes the fast path only when every condition holds:
+
+1. the user's message already names the exact change (what to edit and to what), so no design choice is left;
+2. it touches one file, or two files that must change together (such as a value and its single reference);
+3. it touches no shared contract, configuration, dependency, schema, install or release script, build output, credential, permission, or production surface;
+4. it is undone by reverting the edit.
+
+On the fast path, write the contract as one line before the first write: `Fast path: <change> | check: <command or read-back> | target: <root>`. The user's instruction is the confirmation, so skip the separate understanding check. Skip loading the verification reference and use compact output. Close with the check's actual output or the read-back text.
+
+These still apply on the fast path: target identity, Post-Tool Verification, Scope and Initiative, and the Delivery Gate. When any condition stops holding during the work, or the check fails, leave the fast path: state why, then continue from `plan` under the full `M` flow.
+
 ### Acceptance Gate
 
 Before `execute`, define:
@@ -92,14 +107,6 @@ Before `execute`, define:
 When the deliverable is submitted to an external system (a marketplace, registry, store, review queue or CI), its acceptance rules are part of `done_definition`. Collect them before the first submission and turn them into a local check where possible; do not discover them one rejection at a time. A rejection is a failed check: route to `$bugfixer`.
 
 Missing any material item means remain in `clarify` or `plan`. `L` requires at least one external anchor such as automated tests, static analysis, user acceptance, or independent review.
-
-### Code Commenting Gate
-
-Use this gate only for development-code work that asks to add comments, add documentation-style explanations, or improve maintainability/readability through comments. Before execution, sample the target files and record in the execution contract: the project's primary developer-facing language, existing comment style, comment density, and the user's maintainability expectation. Unless the user requests otherwise, new comments must use the project's primary developer-facing language.
-
-For comment-focused work, do not satisfy the task with scattered inline notes. Prefer concise, human-maintainer entry points at the module, class, method, and function level, covering responsibility, inputs and outputs, key business constraints, boundary conditions, side effects, permissions/security/tenant semantics, and intentional tradeoffs when relevant. Use inline comments only for non-obvious logic inside an implementation. Do not use English or mechanically fragmented comments as a substitute for maintainable method-level explanations when the project faces developers in another language.
-
-If the evidence shows the user expects a systematic readability improvement, plan and verify the work by file or coherent batch before editing. Do not casually pick a few code points to annotate and call the request complete.
 
 ### Workspace Identity Gate
 
@@ -139,7 +146,7 @@ Apply the smallest solution that satisfies `done_definition`.
 
 - Do not add unrelated cleanup, refactors, features, abstractions, or dependencies.
 - Match existing conventions and prefer simple, maintainable changes.
-- Only for development code changes, follow the project's programming language, framework, and existing comment style. Add concise comments or docstrings where they improve maintainability, and apply the Code Commenting Gate for comment-focused or maintainability-through-comments tasks.
+- Only for development code changes, follow the project's programming language, framework, and existing comment style. Add concise comments or docstrings where they improve maintainability, and apply [references/code-commenting.md](references/code-commenting.md) for comment-focused or maintainability-through-comments tasks.
 - For `M/L`, inspect the smallest credible impact surface: callers, consumers, shared contracts, configuration, and failure paths.
 - Classify adjacent findings as **required**, **optional**, or **unrelated**. Change required items, report optional items, and leave unrelated items untouched.
 - If a required discovery materially expands scope, retreat to `clarify`; do not expand silently.
@@ -188,18 +195,6 @@ Before `close`, ensure:
 - The actual change matches the allowed scope; deviations are explained.
 - Important preserved behavior was checked in proportion to risk.
 - Residual assumptions, untested paths, and limitations are explicit.
-
-### Commit and Push Closeout
-
-When the user explicitly requests a commit or push, treat delivery verification as part of the acceptance gate:
-
-- Capture `git status --short` before staging and classify every tracked or untracked change as task-owned, user-owned, generated, or unrelated.
-- Stage exact task-owned paths; preserve user-owned and unrelated worktree changes unless the user explicitly includes them.
-- After committing, read back the commit ID and stat, then confirm the local branch points at that commit.
-- After pushing, compare the remote branch SHA with the local commit SHA. Report any remaining uncommitted paths separately from the pushed artifact.
-- If the requested repository path is corrected during the task, stop mutation, restate the concrete path mapping, and repeat the workspace identity check before continuing.
-
-For multi-phase `M/L` work, use checkpoint commits at meaningful phase boundaries after that phase's targeted checks pass; do not defer all persistence until final closeout. Before each checkpoint, classify and remove only exact, known generated test/cache/log artifacts that are inside the task scope. Preserve runtime business data, backups, user files, and unrelated changes; when retention is uncertain, leave the path untouched and report it. Re-run `git status --short` after cleanup and after each checkpoint.
 
 If progress remains possible, retreat instead of closing with a weaker verdict. “I would only be guessing” is not a terminal condition when source inspection, logs, runtime state, instrumentation, focused tests, or competing-hypothesis checks can still produce evidence.
 
