@@ -24,7 +24,11 @@
 | 提交和验证期间仓库可以是私有的，上架前必须公开 | 提交 | 不校验：仓库是否公开是 GitHub 设置；提交时由用户在开发者门户确认 |
 | 每个插件文件夹单独提交一次；同一组织对同一仓库加文件夹只能有一个提交 | 提交 | 不校验：本仓库只有一个插件文件夹 |
 | 每个组织 24 小时内最多创建 10 个提交，草稿和撤回的提交也计入 | 提交 | 不校验：属于门户操作次数 |
-| 首次提交之后，目录跟踪的分支一有新提交就会扫描、检查、发布；本仓库跟踪 `main`，并手动 Publish（用户 2026-11-04 决定） | 提交 | 不校验：在门户里设置 |
+| 首次提交之后，目录跟踪的分支一有新提交就会扫描、检查、发布；本仓库跟踪 `plugin` 分支（2026-11-05 起，见下文“扫描范围”） | 提交 | 不校验：在门户里设置 |
+| 第一个版本必须由 Anthropic 审核员批准才能上线；在此之前点 Publish 只是登记一个请求。门户的 Auto-publish 开关只对之后通过检查的版本生效 | 门户 | 不校验：门户流程。2026-11-05 提交时开关保持开启，门户显示“暂不适用：本插件的每个版本都要经审核员” |
+| 同一仓库加文件夹已有提交（含草稿）时，再新建会报 `SUBMISSION_EXISTS`；继续已保存的草稿时，仓库、文件夹和分支都不能改，要换来源只能删掉草稿重建 | 门户 | 不校验：门户操作。本仓库的草稿创建于切换分支之前，继续时 Source 已显示跟踪 `plugin` |
+| 目录每约 6 小时检查一次跟踪的分支；配置 GitHub push webhook 后，推送几分钟内就会被拾取。webhook 的 secret 只显示一次 | 门户 | 不校验：仓库设置。2026-11-05 已配置，GitHub 显示首次投递成功，门户显示 Webhook connected |
+| 提交时要回答数据处理问卷（个人数据、外发数据、数据保留、是否面向未成年人）并勾选 4 项合规声明，答案要和 `PRIVACY.md` 一致 | 门户 | 不校验：问卷属于门户操作。本插件的答案是 No · No · Not retained · No；唯一的脚本 `evolver/scripts/append_evolution_ledger.py` 只在本地调用 `git rev-parse`，没有网络访问 |
 | 每次扫描都会按目录规则重新校验，并做安全扫描（未披露的外发数据、隐藏代码、修改权限设置）；首次提交没通过安全扫描会直接被拒；另有政策审核 | 提交 | 部分校验：`claude plugin validate` 只覆盖目录规则的一部分，不做安全扫描和政策审核 |
 
 ## 清单（plugin.json）
@@ -79,6 +83,18 @@
 | Field from another tool's manifest（`icon`） | warning | `plugin.json` | 页面说明不需要处理 |
 
 处理方式：由 `.github/workflows/plugin-branch.yml` 把打包好的插件（技能、`plugin.json`、README、LICENSE、图标）提交到 `plugin` 分支，插件目录改为跟踪这个分支，插件路径留空。用本地 CLI 对这个分支的内容做 validate，结果是 "These checks found nothing to report"，导出内容和存储内容一致。
+
+## 首次提交的扫描结果（v1.0.1 · `plugin @ 596d45e`，2026-11-05）
+
+安全扫描通过（用时 3 分钟），目录政策“通过但有 warning”，状态为 In review，已点 Publish 请求审核员发布。门户报出的项：
+
+| 门户报出的项 | 代码 | 级别 | 处理方式 |
+| --- | --- | --- | --- |
+| Images and fonts passed without a code check：`assets/dev-pdca-avatar.png` | `ASSETS_PASSED_UNREAD` | note | 不处理：格式正确的图片不按代码读取，其中可打印的文字仍会被筛查 |
+| Unrecognized field in plugin.json：`documentationUrl`、`privacyPolicyUrl`、`supportUrl` | `UNKNOWN_KEY` | warning | 不处理：这三个是只供上架页读取的字段，Claude Code 加载时忽略；门户写明 No action needed |
+| Field from another tool's manifest：`icon` | `UNKNOWN_KEY_CROSS_TOOL` | warning | 不处理：目录读取 `icon` 作为上架图标，Claude Code 加载时忽略；门户写明 No action needed |
+
+这些项不写成本地检查：它们是对合法字段的提示，不是错误。`build_plugin.py --check` 要求 `icon` 指向的文件存在，三个链接字段由 `plugin.json` 维护。
 
 ## 已解决的问题
 
