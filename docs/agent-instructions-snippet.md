@@ -21,7 +21,7 @@ English version: [below](#english-snippet).
 ```markdown
 ## 配套技能：要调用，不要只“照着精神做”
 
-本项目使用 Tealun Skills（planner、tasker、bugfixer、auditor、evolver、explainer）。触发条件满足时，通过技能工具调用对应技能（或读取它的 SKILL.md 并按步骤执行）；只按“大意”去做不算调用。每个会话的第一条回复，先说明这六个技能里哪些可用；缺哪个就直说。
+本项目使用 Tealun Dev PDCA（planner、tasker、bugfixer、auditor、evolver、explainer）。触发条件满足时，通过技能工具调用对应技能（或读取它的 SKILL.md 并按步骤执行）；只按“大意”去做不算调用。每个会话的第一条回复，先说明这六个技能里哪些可用；缺哪个就直说。
 
 - **planner：任何规划意图，不论大小。** 功能、页面、URL 或站点结构调整、数据或 schema 变更、重构、发布、路线图、文档体系或流程。在写代码或内容之前调用，先把决定写进对应文档。
 - **tasker：任何对文件或状态的改动。** 动手前写清完成定义和一个可执行的检查；收尾时给出证据（命令输出、截图），不要只给描述。只读的问答不需要。
@@ -36,7 +36,7 @@ English version: [below](#english-snippet).
 ```markdown
 ## Companion skills: invoke them, do not just follow their spirit
 
-This project uses the Tealun Skills (planner, tasker, bugfixer, auditor, evolver, explainer). When a trigger below applies, invoke the matching skill through the skill tool (or read its SKILL.md and follow it). Following the general idea without invoking it does not count. In the first reply of every session, state which of the six skills are available; if one is missing, say so.
+This project uses Tealun Dev PDCA (planner, tasker, bugfixer, auditor, evolver, explainer). When a trigger below applies, invoke the matching skill through the skill tool (or read its SKILL.md and follow it). Following the general idea without invoking it does not count. In the first reply of every session, state which of the six skills are available; if one is missing, say so.
 
 - **planner: every planning intent, whatever its size.** A feature, a page, a URL or site-structure change, a data or schema change, a refactor, a release, a roadmap, a doc system or process. Invoke it before writing code or content, and record the decisions in the relevant doc first.
 - **tasker: every change to files or state.** Set the done definition and an executable check before editing; finish with evidence (command output, screenshots), not a description. Read-only answers are exempt.
@@ -55,12 +55,12 @@ This project uses the Tealun Skills (planner, tasker, bugfixer, auditor, evolver
 1. 把某个提交的完整内容复制到项目里，例如 `skills/tealun/upstream/`：
 
    ```bash
-   git clone --depth 1 https://github.com/tealun/Tealun-Skills.git /tmp/tealun-skills
+   git clone --depth 1 https://github.com/tealun/tealun-dev-pdca.git /tmp/tealun-dev-pdca
    mkdir -p skills/tealun
    rm -rf skills/tealun/upstream
-   cp -R /tmp/tealun-skills skills/tealun/upstream
+   cp -R /tmp/tealun-dev-pdca skills/tealun/upstream
    rm -rf skills/tealun/upstream/.git
-   git -C /tmp/tealun-skills rev-parse HEAD   # 记下这个提交号
+   git -C /tmp/tealun-dev-pdca rev-parse HEAD   # 记下这个提交号
    ```
 
 2. 在 `skills/tealun/UPSTREAM.md` 里记下来源仓库、提交号、日期和许可证（MIT），并写明：不要在项目里直接改这些文件，要更新就从新的提交整体替换目录，同时更新这张表。

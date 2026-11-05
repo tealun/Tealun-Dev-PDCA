@@ -33,7 +33,7 @@ jobs:
       - name: build the plugin
         run: python3 scripts/build_plugin.py
       - name: validate with the Claude Code CLI (no skip when it is unavailable)
-        run: npx -y @anthropic-ai/claude-code@2.1.318 plugin validate dist/tealun-skills/.claude-plugin/plugin.json
+        run: npx -y @anthropic-ai/claude-code@2.1.318 plugin validate dist/tealun-dev-pdca/.claude-plugin/plugin.json
       - name: release notes from CHANGELOG
         run: python3 scripts/build_plugin.py --notes "$RUNNER_TEMP/notes.md"
       - name: create the GitHub Release
@@ -42,8 +42,8 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#v}"
           gh release create "$GITHUB_REF_NAME" \
-            "dist/tealun-skills-${version}.plugin" \
-            "dist/tealun-skills-${version}.zip" \
+            "dist/tealun-dev-pdca-${version}.plugin" \
+            "dist/tealun-dev-pdca-${version}.zip" \
             dev-pdca.zip \
-            --title "Tealun Skills ${version}" \
+            --title "Tealun Dev PDCA ${version}" \
             --notes-file "$RUNNER_TEMP/notes.md"

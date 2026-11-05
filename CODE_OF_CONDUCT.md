@@ -1,6 +1,6 @@
 # Code of Conduct
 
-Tealun Skills 希望保持一个友好、清晰、尊重事实的协作环境。
+Tealun Dev PDCA 希望保持一个友好、清晰、尊重事实的协作环境。
 
 ## 我们鼓励
 

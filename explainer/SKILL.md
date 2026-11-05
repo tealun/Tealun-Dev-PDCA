@@ -75,3 +75,7 @@ In the conversation, give the short answer, the pages written or updated, the ba
 - **Before change work.** When the user is about to have `$tasker` or `$bugfixer` change an area they do not understand, run a feature trace or change impact first so they can confirm the target.
 - **After change work.** When a feature is finished, a fix is verified, or `$auditor` closes an audit, offer to refresh the project map and add a change explanation for the commits since the recorded baseline.
 - **Out of scope.** A reported symptom goes to `$bugfixer`; a request for risk findings goes to `$auditor`; a decision about what to build goes to `$planner`; a lesson to keep goes to `$evolver`.
+
+---
+
+Part of Tealun Dev PDCA by Tealun · https://github.com/tealun/tealun-dev-pdca · MIT

@@ -95,3 +95,7 @@ Do create or update planning docs, schema drafts, migration plans, audit gates, 
 Do not implement production business code unless the user explicitly moves out of planning. Do not invent external-platform facts, create broad scaffolding for appearance, overwrite an established repository convention without reason, or treat generated docs as authoritative when code or existing source-of-truth files contradict them.
 
 For a small request, return the next useful checklist or artifact directly. For a full planning cycle, provide the understanding card, ledgers, blockers, proposed artifact map, M0/M1 gates, and readiness verdict.
+
+---
+
+Part of Tealun Dev PDCA by Tealun · https://github.com/tealun/tealun-dev-pdca · MIT

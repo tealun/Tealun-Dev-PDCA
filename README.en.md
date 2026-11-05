@@ -1,10 +1,10 @@
-# Tealun Skills
+# Tealun Dev PDCA
 
 [中文](README.md) | English
 
 Less "I think I did it" from your AI agent, more "here is the proof I did it".
 
-Tealun Skills organises AI-assisted development as a PDCA loop (Plan, Do, Check, Act): five skills, each owning one stage, handing work to one another so the loop closes, plus a read-only `explainer` that translates AI-written code into explanations people who do not read code can follow. You can sync them into the local skill folders of your agent tools, install them as a Claude Code plugin, or build a single suite package (`dev-pdca`) for platforms that accept only one skill per upload. It is for people who already use Codex, Claude Code, Cursor, Gemini, Kimi, OpenCode, or a shared `.agents/skills` folder. You keep your tools; the agent gets a few steadier ways of working.
+Tealun Dev PDCA organises AI-assisted development as a PDCA loop (Plan, Do, Check, Act): five skills, each owning one stage, handing work to one another so the loop closes, plus a read-only `explainer` that translates AI-written code into explanations people who do not read code can follow. You can sync them into the local skill folders of your agent tools, install them as a Claude Code plugin, or build a single suite package (`dev-pdca`) for platforms that accept only one skill per upload. It is for people who already use Codex, Claude Code, Cursor, Gemini, Kimi, OpenCode, or a shared `.agents/skills` folder. You keep your tools; the agent gets a few steadier ways of working.
 
 ## The problems it targets
 
@@ -45,31 +45,31 @@ Each of the three routes installs the whole set at once. Pick the one that fits 
 
 With the first two routes the six skills are installed separately and each triggers from its own description, which gives the sharpest triggering from a cold start. The suite package puts all six inside one skill; its entry routes requests and keeps the hand-off rules in force for the whole session.
 
-In Claude Code, do not use both routes, or each skill appears twice (`tasker` and `tealun-skills:tasker`). The sync script also writes to `~/.claude/skills` whenever it detects Claude; if you installed the plugin, you can delete those six folders under `~/.claude/skills` after running the script.
+In Claude Code, do not use both routes, or each skill appears twice (`tasker` and `dev-pdca:tasker`). The sync script also writes to `~/.claude/skills` whenever it detects Claude; if you installed the plugin, you can delete those six folders under `~/.claude/skills` after running the script.
 
 ### Option 1: Claude Code plugin marketplace
 
 In a Claude Code session:
 
 ```text
-/plugin marketplace add tealun/Tealun-Skills
-/plugin install tealun-skills@tealun-skills
+/plugin marketplace add tealun/tealun-dev-pdca
+/plugin install dev-pdca@tealun
 ```
 
 The same from a terminal:
 
 ```bash
-claude plugin marketplace add tealun/Tealun-Skills
-claude plugin install tealun-skills@tealun-skills
+claude plugin marketplace add tealun/tealun-dev-pdca
+claude plugin install dev-pdca@tealun
 ```
 
-Start a new session afterwards and all six skills load. Plugin skills carry a prefix, so to call one by hand you type `/tealun-skills:tasker`, `/tealun-skills:bugfixer` and so on. Automatic selection works the same as before.
+Start a new session afterwards and all six skills load. Plugin skills carry a prefix, so to call one by hand you type `/dev-pdca:tasker`, `/dev-pdca:bugfixer` and so on. Automatic selection works the same as before.
 
-To update: `/plugin marketplace update tealun-skills`. You can also turn on auto-update for this marketplace under Marketplaces in `/plugin`.
+To update: `/plugin marketplace update tealun`. You can also turn on auto-update for this marketplace under Marketplaces in `/plugin`.
 
 ### claude.ai: one-click install
 
-1. Open the [latest Release](https://github.com/tealun/Tealun-Skills/releases/latest) and download `tealun-skills-<version>.zip`. The same package is also attached with a `.plugin` suffix; the contents are identical.
+1. Open the [latest Release](https://github.com/tealun/tealun-dev-pdca/releases/latest) and download `tealun-dev-pdca-<version>.zip`. The same package is also attached with a `.plugin` suffix; the contents are identical.
 2. In claude.ai, open Customize > Plugins > Add > Upload plugin and upload the zip.
 
 Keep one install route per tool, or each skill appears twice. If you uploaded planner, tasker, bugfixer, auditor and evolver as separate skills before, delete those five in your skill settings first, then install the plugin. When a new plugin version is released, download it and upload it again.
@@ -81,8 +81,8 @@ Sync the skills from this repository into the `skills` folders of your local age
 #### Windows
 
 ```powershell
-git clone https://github.com/tealun/Tealun-Skills.git
-cd Tealun-Skills
+git clone https://github.com/tealun/tealun-dev-pdca.git
+cd tealun-dev-pdca
 .\sync-skills.ps1 --list-targets
 $env:DRY_RUN = '1'
 .\sync-skills.ps1
@@ -93,8 +93,8 @@ Remove-Item Env:\DRY_RUN
 #### macOS / Linux
 
 ```bash
-git clone https://github.com/tealun/Tealun-Skills.git
-cd Tealun-Skills
+git clone https://github.com/tealun/tealun-dev-pdca.git
+cd tealun-dev-pdca
 bash ./sync-skills.sh --list-targets
 DRY_RUN=1 bash ./sync-skills.sh
 bash ./sync-skills.sh
@@ -141,7 +141,7 @@ Copy this into your project's instruction file:
 ```markdown
 ## Companion skills: invoke them, do not just follow their spirit
 
-This project uses the Tealun Skills (planner, tasker, bugfixer, auditor, evolver, explainer). When a trigger below applies, invoke the matching skill through the skill tool (or read its SKILL.md and follow it). Following the general idea without invoking it does not count. In the first reply of every session, state which of the six skills are available; if one is missing, say so.
+This project uses Tealun Dev PDCA (planner, tasker, bugfixer, auditor, evolver, explainer). When a trigger below applies, invoke the matching skill through the skill tool (or read its SKILL.md and follow it). Following the general idea without invoking it does not count. In the first reply of every session, state which of the six skills are available; if one is missing, say so.
 
 - **planner: every planning intent, whatever its size.** A feature, a page, a URL or site-structure change, a data or schema change, a refactor, a release, a roadmap, a doc system or process. Invoke it before writing code or content, and record the decisions in the relevant doc first.
 - **tasker: every change to files or state.** Set the done definition and an executable check before editing; finish with evidence (command output, screenshots), not a description. Read-only answers are exempt.
@@ -213,7 +213,7 @@ The script copies over the existing content: skills from this repository are wri
 
 ## Updating
 
-Installed through the plugin marketplace: run `/plugin marketplace update tealun-skills` in Claude Code.
+Installed through the plugin marketplace: run `/plugin marketplace update tealun` in Claude Code.
 
 Installed with the sync script: pull the latest version and run the script again.
 

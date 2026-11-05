@@ -244,3 +244,7 @@ If the same cause recurs twice in the session, make its safeguard mandatory for 
 - Carry this state line across long work or context compaction: `State: <stage> | Level: <S/M/L> | done: <done_definition>`.
 - On resume, continue from current artifacts and evidence; do not restart completed work.
 - A repository switch or ambiguous project correction invalidates the current `target_identity`; reacquire the Workspace Identity Gate before continuing.
+
+---
+
+Part of Tealun Dev PDCA by Tealun · https://github.com/tealun/tealun-dev-pdca · MIT

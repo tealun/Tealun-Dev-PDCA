@@ -17,12 +17,12 @@ category: developer
 description: "PDCA development loop for AI coding agents: one entry that routes to six evidence-first sub-skills. Plan = planner, Do = tasker, Check = auditor (and bugfixer when a check fails), Act = evolver, plus explainer for read-only plain-language code explanations. Use for software development work: project planning, requirements, architecture, M0/M1; implementing or changing code and docs with verification; bugs, errors, 500s, regressions, wrong-looking screenshots, 'still wrong'; audits, code review, security or release checks; retrospectives, preventing recurrence, persisting lessons; explaining a codebase, a feature flow, change impact or a commit to a non-coder. 开发闭环（PDCA）：项目规划、需求梳理、技术方案；任务执行、代码实现；修 bug、报错、还是不对、CI 失败、上传或审核被拒；审计、代码评审、安全检查；复盘、防止复发、经验固化；看懂项目、功能追踪、改动影响、读懂提交。Once active, keep its routing rules for the rest of the session."
 argument-hint: "Optional: name a stage or skill, then the task. e.g. 审计 当前项目 / 修复 这个 500 报错 / planner M0 计划"
 user-invocable: true
-version: 1.5.0
+version: 1.5.1
 ---
 
 # dev-pdca
 
-One entry for the Tealun Skills suite. It runs software work as a PDCA loop and hands each stage to the sub-skill that owns it. This file only routes; the sub-skills do the work.
+One entry for the Tealun Dev PDCA suite. It runs software work as a PDCA loop and hands each stage to the sub-skill that owns it. This file only routes; the sub-skills do the work.
 
 | Stage | Sub-skill | Owns |
 | --- | --- | --- |

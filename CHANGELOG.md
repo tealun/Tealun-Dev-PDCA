@@ -35,6 +35,16 @@
 - 新增 Claude Code 插件市场清单 `.claude-plugin/marketplace.json`：`/plugin marketplace add tealun/Tealun-Skills` 后 `/plugin install tealun-skills@tealun-skills` 即可安装五个技能。技能目录位置不变，同步脚本照常可用。
 - README 增加插件安装方式、「让 Agent 真的调用技能」指令片段；新增英文版 `README.en.md`，两份 README 顶部互相链接。
 
+## tealun-dev-pdca 1.0.1（2026-11-05）
+
+品牌更名：Tealun Skills 改名为 Tealun Dev PDCA。六个技能的名称和行为都不变。
+
+- 插件名改为 `dev-pdca`，上架名称为 Tealun Dev PDCA；手动调用改为 `/dev-pdca:tasker` 这样的形式。
+- 插件市场名改为 `tealun`。在 Claude Code 里安装：`/plugin marketplace add tealun/tealun-dev-pdca`，然后 `/plugin install dev-pdca@tealun`。
+- 仓库改名为 `tealun/tealun-dev-pdca`，旧地址会自动跳转。下载文件改名为 `tealun-dev-pdca-<版本>.zip` / `.plugin`。
+- **从 1.0.0 升级**：插件名变了，不会自动更新。在 Claude Code 里先卸载 `tealun-skills@tealun-skills`、移除旧市场，再按上面的命令安装；在 claude.ai 上删除旧插件，再上传新的 zip。
+- 每个技能的 `SKILL.md` 末尾加了一行出处（作者、仓库、MIT）。LICENSE 的版权人改为 Tealun。套件包 `dev-pdca` 升到 1.5.1，内容只多了这行出处。规划见 `docs/88_planning/rename-dev-pdca-20261105.md`。
+
 ## tealun-skills 1.0.0（2026-11-04）
 
 首个插件版本：仓库本身是一个合规的 Claude 插件，发布由推送 `v<版本>` tag 触发，CI 自动生成 GitHub Release。
@@ -45,11 +55,11 @@
 
 ## 现有技能
 
-- 插件 `tealun-skills` 1.0.0（六个技能的组合版本，见 `.claude-plugin/plugin.json`）
+- 插件 `dev-pdca` 1.0.1（Tealun Dev PDCA；六个技能的组合版本，见 `.claude-plugin/plugin.json`）
 - `planner` 2.3.0
 - `tasker` 1.12.0
 - `auditor` 4.1.0
 - `bugfixer` 1.7.0
 - `evolver` 1.2.1
 - `explainer` 1.0.0
-- `dev-pdca` 1.5.0
+- `dev-pdca` 1.5.1
