@@ -64,7 +64,7 @@
 |---|---|---|
 | V1：加上 `plugin.json` 后，validate 只报方案第 2 节列出的警告 | validate 的输出原文 | S1 |
 | V2：目录提交规则、`plugin.json` 字段、`.plugin` 格式与官方文档一致 | 已核实，与方案有 3 处不同：① 官方文档没有 `.plugin` 格式，改为附 zip（P5）；② 方案里的图标规格和“只在首次提交时生效”在官方页面找不到原文，已标为“方案转述”；③ `.zip` 会转人工审核（P7） | 已完成 |
-| V3：发布流程里 npx 能拉到 CLI，validate 能跑通 | Release 流程的运行日志 | 推送 v1.0.0 之后 |
+| V3：发布流程里 npx 能拉到 CLI，validate 能跑通 | 已核实：release 运行 41942867251 的 12 个步骤全部 success，其中 CLI validate 那一步也 success；Release v1.0.0 带 3 个附件，`.plugin` 和 `.zip` 的 sha256 都是 `3fb9e925…`，和本地两次构建的结果相同；`dev-pdca.zip` 的 sha256 是 `45c56380…`，和 main 上的文件相同；`releases/latest` 指向 v1.0.0 | 已完成（2026-11-05） |
 
 ## 6. 实施中发现的问题
 
