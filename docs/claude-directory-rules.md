@@ -51,7 +51,7 @@
 | 不能有子模块和 LFS 指针 | 清单 | 不校验：仓库里没有 `.gitmodules`，也没有用 LFS |
 | 图片和字体以外的文件超过 256 KiB，转人工审核 | 清单 | 提示：`directory_warnings()` |
 | 文件超过 512 个，转人工审核 | 清单 | 提示：`directory_warnings()`（目前 84 个） |
-| 只允许文本、SVG、PNG、JPEG、GIF、WebP 和字体；其他二进制文件（如 `.zip`、`.ico`、`.pdf`）转人工审核 | 清单 | 提示：`directory_warnings()`。**已知命中：根目录的 `dev-pdca.zip`**，见下文“已知问题” |
+| 只允许文本、SVG、PNG、JPEG、GIF、WebP 和字体；其他二进制文件（如 `.zip`、`.ico`、`.pdf`）转人工审核 | 清单 | 提示：`directory_warnings()`。目前没有命中：`dev-pdca.zip` 已于 2026-11-05 移出仓库，见下文“已解决的问题” |
 | 删掉 `.DS_Store`、`Thumbs.db`、`desktop.ini`、`__MACOSX` | 清单 | 提示：`directory_warnings()` |
 | 包启动器要固定版本（如 `npx pkg@1.2.3`），`@latest` 和不固定的版本范围会被拦下 | 清单 | 不校验：插件本身不调用启动器。发布流程里的 `npx @anthropic-ai/claude-code@2.1.318` 已固定版本 |
 | 凭据不能写死在代码里 | 清单 | 不校验：插件不需要任何凭据 |
@@ -65,6 +65,6 @@
 | claude.ai 的安装方式：Customize > Plugins > Add > Upload plugin，上传 zip；zip 根目录（或唯一的顶层目录）里要有 `.claude-plugin/plugin.json` | 构建 | 阻断：单元测试检查包的结构；发布流程用 CLI 校验解包后的 `dist/tealun-dev-pdca/` |
 | `.plugin` 后缀 | 方案 | 不校验：官方页面没有 `.plugin` 格式的说明。Release 同时附上内容完全相同的 `.zip` 和 `.plugin`，README 指导用户上传 `.zip` |
 
-## 已知问题
+## 已解决的问题
 
-**`dev-pdca.zip` 会让插件转人工审核。** 它是 WorkBuddy 套件包，按规划的非目标原样留在仓库根目录，而仓库根目录就是插件文件夹。按清单的规则，`.zip` 文件会转人工审核：不会被拒，但每个版本都要等审核员处理。另外，`claude plugin validate`（2.1.318）的目录检查没有报出这一条，说明它只覆盖了目录规则的一部分，以清单页面为准。是否把它移出插件文件夹（例如只放在 Release 里），由用户决定。
+**`dev-pdca.zip` 曾会让插件转人工审核（2026-11-05 已解决）。** 它是 WorkBuddy 套件包，按规划的非目标原样留在仓库根目录，而仓库根目录就是插件文件夹。按清单的规则，`.zip` 文件会转人工审核：不会被拒，但每个版本都要等审核员处理。另外，`claude plugin validate`（2.1.318）的目录检查没有报出这一条，说明它只覆盖了目录规则的一部分，以清单页面为准。用户决定把它移出：仓库不再跟踪这个文件，由 `release.yml` 构建后附到 Release 上，见 `docs/88_planning/suite-zip-out-20261105.md`。

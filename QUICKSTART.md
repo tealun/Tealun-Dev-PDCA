@@ -11,7 +11,7 @@
 
 新建会话后技能即可使用，手动调用时写 `/dev-pdca:tasker` 这样的形式。下面的步骤是同步脚本的用法。两种方式在 Claude Code 里不要同时用，否则每个技能会出现两份。
 
-用 WorkBuddy 等只能上传单个技能压缩包的平台，直接上传仓库根目录的 `dev-pdca.zip`，详见 README 的「方式三」。
+用 WorkBuddy 等只能上传单个技能压缩包的平台，从 [最新 Release](https://github.com/tealun/tealun-dev-pdca/releases/latest/download/dev-pdca.zip) 下载 `dev-pdca.zip` 上传，详见 README 的「方式三」。
 
 装好后，记得把技能触发条件写进项目指令，见 [docs/agent-instructions-snippet.md](docs/agent-instructions-snippet.md)。
 

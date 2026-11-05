@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: dev-pdca.zip matches the skill sources
+      - name: dev-pdca suite package validates and builds
         run: python3 scripts/build_suite.py --check
       - name: evolution ledger and compliance log are well-formed
         run: python3 scripts/check_ledger.py
@@ -30,8 +30,10 @@ jobs:
         run: |
           previous=$(git describe --tags --abbrev=0 "${GITHUB_REF_NAME}^" 2>/dev/null || true)
           python3 scripts/build_plugin.py --check --tag "$GITHUB_REF_NAME" ${previous:+--since "$previous"}
-      - name: build the plugin
-        run: python3 scripts/build_plugin.py
+      - name: build the plugin and the dev-pdca suite package
+        run: |
+          python3 scripts/build_plugin.py
+          python3 scripts/build_suite.py
       - name: validate with the Claude Code CLI (no skip when it is unavailable)
         run: npx -y @anthropic-ai/claude-code@2.1.318 plugin validate dist/tealun-dev-pdca/.claude-plugin/plugin.json
       - name: release notes from CHANGELOG
@@ -44,6 +46,6 @@ jobs:
           gh release create "$GITHUB_REF_NAME" \
             "dist/tealun-dev-pdca-${version}.plugin" \
             "dist/tealun-dev-pdca-${version}.zip" \
-            dev-pdca.zip \
+            dist/dev-pdca.zip \
             --title "Tealun Dev PDCA ${version}" \
             --notes-file "$RUNNER_TEMP/notes.md"

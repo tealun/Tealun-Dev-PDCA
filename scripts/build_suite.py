@@ -2,16 +2,19 @@
 """Build the dev-pdca suite package: one skill folder that bundles all five skills.
 
 Usage:
-    python3 scripts/build_suite.py            # rebuild dev-pdca.zip and dist/
-    python3 scripts/build_suite.py --check    # validate, and fail if dev-pdca.zip is stale
+    python3 scripts/build_suite.py            # build dist/dev-pdca.zip and dist/
+    python3 scripts/build_suite.py --check    # validate the sources and the package, write nothing
 
-Output:
-    dev-pdca.zip                   committed at the repository root; folder dev-pdca/ inside
+Output (dist/ is never committed; the release workflow attaches dist/dev-pdca.zip
+to the GitHub Release):
+    dist/dev-pdca.zip              folder dev-pdca/ inside; upload this to WorkBuddy
     dist/dev-pdca/                 unpacked package (inspect before uploading)
     dist/dev-pdca-<version>-flat.zip  SKILL.md at the zip root, for platforms that need it
 
-The build is deterministic (sorted entries, fixed timestamps, LF line endings), so
---check can compare the committed zip byte for byte with a fresh build.
+The zip is not committed because the repository root is also the Claude plugin
+folder, and the plugin directory holds any .zip there for manual review
+(docs/88_planning/suite-zip-out-20261105.md). The build is deterministic (sorted
+entries, fixed timestamps, LF line endings).
 """
 from __future__ import annotations
 
@@ -26,7 +29,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 SUITE_SRC = REPO / "suite" / "dev-pdca"
 DIST = REPO / "dist"
-ROOT_ZIP = REPO / "dev-pdca.zip"
+ROOT_ZIP = DIST / "dev-pdca.zip"
 TEXT_SUFFIXES = {".md", ".py", ".yaml", ".yml", ".json", ".txt", ""}
 FIXED_TIME = (2020, 1, 1, 0, 0, 0)
 NAME = "dev-pdca"
@@ -219,17 +222,20 @@ def make_zip(entries: list[tuple[str, Path]], prefix: str) -> bytes:
     return buf.getvalue()
 
 
-def check_fresh(entries: list[tuple[str, Path]]) -> None:
-    if not ROOT_ZIP.is_file():
-        raise SystemExit("dev-pdca.zip is missing: run python3 scripts/build_suite.py and commit it")
-    if ROOT_ZIP.read_bytes() != make_zip(entries, f"{NAME}/"):
-        raise SystemExit("dev-pdca.zip is stale: run python3 scripts/build_suite.py and commit it")
-    print("ok: dev-pdca.zip matches the sources")
+def check_builds(entries: list[tuple[str, Path]]) -> None:
+    """Build the package in memory and confirm it opens and holds exactly the entries."""
+    data = make_zip(entries, f"{NAME}/")
+    with zipfile.ZipFile(io.BytesIO(data)) as zf:
+        names = zf.namelist()
+        if zf.testzip() is not None or len(names) != len(entries):
+            raise SystemExit("dev-pdca package did not build cleanly")
+    print(f"ok: dev-pdca package builds ({len(data) // 1024} KB, {len(names)} files)")
 
 
 def build(version: str, entries: list[tuple[str, Path]]) -> None:
+    DIST.mkdir(exist_ok=True)
     ROOT_ZIP.write_bytes(make_zip(entries, f"{NAME}/"))
-    print(f"wrote dev-pdca.zip ({ROOT_ZIP.stat().st_size // 1024} KB, {len(entries)} files, version {version})")
+    print(f"wrote dist/dev-pdca.zip ({ROOT_ZIP.stat().st_size // 1024} KB, {len(entries)} files, version {version})")
 
     out = DIST / NAME
     if out.exists():
@@ -251,7 +257,7 @@ def main() -> int:
     entries = package_files()
     validate_package(entries)
     if args.check:
-        check_fresh(entries)
+        check_builds(entries)
     else:
         build(version, entries)
     return 0

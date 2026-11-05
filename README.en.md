@@ -118,7 +118,7 @@ After installing, reopen your agent CLI or start a new session so the tool reloa
 
 ### Option 3: the dev-pdca suite package
 
-Download [`dev-pdca.zip`](dev-pdca.zip) from the repository root and choose it in the platform's skill import or upload dialog. It holds the entry skill and all six sub-skills, and CI checks on every push that it matches the skill sources.
+Download [`dev-pdca.zip`](https://github.com/tealun/tealun-dev-pdca/releases/latest/download/dev-pdca.zip) from the latest Release and choose it in the platform's skill import or upload dialog. It holds the entry skill and all six sub-skills, built by CI from the skill sources at each release.
 
 If the platform wants `SKILL.md` at the zip root, run `python3 scripts/build_suite.py` in the repository (Python 3, no third-party packages) and upload `dist/dev-pdca-<version>-flat.zip`.
 
@@ -244,7 +244,6 @@ git pull
 ├── tasker/           # General task-execution discipline
 ├── suite/dev-pdca/   # Suite package entry: PDCA routing rules
 ├── scripts/          # build_suite.py: builds the dev-pdca suite package
-├── dev-pdca.zip      # Built suite package, for WorkBuddy and other single-skill platforms
 ├── docs/             # Instruction snippet, case studies, this repo's evolution ledger
 ├── sync-skills.ps1   # Windows sync script
 └── sync-skills.sh    # macOS / Linux / WSL sync script
