@@ -44,7 +44,7 @@
 | # | 决策 | 理由 |
 |---|---|---|
 | B1 | 插件目录跟踪 `plugin` 分支，插件路径留空 | 扫描范围只剩技能、清单、README、LICENSE 和图标 |
-| B2 | `plugin` 分支只由 CI 写入：推送 `v*` tag 时，或手动触发 `workflow_dispatch` 时（用于首次填充和补发）。每次是在已有分支上追加一个提交，不重写历史 | 只有发布过的版本才进入目录；改动可以追溯 |
+| B2 | `plugin` 分支只由 CI 写入：推送 `v*` tag 时，或手动触发 `workflow_dispatch` 时（用于首次填充和补发）。每次是在已有分支上追加一个提交，不重写历史 | 只有发布过的版本才进入目录；改动可以追溯。（2026-11-05 修正：原实现与 `release.yml` 并行运行，也接受从 main 手动触发，没有做到“发布过的版本”，见 `release-gate-20261105.md`） |
 | B3 | 分支内容就是 `build_plugin.py` 的打包结果（`dist/tealun-dev-pdca/`），和 Release 附件同源 | 只有一份构建产物 |
 | B4 | `suite-package.yml` 的 push 触发排除 `plugin` 分支 | 那个分支上没有脚本，跑 main 的 CI 必然失败 |
 | B6 | （2026-11-05 补充）切换到 `plugin` 分支后，门户只剩 2 条 warning：`icon`（不用处理），以及 README 里的 download-and-run。用户决定删除同步脚本和所有“clone 后运行”的说明；其他 Agent 工具改为从 Release 下载后手动复制技能文件夹；`build_plugin.py --check` 检查 README，出现这类写法就报错 | 插件包里没有这两个脚本，这段说明本来就不适用；上架介绍取自 README，也不该引导用户执行脚本 |

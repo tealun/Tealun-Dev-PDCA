@@ -82,7 +82,7 @@
 | CLAUDE.md at the plugin root isn't loaded | warning | 根目录的 `CLAUDE.md` | 不进入 `plugin` 分支 |
 | Field from another tool's manifest（`icon`） | warning | `plugin.json` | 页面说明不需要处理 |
 
-处理方式：由 `.github/workflows/plugin-branch.yml` 把打包好的插件（技能、`plugin.json`、README、LICENSE、图标）提交到 `plugin` 分支，插件目录改为跟踪这个分支，插件路径留空。用本地 CLI 对这个分支的内容做 validate，结果是 "These checks found nothing to report"，导出内容和存储内容一致。
+处理方式：由 `.github/workflows/plugin-branch.yml` 把打包好的插件（技能、`plugin.json`、README、LICENSE、图标）提交到 `plugin` 分支（2026-11-05 起只在 Release 成功之后，或手动指定已有 Release 的 tag 时写入，见 `docs/88_planning/release-gate-20261105.md`），插件目录改为跟踪这个分支，插件路径留空。用本地 CLI 对这个分支的内容做 validate，结果是 "These checks found nothing to report"，导出内容和存储内容一致。
 
 ## 首次提交的扫描结果（v1.0.1 · `plugin @ 596d45e`，2026-11-05）
 

@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- 收紧 `plugin` 分支的写入（规划见 `docs/88_planning/release-gate-20261105.md`）。原来 `plugin-branch.yml` 与 `release.yml` 由同一次 tag 推送触发、并行运行，Release 失败的 tag 照样会写进 `plugin` 分支；手动触发时还能把未发布的 main 写进去。现在 `plugin-branch.yml` 改为可复用工作流，由 `release.yml` 的 `plugin-branch` 作业在 `needs: release` 之后调用；手动触发必须指定一个已有 GitHub Release 的 tag，并重跑 `build_plugin.py --check --tag`。`publish_plugin_branch.sh` 改用 `commit-tree` 生成提交，不再在本地留下 `publish-<分支>` 分支（原来远端分支被删后，从同一个 clone 再发布会报错）。`docs/workbuddy-rules.md` 按第三方 schema 补登 9 条规则、修订 1 条（排除项）；`build_suite.py` 新增四项检查：`name` 不能用 `workbuddy-` 前缀，`category` 必须是已知取值，排除 `.git` 和 `node_modules`，包内文本不能含 CR。
 - `plugin.json` 补上插件目录上架页的三个链接：`documentationUrl`（README）、`supportUrl`（GitHub Issues）、`privacyPolicyUrl`（新增的 `PRIVACY.md`，说明插件不收集、不发送任何数据）。服务条款不单独设置，由 MIT 许可证覆盖。
 - 删除同步脚本 `sync-skills.sh` / `sync-skills.ps1`，以及 README、QUICKSTART、SUPPORT、SECURITY、CONTRIBUTING 和模板里所有关于“clone 仓库再运行脚本”的安装说明（用户 2026-11-05 决定）。原因是插件目录会把 README 里这类“下载后直接执行”的写法作为安装风险展示给用户。其他 Agent 工具改为：从 Release 下载 zip，解压后把技能文件夹复制到工具的技能目录。`build_plugin.py --check` 新增一项检查，发现 README 里有 clone 后运行、管道接 shell、运行 `.sh` / `.ps1` 等写法就报错（对旧 README 测试，报出 13 行）。
 - 插件目录改为跟踪 `plugin` 分支（规划见 `docs/88_planning/plugin-branch-20261105.md`）。新增 `.github/workflows/plugin-branch.yml` 和 `scripts/publish_plugin_branch.sh`：推送版本 tag 或手动触发时，先校验并构建插件，再把打包结果追加提交到 `plugin` 分支。这个分支只包含技能、`plugin.json`、README、LICENSE 和图标，不含 CI、脚本、测试、文档和 CLAUDE.md。原因是目录把仓库根目录当作插件扫描，开发工具因此被报出 6 个 policy hold。`suite-package.yml` 不再在 `plugin` 分支上运行。
