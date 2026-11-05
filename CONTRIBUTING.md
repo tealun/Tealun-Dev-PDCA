@@ -38,4 +38,4 @@ PR 描述建议包含：
 
 参与本项目即表示你同意遵守 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
 
-修改任何技能目录或 `suite/dev-pdca/SKILL.md` 后，运行 `python3 scripts/build_suite.py` 重新生成 `dev-pdca.zip`，与改动一起提交；CI 会用 `--check` 拦下未更新的成品。
+修改任何技能目录或 `suite/dev-pdca/SKILL.md` 后，运行 `python3 scripts/build_suite.py --check`，确认套件包能通过校验并打出；CI 也会跑这一步。`dev-pdca.zip` 不提交进仓库，发版时由 CI 构建并附到 Release。

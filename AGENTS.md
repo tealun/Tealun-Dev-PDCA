@@ -16,7 +16,7 @@
 ## 本仓库的硬规则
 
 - **发布到外部平台之前，先查清它的全部规则。** 字段、长度、数量、目录结构等要求逐条登记到对照表（WorkBuddy 见 `docs/workbuddy-rules.md`），每条要么写进 `scripts/build_suite.py` 的本地校验，要么写明不校验的原因；本地通过后再上传。不要用平台的报错来逐条试规则，也不要只挑带数字的规则做校验。
-- **改了任何技能目录或 `suite/dev-pdca/SKILL.md`，** 运行 `python3 scripts/build_suite.py` 重新生成 `dev-pdca.zip` 并一起提交；CI 会用 `--check` 拦下未更新的成品。
+- **改了任何技能目录或 `suite/dev-pdca/SKILL.md`，** 运行 `python3 scripts/build_suite.py --check`，确认套件包能通过校验并正常打出。`dev-pdca.zip` 不提交进仓库：仓库根目录就是插件文件夹，里面放 zip 会让插件目录转人工审核。这个包由 `release.yml` 构建并附到 Release 上。
 - **改了技能的行为或触发描述，** 同步更新该技能的 `version` 和 `CHANGELOG.md`。
 - **改了任何技能目录，** 同时升 `.claude-plugin/plugin.json` 的 `version`，并在 `CHANGELOG.md` 加一节 `## tealun-dev-pdca <版本>`。升法：任一技能升 major 或删掉技能，插件升 major；新增技能或任一技能升 minor，插件升 minor；其余改动（技能只升 patch，或只改了文档、清单）插件升 patch。`marketplace.json` 不写版本。CI 用 `build_plugin.py --check --since <上一个 tag>` 拦截没升版本的改动。
 - **发布只靠推送 `v<版本>` tag，** 由 `.github/workflows/release.yml` 构建并创建 Release。不手动上传 Release 附件，不把 `.plugin` 或插件 zip 提交进仓库。

@@ -118,7 +118,7 @@ bash ./sync-skills.sh tasker planner
 
 ### 方式三：套件包 dev-pdca
 
-直接下载仓库根目录的 [`dev-pdca.zip`](dev-pdca.zip)，在平台的技能导入或上传入口选择它即可。它包含入口技能和全部 6 个子技能，与仓库里的技能源码保持同步（每次推送由 CI 校验）。
+从最新 Release 下载 [`dev-pdca.zip`](https://github.com/tealun/tealun-dev-pdca/releases/latest/download/dev-pdca.zip)，在平台的技能导入或上传入口选择它即可。它包含入口技能和全部 6 个子技能，每次发版由 CI 按当时的技能源码构建。
 
 如果平台要求 `SKILL.md` 直接位于压缩包根目录，在仓库里运行 `python3 scripts/build_suite.py`（需要 Python 3，无第三方依赖），上传生成的 `dist/dev-pdca-<版本>-flat.zip`。
 
@@ -244,7 +244,6 @@ git pull
 ├── tasker/           # 通用任务执行纪律技能
 ├── suite/dev-pdca/   # 套件包入口：PDCA 分派规则
 ├── scripts/          # build_suite.py：构建 dev-pdca 套件包
-├── dev-pdca.zip      # 套件包成品，供 WorkBuddy 等单技能平台上传
 ├── docs/             # 指令片段、本仓库的演进台账
 ├── sync-skills.ps1   # Windows 同步脚本
 └── sync-skills.sh    # macOS / Linux / WSL 同步脚本

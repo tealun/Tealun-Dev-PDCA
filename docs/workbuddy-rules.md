@@ -1,6 +1,6 @@
 # WorkBuddy 上架规则对照表
 
-`dev-pdca.zip` 上传 WorkBuddy 前要满足的全部已知规则，以及每条规则在本地由谁检查。新增规则时，先在这里加一行，再补校验；能校验的必须写进 `scripts/build_suite.py`，不能校验的写明原因。
+`dev-pdca.zip`（由 `build_suite.py` 生成到 `dist/`，发版时附在 Release 上）上传 WorkBuddy 前要满足的全部已知规则，以及每条规则在本地由谁检查。新增规则时，先在这里加一行，再补校验；能校验的必须写进 `scripts/build_suite.py`，不能校验的写明原因。
 
 来源：**实测** = 上传或审核实际报错过；**第三方** = [wb-skill-converter 的 workbuddy-schema.md](https://github.com/starve001/wb-skill-converter/blob/main/references/workbuddy-schema.md)，非官方文档。
 
