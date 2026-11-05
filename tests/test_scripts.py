@@ -233,29 +233,35 @@ class BuildPluginTest(unittest.TestCase):
         self.assertTrue(any("references missing file references/verification.md" in e for e in errors), errors)
 
     def test_tag_must_match_version(self):
-        self.assertEqual(build_plugin.check(self.root, tag="v1.0.0"), [])
-        self.assertTrue(any("does not match" in e for e in build_plugin.check(self.root, tag="v1.0.1")))
+        version = self.manifest()["version"]
+        self.assertEqual(build_plugin.check(self.root, tag=f"v{version}"), [])
+        self.assertTrue(any("does not match" in e for e in build_plugin.check(self.root, tag="v0.0.1")))
 
     def test_tag_needs_changelog_section(self):
         changelog = self.root / "CHANGELOG.md"
-        changelog.write_text(changelog.read_text(encoding="utf-8").replace("## tealun-skills 1.0.0", "## old"), encoding="utf-8")
-        errors = build_plugin.check(self.root, tag="v1.0.0")
-        self.assertTrue(any("no '## tealun-skills 1.0.0' section" in e for e in errors), errors)
+        version = self.manifest()["version"]
+        heading = f"## {build_plugin.NAME} {version}"
+        changelog.write_text(changelog.read_text(encoding="utf-8").replace(heading, "## old"), encoding="utf-8")
+        errors = build_plugin.check(self.root, tag=f"v{version}")
+        self.assertTrue(any(f"no '{heading}' section" in e for e in errors), errors)
         self.assertEqual(build_plugin.check(self.root), [])
 
     def test_skill_change_needs_version_bump(self):
+        version = self.manifest()["version"]
+        tag = f"v{version}"
         git(self.root, "init", "-q")
         git(self.root, "add", "-A")
         git(self.root, "commit", "-qm", "base")
-        git(self.root, "tag", "v1.0.0")
-        self.assertEqual(build_plugin.check(self.root, since="v1.0.0"), [])
+        git(self.root, "tag", tag)
+        self.assertEqual(build_plugin.check(self.root, since=tag), [])
         with (self.root / "planner" / "SKILL.md").open("a", encoding="utf-8") as f:
             f.write("\nchanged\n")
-        self.assertTrue(any("is not higher" in e for e in build_plugin.check(self.root, since="v1.0.0")))
+        self.assertTrue(any("is not higher" in e for e in build_plugin.check(self.root, since=tag)))
+        major, minor, patch = (int(p) for p in version.split("."))
         data = self.manifest()
-        data["version"] = "1.0.1"
+        data["version"] = f"{major}.{minor}.{patch + 1}"
         self.write_manifest(data)
-        self.assertEqual(build_plugin.check(self.root, since="v1.0.0"), [])
+        self.assertEqual(build_plugin.check(self.root, since=tag), [])
 
     def test_directory_naming_rules(self):
         for bad in ("claude-tools", "Tealun", "plugin", "-x"):

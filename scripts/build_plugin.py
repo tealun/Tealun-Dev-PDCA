@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check and build the Claude plugin package tealun-skills-<version>.plugin.
+"""Check and build the Claude plugin package tealun-dev-pdca-<version>.plugin.
 
 The repository root is itself the plugin (.claude-plugin/plugin.json lists the
 six skill folders). This script packs a copy laid out the standard way:
@@ -36,7 +36,10 @@ REPO = Path(__file__).resolve().parent.parent
 PLUGIN_JSON = REPO / ".claude-plugin" / "plugin.json"
 MARKETPLACE_JSON = REPO / ".claude-plugin" / "marketplace.json"
 DIST = REPO / "dist"
-NAME = "tealun-skills"
+# Package and release name. It carries the brand and differs from the plugin name in
+# plugin.json (dev-pdca), which is the short invocation prefix. See
+# docs/88_planning/rename-dev-pdca-20261105.md R2 and R4.
+NAME = "tealun-dev-pdca"
 EXTRA_FILES = ["README.md", "LICENSE"]
 DROP_DIRS = {"agents"}  # Codex UI metadata
 VERSION_PATTERN = re.compile(r"\d+\.\d+\.\d+")
@@ -168,7 +171,7 @@ def check(repo: Path = REPO, tag: str | None = None, since: str | None = None) -
 
 
 def release_notes(version: str, repo: Path = REPO) -> str:
-    """The body of the CHANGELOG section headed '## tealun-skills <version>'."""
+    """The body of the CHANGELOG section headed '## tealun-dev-pdca <version>'."""
     path = repo / "CHANGELOG.md"
     if not path.is_file():
         return ""

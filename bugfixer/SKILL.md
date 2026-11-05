@@ -159,3 +159,7 @@ Report concisely:
 5. Remaining restart, migration, deployment, or user confirmation.
 
 Commit or push only when explicitly requested.
+
+---
+
+Part of Tealun Dev PDCA by Tealun · https://github.com/tealun/tealun-dev-pdca · MIT

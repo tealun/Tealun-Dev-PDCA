@@ -1,10 +1,10 @@
-# Tealun Skills
+# Tealun Dev PDCA
 
 中文 | [English](README.en.md)
 
 让 AI Agent 少一点"我以为我做了"，多一点"我证明我做到了"。
 
-Tealun Skills 用 PDCA（计划、执行、检查、改进）的方法组织 AI 辅助开发：5 个技能各管一个环节，彼此衔接成一个闭环；另有一个只读的 `explainer`，把 AI 写的代码翻译成不懂代码的人也能看懂的说明。它可以同步到本机 Agent 工具，可以作为 Claude Code 插件安装，也可以打成一个套件包（`dev-pdca`）上传到只支持单个技能的平台。它面向已经在用 Codex、Claude Code、Cursor、Gemini、Kimi、OpenCode 或共享 `.agents/skills` 目录的用户：你不用换工具，只是给代理加上几套更稳的工作方式。
+Tealun Dev PDCA 用 PDCA（计划、执行、检查、改进）的方法组织 AI 辅助开发：5 个技能各管一个环节，彼此衔接成一个闭环；另有一个只读的 `explainer`，把 AI 写的代码翻译成不懂代码的人也能看懂的说明。它可以同步到本机 Agent 工具，可以作为 Claude Code 插件安装，也可以打成一个套件包（`dev-pdca`）上传到只支持单个技能的平台。它面向已经在用 Codex、Claude Code、Cursor、Gemini、Kimi、OpenCode 或共享 `.agents/skills` 目录的用户：你不用换工具，只是给代理加上几套更稳的工作方式。
 
 ## 先解决这些问题
 
@@ -45,31 +45,31 @@ Tealun Skills 用 PDCA（计划、执行、检查、改进）的方法组织 AI 
 
 前两种方式下，6 个技能独立安装，各自按描述自动触发，冷启动时触发最精准。套件包把 6 个技能放进一个技能里，由入口统一分派，联动规则在整个会话里生效。
 
-Claude Code 里不要两种方式都装，否则同一个技能会出现两份（`tasker` 和 `tealun-skills:tasker`）。同步脚本只要检测到 Claude 也会写入 `~/.claude/skills`，已经用插件安装的话，跑完脚本后可以删掉 `~/.claude/skills` 下这六个目录。
+Claude Code 里不要两种方式都装，否则同一个技能会出现两份（`tasker` 和 `dev-pdca:tasker`）。同步脚本只要检测到 Claude 也会写入 `~/.claude/skills`，已经用插件安装的话，跑完脚本后可以删掉 `~/.claude/skills` 下这六个目录。
 
 ### 方式一：Claude Code 插件市场
 
 在 Claude Code 会话里输入：
 
 ```text
-/plugin marketplace add tealun/Tealun-Skills
-/plugin install tealun-skills@tealun-skills
+/plugin marketplace add tealun/tealun-dev-pdca
+/plugin install dev-pdca@tealun
 ```
 
 也可以在终端里执行同样的操作：
 
 ```bash
-claude plugin marketplace add tealun/Tealun-Skills
-claude plugin install tealun-skills@tealun-skills
+claude plugin marketplace add tealun/tealun-dev-pdca
+claude plugin install dev-pdca@tealun
 ```
 
-装好后新建会话，六个技能都会加载。插件里的技能名带前缀，手动调用时写 `/tealun-skills:tasker`、`/tealun-skills:bugfixer` 这样的形式；自动触发不受影响。
+装好后新建会话，六个技能都会加载。插件里的技能名带前缀，手动调用时写 `/dev-pdca:tasker`、`/dev-pdca:bugfixer` 这样的形式；自动触发不受影响。
 
-更新：`/plugin marketplace update tealun-skills`。也可以在 `/plugin` 的 Marketplaces 里给这个市场打开自动更新。
+更新：`/plugin marketplace update tealun`。也可以在 `/plugin` 的 Marketplaces 里给这个市场打开自动更新。
 
 ### claude.ai 一键安装
 
-1. 打开 [最新 Release](https://github.com/tealun/Tealun-Skills/releases/latest)，下载 `tealun-skills-<版本>.zip`。同一个包也以 `.plugin` 为后缀附上，内容完全相同。
+1. 打开 [最新 Release](https://github.com/tealun/tealun-dev-pdca/releases/latest)，下载 `tealun-dev-pdca-<版本>.zip`。同一个包也以 `.plugin` 为后缀附上，内容完全相同。
 2. 在 claude.ai 打开 Customize > Plugins > Add > Upload plugin，上传这个 zip。
 
 同一个工具里只保留一种安装方式，否则技能会出现两份。如果之前单独上传过 planner、tasker、bugfixer、auditor、evolver 这五个技能，先在技能设置里删掉它们，再装插件。插件发布新版本后，重新下载并上传。
@@ -81,8 +81,8 @@ claude plugin install tealun-skills@tealun-skills
 #### Windows
 
 ```powershell
-git clone https://github.com/tealun/Tealun-Skills.git
-cd Tealun-Skills
+git clone https://github.com/tealun/tealun-dev-pdca.git
+cd tealun-dev-pdca
 .\sync-skills.ps1 --list-targets
 $env:DRY_RUN = '1'
 .\sync-skills.ps1
@@ -93,8 +93,8 @@ Remove-Item Env:\DRY_RUN
 #### macOS / Linux
 
 ```bash
-git clone https://github.com/tealun/Tealun-Skills.git
-cd Tealun-Skills
+git clone https://github.com/tealun/tealun-dev-pdca.git
+cd tealun-dev-pdca
 bash ./sync-skills.sh --list-targets
 DRY_RUN=1 bash ./sync-skills.sh
 bash ./sync-skills.sh
@@ -141,7 +141,7 @@ bash ./sync-skills.sh tasker planner
 ```markdown
 ## 配套技能：要调用，不要只“照着精神做”
 
-本项目使用 Tealun Skills（planner、tasker、bugfixer、auditor、evolver、explainer）。触发条件满足时，通过技能工具调用对应技能（或读取它的 SKILL.md 并按步骤执行）；只按“大意”去做不算调用。每个会话的第一条回复，先说明这六个技能里哪些可用；缺哪个就直说。
+本项目使用 Tealun Dev PDCA（planner、tasker、bugfixer、auditor、evolver、explainer）。触发条件满足时，通过技能工具调用对应技能（或读取它的 SKILL.md 并按步骤执行）；只按“大意”去做不算调用。每个会话的第一条回复，先说明这六个技能里哪些可用；缺哪个就直说。
 
 - **planner：任何规划意图，不论大小。** 功能、页面、URL 或站点结构调整、数据或 schema 变更、重构、发布、路线图、文档体系或流程。在写代码或内容之前调用，先把决定写进对应文档。
 - **tasker：任何对文件或状态的改动。** 动手前写清完成定义和一个可执行的检查；收尾时给出证据（命令输出、截图），不要只给描述。只读的问答不需要。
@@ -213,7 +213,7 @@ bash ./sync-skills.sh tasker planner
 
 ## 更新技能
 
-插件市场安装的，在 Claude Code 里运行 `/plugin marketplace update tealun-skills`。
+插件市场安装的，在 Claude Code 里运行 `/plugin marketplace update tealun`。
 
 同步脚本安装的，拉取最新内容后重新运行同步脚本即可。
 

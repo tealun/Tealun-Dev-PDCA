@@ -1,6 +1,6 @@
-# Tealun Skills 仓库的 Agent 指令
+# Tealun Dev PDCA 仓库的 Agent 指令
 
-本仓库开发的就是 Tealun Skills，自己的工作也要用这些技能。技能源码在仓库根目录的 `planner/`、`tasker/`、`bugfixer/`、`auditor/`、`evolver/`、`explainer/`；`suite/dev-pdca/` 是套件包入口。
+本仓库开发的就是 Tealun Dev PDCA，自己的工作也要用这些技能。技能源码在仓库根目录的 `planner/`、`tasker/`、`bugfixer/`、`auditor/`、`evolver/`、`explainer/`；`suite/dev-pdca/` 是套件包入口。
 
 ## 配套技能：要调用，不要只“照着精神做”
 
@@ -18,7 +18,7 @@
 - **发布到外部平台之前，先查清它的全部规则。** 字段、长度、数量、目录结构等要求逐条登记到对照表（WorkBuddy 见 `docs/workbuddy-rules.md`），每条要么写进 `scripts/build_suite.py` 的本地校验，要么写明不校验的原因；本地通过后再上传。不要用平台的报错来逐条试规则，也不要只挑带数字的规则做校验。
 - **改了任何技能目录或 `suite/dev-pdca/SKILL.md`，** 运行 `python3 scripts/build_suite.py` 重新生成 `dev-pdca.zip` 并一起提交；CI 会用 `--check` 拦下未更新的成品。
 - **改了技能的行为或触发描述，** 同步更新该技能的 `version` 和 `CHANGELOG.md`。
-- **改了任何技能目录，** 同时升 `.claude-plugin/plugin.json` 的 `version`，并在 `CHANGELOG.md` 加一节 `## tealun-skills <版本>`。升法：任一技能升 major 或删掉技能，插件升 major；新增技能或任一技能升 minor，插件升 minor；其余改动（技能只升 patch，或只改了文档、清单）插件升 patch。`marketplace.json` 不写版本。CI 用 `build_plugin.py --check --since <上一个 tag>` 拦截没升版本的改动。
+- **改了任何技能目录，** 同时升 `.claude-plugin/plugin.json` 的 `version`，并在 `CHANGELOG.md` 加一节 `## tealun-dev-pdca <版本>`。升法：任一技能升 major 或删掉技能，插件升 major；新增技能或任一技能升 minor，插件升 minor；其余改动（技能只升 patch，或只改了文档、清单）插件升 patch。`marketplace.json` 不写版本。CI 用 `build_plugin.py --check --since <上一个 tag>` 拦截没升版本的改动。
 - **发布只靠推送 `v<版本>` tag，** 由 `.github/workflows/release.yml` 构建并创建 Release。不手动上传 Release 附件，不把 `.plugin` 或插件 zip 提交进仓库。
 - **提交 Claude 插件目录之前，** 先把目录规则登记进 `docs/claude-directory-rules.md`。每条要么写进 `build_plugin.py --check`，要么写明不校验的原因。
 - **新增技能或大改技能的工作流之后、发布之前，** 派一个只拿到该技能 `SKILL.md` 路径的全新 agent，在真实项目上按技能执行一次，要求它列出指令不清、矛盾或缺失之处；核验它的产出后按反馈迭代。用作样本的项目一律只读：规划里写明，产出写到会话 scratchpad，不写进样本仓库。

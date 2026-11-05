@@ -157,3 +157,7 @@ Do not redo the entire audit unless requested or the fixes materially changed th
 An explicit “fix/apply the recommendations/修复” request enters fix mode. Apply the smallest causal changes, verify them, and preserve unrelated work. Architecture decisions, schema/data changes, production actions, or domain-dependent behavior may still require a user decision when the existing evidence does not determine a safe answer.
 
 Fixing an issue does not authorize committing, pushing, deploying, migrating production data, or rewriting unrelated modules.
+
+---
+
+Part of Tealun Dev PDCA by Tealun · https://github.com/tealun/tealun-dev-pdca · MIT

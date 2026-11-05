@@ -1,6 +1,6 @@
 # Support
 
-如果你在使用 Tealun Skills 时遇到问题，请优先按下面的顺序排查。
+如果你在使用 Tealun Dev PDCA 时遇到问题，请优先按下面的顺序排查。
 
 ## 先确认三件事
 

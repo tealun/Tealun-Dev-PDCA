@@ -262,3 +262,7 @@ After persistence or a direct-mode closeout, return no more than six short lines
 ```
 
 Omit `待办` when empty. Never use the generic phrase `已落盘` unless the project evolution ledger was actually updated and read back. If cycle coverage is incomplete and material, append it briefly to `结论` or `待办`; never imply a full-history sweep. In advisory mode, use only the three-line proposal from Invocation Modes; when evolution is not worthwhile, emit nothing. Keep detailed cards, taxonomies, and evidence walkthroughs internal or in the persisted artifact unless the user requests detail. Never claim closure without guard verification.
+
+---
+
+Part of Tealun Dev PDCA by Tealun · https://github.com/tealun/tealun-dev-pdca · MIT

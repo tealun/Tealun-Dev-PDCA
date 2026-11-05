@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
   - name: 使用支持说明
-    url: https://github.com/tealun/Tealun-Skills/blob/main/SUPPORT.md
+    url: https://github.com/tealun/tealun-dev-pdca/blob/main/SUPPORT.md
     about: 提交 issue 前请先阅读仓库中的 SUPPORT.md。
