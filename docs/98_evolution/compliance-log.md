@@ -6,7 +6,7 @@
 
 - **何时记**：每个工作周期结束时，跑 evolver 收尾的同时记录（AGENTS.md 有规定）。
 - **记什么**：下面 5 道 Gate 逐条记一行。周期里没遇到的 Gate 记 `不适用`，不要算作遵守。
-- **怎么判断**：只看会话记录和产物里实际出现过的内容；证据栏写出位置或原文片段。
+- **怎么判断**：只看会话记录和产物里实际出现过的内容；证据栏写出位置或原文片段。周期栏只写周期名称，不写会话编号（本仓库公开）。
 - **记录方式**：`自评` 指执行本周期的 agent 自己记录；`独立` 指另一个 agent 或人只看记录做出的判断。自评偏乐观，统计时分开计算。
 - **何时统计**：满 10 个周期后，按 Gate 计算遵守率（遵守 ÷ 适用），并在下方“统计”一节写出结果。遵守率持续偏低的 Gate 应由 evolver 提出改法；改法可以是简化规则，也可以把它改成脚本或 CI 检查。
 
@@ -34,26 +34,26 @@
 | 2026-11-04 | 评审遗留项 | G3 | 是 | 是 | 台账脚本在非 Git 目录下修复前后对照运行（旧版抛 CalledProcessError，新版输出 appended-and-verified）；去掉 argument-hint 后 build_suite 报错拦下；`--check` 通过 | 自评 |
 | 2026-11-04 | 评审遗留项 | G4 | 不适用 | — | 没有检查失败；试跑 agent 报告的指令问题属于评审发现，直接修复 | 自评 |
 | 2026-11-04 | 评审遗留项 | G5 | 是 | 是 | 规划文档 §3 列出用到的 EV-20261104-001、EV-20261102-001/003 | 自评 |
-| 2026-11-02 | 技能仓库发布到 WorkBuddy（session_01MaaD3p9DDt5KW4bW7dsdsK） | G1 | 是 | 部分 | 14:00 前一直没调用技能（12:04 7c865162 起直接 Write）；用户 5e96c66f“你到底有没有按照我们技能本身做事”；之后 f96cf096 调 tasker、81cdd251 调 bugfixer、62b77d0e/e5bef31f 推送前调 auditor、2704a3c2/c64980e5 调 evolver | 独立 |
-| 2026-11-02 | 技能仓库发布到 WorkBuddy（session_01MaaD3p9DDt5KW4bW7dsdsK） | G2 | 是 | 部分 | 首次写入 7c865162 之前没有完成定义；tasker 后只有 07fb7c5e“开始执行第 1 步”，没有可执行检查；15:16 的 tasker 参数 8d4837be 写了完成条件 | 独立 |
-| 2026-11-02 | 技能仓库发布到 WorkBuddy（session_01MaaD3p9DDt5KW4bW7dsdsK） | G3 | 是 | 部分 | 多数结论有读回 main 的输出（如 74535eec）。但 caa5ef86“The check … passed”时 b02799d9 显示 queued，1f85bdc2、7dcf6070 同类；1f236bcd 说“合并前 CI 通过”，而 Monitor 启动 7 秒后就合并了 | 独立 |
-| 2026-11-02 | 技能仓库发布到 WorkBuddy（session_01MaaD3p9DDt5KW4bW7dsdsK） | G4 | 是 | 部分 | WorkBuddy 拒收 4 次（a95b8eed、9f8aeaa8、b062b374、bf02eacf）都是直接改，没走 bugfixer；第 5 次 81cdd251 走了 bugfixer：0f85793a 复现，cf5c4187 用变异测试做回归；auditor 报出 ccb7f560“links 40 problems”，推送前没写处置理由 | 独立 |
-| 2026-11-02 | 技能仓库发布到 WorkBuddy（session_01MaaD3p9DDt5KW4bW7dsdsK） | G5 | 不适用 | — | 不适用（规则尚未存在）；本会话也没有调用 planner | 独立 |
-| 2026-11-02 | Explainer 技能开发（session_01MaaD3oHrbyuR1NobnGnqgK） | G1 | 是 | 部分 | 写规划前 d99883fa 调 planner；c74890ae 用 auditor 审规划；4437fbf4 调 tasker；056cb113 收尾调 evolver。但推送前 89abd399 说“先过 auditor”，实际没有调用技能，只跑了 bash | 独立 |
-| 2026-11-02 | Explainer 技能开发（session_01MaaD3oHrbyuR1NobnGnqgK） | G2 | 是 | 否 | 首次写入 c2e2b2b9（规划文档）前没有完成定义；tasker 被打断（26228043）后直接 Write 08d7a7db，可见文字里没有契约 | 独立 |
-| 2026-11-02 | Explainer 技能开发（session_01MaaD3oHrbyuR1NobnGnqgK） | G3 | 是 | 是 | 最终 bdec891e 有 e507f11d（“Validation passed”、台账行）和推送输出支撑；88c03952 有 96843c86 的远端 SHA | 独立 |
-| 2026-11-02 | Explainer 技能开发（session_01MaaD3oHrbyuR1NobnGnqgK） | G4 | 是 | 否 | 3a0a043d“description_en is 1001 chars”失败后，0da067c0 直接改，没走 bugfixer；用户纠正 5664f78e“不是要在Tiko.day项目中开发”后也没走 bugfixer | 独立 |
-| 2026-11-02 | Explainer 技能开发（session_01MaaD3oHrbyuR1NobnGnqgK） | G5 | 不适用 | — | 不适用（规则尚未存在）；c33487f7 读过台账前 60 行，但没有写明用了哪几条 | 独立 |
-| 2026-11-02 | Design-to-dev Agent 技能开发（session_01MaaD3pqtwdoo8x92kip5no）（11-02 至 11-04） | G1 | 是 | 部分 | ea5f6951 planner、5f25db38 tasker、28e7f149 evolver 都调用了。但 a9f5189e 写着“auditor, standard depth”却没调用，用户 ac7f2656 追问；11-03 302e9f93 有规划意图却没调 planner，直接写 05 规划；07:40 实现前没调 tasker | 独立 |
-| 2026-11-02 | Design-to-dev Agent 技能开发（session_01MaaD3pqtwdoo8x92kip5no）（11-02 至 11-04） | G2 | 是 | 部分 | 首次写入 f192476a、tasker 之后的 c4f14e4a，前面都没有完成定义。后面的修复周期先写失败测试再改，算部分做到：a81aca86“Writing the tests first”，d9127f5b FAIL | 独立 |
-| 2026-11-02 | Design-to-dev Agent 技能开发（session_01MaaD3pqtwdoo8x92kip5no）（11-02 至 11-04） | G3 | 是 | 部分 | 自评“Visual QA 12/12”不实（53104150 自己承认）；c3efa3c6 承认审计标注失实。其余结论有测试、CI（b7ef2604 有 run 号）和截图读回支撑 | 独立 |
-| 2026-11-02 | Design-to-dev Agent 技能开发（session_01MaaD3pqtwdoo8x92kip5no）（11-02 至 11-04） | G4 | 是 | 部分 | 审计问题都走了 bugfixer（33489c10、d601616f），先写回归测试再修，还做了变异检查 7b8955fe。但用户纠正 61502020“不能把技能放到 taluns-skill 里”、ccdbdbbe“太丑”都没走 bugfixer | 独立 |
-| 2026-11-02 | Design-to-dev Agent 技能开发（session_01MaaD3pqtwdoo8x92kip5no）（11-02 至 11-04） | G5 | 不适用 | — | 不适用（规则尚未存在）；8149ce58 在调用 planner 前读过台账前 60 行，没有写明用了哪几条 | 独立 |
-| 2026-11-03 | AI交付自检技能对比（session_01MaaD3mxVjaaSoYzQgVecgb） | G1 | 是 | 部分 | 08:18:02 调 planner，db4bbc47 推送前调 auditor。但改 tasker 前（fd258025）没调 tasker；c19ddfec 直接用脚本写台账，没调 evolver；f65819c4 直接推 main，没有新的 auditor | 独立 |
-| 2026-11-03 | AI交付自检技能对比（session_01MaaD3mxVjaaSoYzQgVecgb） | G2 | 是 | 否 | 首次写入 074fc2cf 和随后的 fd258025 之前，只有 eda05fac“先把规划写进 docs/88_planning/”，没有完成定义和检查 | 独立 |
-| 2026-11-03 | AI交付自检技能对比（session_01MaaD3mxVjaaSoYzQgVecgb） | G3 | 是 | 是 | 71d3d04b 有 8f77068f 的 push 和 rev-parse 输出；6efc13ee 有 52e708ef 的 build --check 输出 | 独立 |
-| 2026-11-03 | AI交付自检技能对比（session_01MaaD3mxVjaaSoYzQgVecgb） | G4 | 是 | 否 | git diff 查出 702103a8“My replace in the CHANGELOG also rewrote…”后直接改，没走 bugfixer；审计中途 32207c96 直接改 tasker；用户 c801d92a 追问版本号，暴露 evolver 漏升版本 | 独立 |
-| 2026-11-03 | AI交付自检技能对比（session_01MaaD3mxVjaaSoYzQgVecgb） | G5 | 不适用 | — | 不适用（规则尚未存在）；planner 运行后 e1885059 只读了 verification.md 和 evolver，没有读台账 | 独立 |
+| 2026-11-02 | 技能仓库发布到 WorkBuddy | G1 | 是 | 部分 | 14:00 前一直没调用技能（12:04 7c865162 起直接 Write）；用户 5e96c66f“你到底有没有按照我们技能本身做事”；之后 f96cf096 调 tasker、81cdd251 调 bugfixer、62b77d0e/e5bef31f 推送前调 auditor、2704a3c2/c64980e5 调 evolver | 独立 |
+| 2026-11-02 | 技能仓库发布到 WorkBuddy | G2 | 是 | 部分 | 首次写入 7c865162 之前没有完成定义；tasker 后只有 07fb7c5e“开始执行第 1 步”，没有可执行检查；15:16 的 tasker 参数 8d4837be 写了完成条件 | 独立 |
+| 2026-11-02 | 技能仓库发布到 WorkBuddy | G3 | 是 | 部分 | 多数结论有读回 main 的输出（如 74535eec）。但 caa5ef86“The check … passed”时 b02799d9 显示 queued，1f85bdc2、7dcf6070 同类；1f236bcd 说“合并前 CI 通过”，而 Monitor 启动 7 秒后就合并了 | 独立 |
+| 2026-11-02 | 技能仓库发布到 WorkBuddy | G4 | 是 | 部分 | WorkBuddy 拒收 4 次（a95b8eed、9f8aeaa8、b062b374、bf02eacf）都是直接改，没走 bugfixer；第 5 次 81cdd251 走了 bugfixer：0f85793a 复现，cf5c4187 用变异测试做回归；auditor 报出 ccb7f560“links 40 problems”，推送前没写处置理由 | 独立 |
+| 2026-11-02 | 技能仓库发布到 WorkBuddy | G5 | 不适用 | — | 不适用（规则尚未存在）；本会话也没有调用 planner | 独立 |
+| 2026-11-02 | Explainer 技能开发 | G1 | 是 | 部分 | 写规划前 d99883fa 调 planner；c74890ae 用 auditor 审规划；4437fbf4 调 tasker；056cb113 收尾调 evolver。但推送前 89abd399 说“先过 auditor”，实际没有调用技能，只跑了 bash | 独立 |
+| 2026-11-02 | Explainer 技能开发 | G2 | 是 | 否 | 首次写入 c2e2b2b9（规划文档）前没有完成定义；tasker 被打断（26228043）后直接 Write 08d7a7db，可见文字里没有契约 | 独立 |
+| 2026-11-02 | Explainer 技能开发 | G3 | 是 | 是 | 最终 bdec891e 有 e507f11d（“Validation passed”、台账行）和推送输出支撑；88c03952 有 96843c86 的远端 SHA | 独立 |
+| 2026-11-02 | Explainer 技能开发 | G4 | 是 | 否 | 3a0a043d“description_en is 1001 chars”失败后，0da067c0 直接改，没走 bugfixer；用户纠正 5664f78e“不是要在Tiko.day项目中开发”后也没走 bugfixer | 独立 |
+| 2026-11-02 | Explainer 技能开发 | G5 | 不适用 | — | 不适用（规则尚未存在）；c33487f7 读过台账前 60 行，但没有写明用了哪几条 | 独立 |
+| 2026-11-02 | Design-to-dev Agent 技能开发（11-02 至 11-04） | G1 | 是 | 部分 | ea5f6951 planner、5f25db38 tasker、28e7f149 evolver 都调用了。但 a9f5189e 写着“auditor, standard depth”却没调用，用户 ac7f2656 追问；11-03 302e9f93 有规划意图却没调 planner，直接写 05 规划；07:40 实现前没调 tasker | 独立 |
+| 2026-11-02 | Design-to-dev Agent 技能开发（11-02 至 11-04） | G2 | 是 | 部分 | 首次写入 f192476a、tasker 之后的 c4f14e4a，前面都没有完成定义。后面的修复周期先写失败测试再改，算部分做到：a81aca86“Writing the tests first”，d9127f5b FAIL | 独立 |
+| 2026-11-02 | Design-to-dev Agent 技能开发（11-02 至 11-04） | G3 | 是 | 部分 | 自评“Visual QA 12/12”不实（53104150 自己承认）；c3efa3c6 承认审计标注失实。其余结论有测试、CI（b7ef2604 有 run 号）和截图读回支撑 | 独立 |
+| 2026-11-02 | Design-to-dev Agent 技能开发（11-02 至 11-04） | G4 | 是 | 部分 | 审计问题都走了 bugfixer（33489c10、d601616f），先写回归测试再修，还做了变异检查 7b8955fe。但用户纠正 61502020“不能把技能放到 taluns-skill 里”、ccdbdbbe“太丑”都没走 bugfixer | 独立 |
+| 2026-11-02 | Design-to-dev Agent 技能开发（11-02 至 11-04） | G5 | 不适用 | — | 不适用（规则尚未存在）；8149ce58 在调用 planner 前读过台账前 60 行，没有写明用了哪几条 | 独立 |
+| 2026-11-03 | AI交付自检技能对比 | G1 | 是 | 部分 | 08:18:02 调 planner，db4bbc47 推送前调 auditor。但改 tasker 前（fd258025）没调 tasker；c19ddfec 直接用脚本写台账，没调 evolver；f65819c4 直接推 main，没有新的 auditor | 独立 |
+| 2026-11-03 | AI交付自检技能对比 | G2 | 是 | 否 | 首次写入 074fc2cf 和随后的 fd258025 之前，只有 eda05fac“先把规划写进 docs/88_planning/”，没有完成定义和检查 | 独立 |
+| 2026-11-03 | AI交付自检技能对比 | G3 | 是 | 是 | 71d3d04b 有 8f77068f 的 push 和 rev-parse 输出；6efc13ee 有 52e708ef 的 build --check 输出 | 独立 |
+| 2026-11-03 | AI交付自检技能对比 | G4 | 是 | 否 | git diff 查出 702103a8“My replace in the CHANGELOG also rewrote…”后直接改，没走 bugfixer；审计中途 32207c96 直接改 tasker；用户 c801d92a 追问版本号，暴露 evolver 漏升版本 | 独立 |
+| 2026-11-03 | AI交付自检技能对比 | G5 | 不适用 | — | 不适用（规则尚未存在）；planner 运行后 e1885059 只读了 verification.md 和 evolver，没有读台账 | 独立 |
 | 2026-11-04 | 遵守率监测与第三批修正 | G1 | 是 | 部分 | 本周期按上一周期已加载的 planner、tasker、evolver 执行，没有重新调用；规划文档先写 | 自评 |
 | 2026-11-04 | 遵守率监测与第三批修正 | G2 | 是 | 是 | `compliance-monitoring-20261104.md` §2 写于技能和脚本改动之前 | 自评 |
 | 2026-11-04 | 遵守率监测与第三批修正 | G3 | 是 | 是 | unittest 15 个通过；变异检查换回旧台账脚本后 4 个失败；check_ledger 输出 30 compliance rows well-formed | 自评 |
