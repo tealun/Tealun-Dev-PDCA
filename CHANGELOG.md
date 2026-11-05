@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- `plugin.json` 补上插件目录上架页的三个链接：`documentationUrl`（README）、`supportUrl`（GitHub Issues）、`privacyPolicyUrl`（新增的 `PRIVACY.md`，说明插件不收集、不发送任何数据）。服务条款不单独设置，由 MIT 许可证覆盖。
 - 删除同步脚本 `sync-skills.sh` / `sync-skills.ps1`，以及 README、QUICKSTART、SUPPORT、SECURITY、CONTRIBUTING 和模板里所有关于“clone 仓库再运行脚本”的安装说明（用户 2026-11-05 决定）。原因是插件目录会把 README 里这类“下载后直接执行”的写法作为安装风险展示给用户。其他 Agent 工具改为：从 Release 下载 zip，解压后把技能文件夹复制到工具的技能目录。`build_plugin.py --check` 新增一项检查，发现 README 里有 clone 后运行、管道接 shell、运行 `.sh` / `.ps1` 等写法就报错（对旧 README 测试，报出 13 行）。
 - 插件目录改为跟踪 `plugin` 分支（规划见 `docs/88_planning/plugin-branch-20261105.md`）。新增 `.github/workflows/plugin-branch.yml` 和 `scripts/publish_plugin_branch.sh`：推送版本 tag 或手动触发时，先校验并构建插件，再把打包结果追加提交到 `plugin` 分支。这个分支只包含技能、`plugin.json`、README、LICENSE 和图标，不含 CI、脚本、测试、文档和 CLAUDE.md。原因是目录把仓库根目录当作插件扫描，开发工具因此被报出 6 个 policy hold。`suite-package.yml` 不再在 `plugin` 分支上运行。
 - 第二次修复插件目录 Validate 被拒：只去掉 `*.ps1` 的 `eol=crlf` 仍然无法通过校验。`.gitattributes` 改为 `* -text`，所有文件都不再做换行转换，任何平台检出的都是仓库里存的原样内容（`.sh` 为 LF，`sync-skills.ps1` 为 CRLF，已逐个核对存储内容）。`build_plugin.py --check` 新增 `content_rewriting_attributes()`：只要 `.gitattributes` 里出现 `text`、`eol`、`filter`、`export-ignore`、`export-subst`、`ident`、`working-tree-encoding` 等会改写内容的属性，就报错。

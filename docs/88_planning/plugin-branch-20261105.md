@@ -48,6 +48,7 @@
 | B3 | 分支内容就是 `build_plugin.py` 的打包结果（`dist/tealun-dev-pdca/`），和 Release 附件同源 | 只有一份构建产物 |
 | B4 | `suite-package.yml` 的 push 触发排除 `plugin` 分支 | 那个分支上没有脚本，跑 main 的 CI 必然失败 |
 | B6 | （2026-11-05 补充）切换到 `plugin` 分支后，门户只剩 2 条 warning：`icon`（不用处理），以及 README 里的 download-and-run。用户决定删除同步脚本和所有“clone 后运行”的说明；其他 Agent 工具改为从 Release 下载后手动复制技能文件夹；`build_plugin.py --check` 检查 README，出现这类写法就报错 | 插件包里没有这两个脚本，这段说明本来就不适用；上架介绍取自 README，也不该引导用户执行脚本 |
+| B7 | （2026-11-05 补充）提交第 2 步 Listing details 显示 Links 一栏 2/6。`plugin.json` 补上 documentationUrl、supportUrl、privacyPolicyUrl，并新增 `PRIVACY.md`；termsOfServiceUrl 不设，由 MIT 覆盖；classification 由门户在提交后自动填写 | 上架页信息更完整；隐私政策照实写“不收集任何数据” |
 | B5 | 提交前在工作流里用 `npx -y @anthropic-ai/claude-code@2.1.318 plugin validate` 校验打包结果 | 不合格的内容不会进入分支 |
 
 ## 5. 待核实
