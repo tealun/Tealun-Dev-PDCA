@@ -9,6 +9,9 @@
   },
   "homepage": "https://github.com/tealun/tealun-dev-pdca",
   "repository": "https://github.com/tealun/tealun-dev-pdca",
+  "documentationUrl": "https://github.com/tealun/tealun-dev-pdca#readme",
+  "supportUrl": "https://github.com/tealun/tealun-dev-pdca/issues",
+  "privacyPolicyUrl": "https://github.com/tealun/tealun-dev-pdca/blob/main/PRIVACY.md",
   "license": "MIT",
   "keywords": [
     "pdca",
