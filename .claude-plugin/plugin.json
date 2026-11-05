@@ -1,0 +1,31 @@
+{
+  "name": "dev-pdca",
+  "displayName": "Tealun Dev PDCA",
+  "version": "1.0.1",
+  "description": "Five skills forming a PDCA loop: planner (plan before code), tasker (checkable changes with evidence), bugfixer (reproduce, prove the cause, fix, guard), auditor (evidence-backed audits), evolver (turn verified lessons into guards and ledger records); plus explainer (read-only, plain-language explanations of the codebase with file paths).",
+  "author": {
+    "name": "Tealun",
+    "url": "https://github.com/tealun"
+  },
+  "homepage": "https://github.com/tealun/tealun-dev-pdca",
+  "repository": "https://github.com/tealun/tealun-dev-pdca",
+  "license": "MIT",
+  "keywords": [
+    "pdca",
+    "planning",
+    "task-execution",
+    "debugging",
+    "audit",
+    "retrospective",
+    "code-explanation"
+  ],
+  "icon": "./assets/dev-pdca-avatar.png",
+  "skills": [
+    "./skills/planner",
+    "./skills/tasker",
+    "./skills/bugfixer",
+    "./skills/auditor",
+    "./skills/evolver",
+    "./skills/explainer"
+  ]
+}
