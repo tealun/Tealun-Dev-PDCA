@@ -44,6 +44,7 @@
 | M5 | 以后新增插件：在 `tealun-plugins` 的清单里加一条，指向该插件仓库的 `plugin` 分支（或它的发布分支），新仓库里不放市场清单 | 和 M2、M3 一致 |
 | M6 | 老用户迁移：先 `/plugin marketplace remove tealun`，再 `/plugin marketplace add tealun/tealun-plugins`，然后重新安装 | 市场的来源变了，旧的市场不会自动跟过来 |
 | M7 | 2026-11-05 仓库由 `claude-plugins` 改名为 `tealun-plugins` | 用户决定：Claude 桌面端用仓库名标记市场来源（显示 "by claude-plugins"），容易被误读为官方插件 |
+| M8 | README 不写旧市场的迁移说明 | 用户 2026-11-05 决定：除用户本人外没人用过旧市场 |
 
 ## 5. 待核实
 

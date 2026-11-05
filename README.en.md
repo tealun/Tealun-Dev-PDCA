@@ -67,8 +67,6 @@ Start a new session afterwards and all six skills load. Plugin skills carry a pr
 
 To update: `/plugin marketplace update tealun`. You can also turn on auto-update for this marketplace under Marketplaces in `/plugin`.
 
-The `tealun` marketplace list lives in [tealun/tealun-plugins](https://github.com/tealun/tealun-plugins). If you added the marketplace from `tealun/tealun-dev-pdca` before 2026-11-05, run `/plugin marketplace remove tealun` first, then add and install again with the commands above.
-
 ### claude.ai: one-click install
 
 1. Open the [latest Release](https://github.com/tealun/tealun-dev-pdca/releases/latest) and download `tealun-dev-pdca-<version>.zip`. The same package is also attached with a `.plugin` suffix; the contents are identical.
