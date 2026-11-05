@@ -22,4 +22,5 @@
 - **发布只靠推送 `v<版本>` tag，** 由 `.github/workflows/release.yml` 构建并创建 Release。不手动上传 Release 附件，不把 `.plugin` 或插件 zip 提交进仓库。
 - **`plugin` 分支只由 `.github/workflows/plugin-branch.yml` 写入，** 插件目录跟踪这个分支。它只包含打包好的插件，不要手动往里提交，也不要把开发文件放进去。
 - **提交 Claude 插件目录之前，** 先把目录规则登记进 `docs/claude-directory-rules.md`。每条要么写进 `build_plugin.py --check`，要么写明不校验的原因。
+- **本仓库是公开的。** 文件和提交信息里不写内部决策、会话编号、私有仓库名和商业安排；遵守率记录只写周期名称，不写会话编号。
 - **新增技能或大改技能的工作流之后、发布之前，** 派一个只拿到该技能 `SKILL.md` 路径的全新 agent，在真实项目上按技能执行一次，要求它列出指令不清、矛盾或缺失之处；核验它的产出后按反馈迭代。用作样本的项目一律只读：规划里写明，产出写到会话 scratchpad，不写进样本仓库。
