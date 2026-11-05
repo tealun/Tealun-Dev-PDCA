@@ -213,10 +213,15 @@ class BuildPluginTest(unittest.TestCase):
         self.assertEqual(build_plugin.check(REPO), [])
         self.assertEqual(build_plugin.check(self.root), [])
 
-    def test_skill_list_must_match_marketplace(self):
+    def test_skill_list_must_match_skill_folders(self):
         data = self.manifest()
         data["skills"] = data["skills"][:-1]
         self.write_manifest(data)
+        self.assertTrue(any("skills differ" in e for e in build_plugin.check(self.root)))
+
+    def test_new_skill_folder_must_be_listed(self):
+        (self.root / "newskill").mkdir()
+        (self.root / "newskill" / "SKILL.md").write_text("---\nname: newskill\n---\n", encoding="utf-8")
         self.assertTrue(any("skills differ" in e for e in build_plugin.check(self.root)))
 
     def test_missing_reference_file(self):

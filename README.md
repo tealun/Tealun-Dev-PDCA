@@ -52,20 +52,22 @@ Tealun Dev PDCA 用 PDCA（计划、执行、检查、改进）的方法组织 A
 在 Claude Code 会话里输入：
 
 ```text
-/plugin marketplace add tealun/tealun-dev-pdca
+/plugin marketplace add tealun/claude-plugins
 /plugin install dev-pdca@tealun
 ```
 
 也可以在终端里执行同样的操作：
 
 ```bash
-claude plugin marketplace add tealun/tealun-dev-pdca
+claude plugin marketplace add tealun/claude-plugins
 claude plugin install dev-pdca@tealun
 ```
 
 装好后新建会话，六个技能都会加载。插件里的技能名带前缀，手动调用时写 `/dev-pdca:tasker`、`/dev-pdca:bugfixer` 这样的形式；自动触发不受影响。
 
 更新：`/plugin marketplace update tealun`。也可以在 `/plugin` 的 Marketplaces 里给这个市场打开自动更新。
+
+插件市场 `tealun` 的清单放在 [tealun/claude-plugins](https://github.com/tealun/claude-plugins)。2026-11-05 之前用 `tealun/tealun-dev-pdca` 添加过市场的，先运行 `/plugin marketplace remove tealun`，再按上面的命令重新添加和安装。
 
 ### claude.ai 一键安装
 
@@ -169,7 +171,7 @@ claude plugin install dev-pdca@tealun
 
 ```text
 .
-├── .claude-plugin/   # Claude Code 插件市场清单（marketplace.json）
+├── .claude-plugin/   # 插件清单（plugin.json）
 ├── auditor/          # 证据驱动的项目审计技能
 ├── bugfixer/         # 面向具体症状的修复技能
 ├── evolver/          # 把经验固化为长期防线的复盘技能

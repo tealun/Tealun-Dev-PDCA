@@ -22,7 +22,7 @@
 - 技能说明应先写清“什么时候用”，再写“怎么工作”
 - 引用文件请使用相对路径，便于复制到不同用户机器
 - 复杂规则应放在 `references/` 中，避免主技能文件难以阅读
-- 新增或重命名技能目录时，同步更新 `.claude-plugin/marketplace.json` 里的 `skills` 列表，并运行 `claude plugin validate .` 确认通过
+- 新增或重命名技能目录时，同步更新 `.claude-plugin/plugin.json` 里的 `skills` 列表，并运行 `claude plugin validate .` 确认通过
 
 ## Pull Request 建议
 

@@ -7,7 +7,7 @@
 在会话里输入：
 
 ```text
-/plugin marketplace add tealun/tealun-dev-pdca
+/plugin marketplace add tealun/claude-plugins
 /plugin install dev-pdca@tealun
 ```
 

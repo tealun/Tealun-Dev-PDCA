@@ -94,6 +94,11 @@
 | 2026-11-05 | 目录提交与扫描结果登记 | G3 | 是 | 是 | `check_ledger.py`、`build_plugin.py --check`、单元测试的输出，以及规则表新增行的 grep 读回 | 自评 |
 | 2026-11-05 | 目录提交与扫描结果登记 | G4 | 不适用 | — | 门户结果全部通过，没有检查失败 | 自评 |
 | 2026-11-05 | 目录提交与扫描结果登记 | G5 | 不适用 | — | 本周期没有运行 planner | 自评 |
+| 2026-11-05 | 市场迁到 tealun/claude-plugins | G1 | 是 | 部分 | 先按 planner 的格式写了规划 `marketplace-move-20261105.md`（契约、台账条目、决策），但技能工具里没有 dev-pdca，本周期没有重新读 planner、tasker 的 SKILL.md | 自评 |
+| 2026-11-05 | 市场迁到 tealun/claude-plugins | G2 | 是 | 是 | 规划 §2 写出完成定义、检查方法和失败条件，时间早于两个仓库的文件改动 | 自评 |
+| 2026-11-05 | 市场迁到 tealun/claude-plugins | G3 | 是 | 是 | `claude plugin validate`（新市场、打包后的插件）、`check_marketplace.py` 及其变异检查（加 version、去 ref 均报错）、隔离 HOME 里从新市场安装成功（装到 1.0.1）、`build_plugin.py --check --since v1.0.1`、unittest、旧安装命令残留为 0 | 自评 |
+| 2026-11-05 | 市场迁到 tealun/claude-plugins | G4 | 不适用 | — | 周期内没有检查失败 | 自评 |
+| 2026-11-05 | 市场迁到 tealun/claude-plugins | G5 | 是 | 是 | 规划 §3 列出用到的台账条目 EV-20261102-001、EV-20261102-003、EV-20261105-003 | 自评 |
 
 ## 统计
 
