@@ -74,7 +74,7 @@
 | --- | --- | --- | --- |
 | Uses a credential from the user's machine | policy hold | `.github/workflows/release.yml` 的 `GH_TOKEN`（推断） | 不进入 `plugin` 分支 |
 | Image or font file that the plugin's code could run（5 处） | policy hold | 仓库里的脚本和测试（推断，详情没有展开） | 不进入 `plugin` 分支 |
-| Contains a download-and-run command（3 处） | warning | `release.yml` 的 `npx -y`、文档里的安装命令（推断） | 不进入 `plugin` 分支 |
+| Contains a download-and-run command（3 处） | warning | `release.yml` 的 `npx -y`、文档里的安装命令（推断） | 不进入 `plugin` 分支；切换到 `plugin` 分支后仍有 1 处，来自 README 里 clone 后运行同步脚本的说明，已在 2026-11-05 删除同步脚本及相关说明；`build_plugin.py --check` 的 `DOWNLOAD_AND_RUN` 检查 README，有这类写法就阻断 |
 | CLAUDE.md at the plugin root isn't loaded | warning | 根目录的 `CLAUDE.md` | 不进入 `plugin` 分支 |
 | Field from another tool's manifest（`icon`） | warning | `plugin.json` | 页面说明不需要处理 |
 

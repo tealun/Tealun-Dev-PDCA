@@ -4,7 +4,7 @@
 
 Less "I think I did it" from your AI agent, more "here is the proof I did it".
 
-Tealun Dev PDCA organises AI-assisted development as a PDCA loop (Plan, Do, Check, Act): five skills, each owning one stage, handing work to one another so the loop closes, plus a read-only `explainer` that translates AI-written code into explanations people who do not read code can follow. You can sync them into the local skill folders of your agent tools, install them as a Claude Code plugin, or build a single suite package (`dev-pdca`) for platforms that accept only one skill per upload. It is for people who already use Codex, Claude Code, Cursor, Gemini, Kimi, OpenCode, or a shared `.agents/skills` folder. You keep your tools; the agent gets a few steadier ways of working.
+Tealun Dev PDCA organises AI-assisted development as a PDCA loop (Plan, Do, Check, Act): five skills, each owning one stage, handing work to one another so the loop closes, plus a read-only `explainer` that translates AI-written code into explanations people who do not read code can follow. You can install them as a Claude plugin, copy them into the skill folders of other agent tools, or build a single suite package (`dev-pdca`) for platforms that accept only one skill per upload. It is for people who already use Codex, Claude Code, Cursor, Gemini, Kimi, OpenCode, or a shared `.agents/skills` folder. You keep your tools; the agent gets a few steadier ways of working.
 
 ## The problems it targets
 
@@ -40,12 +40,12 @@ Each of the three routes installs the whole set at once. Pick the one that fits 
 
 - Claude Code: the plugin marketplace is recommended. Two commands to install, one to update.
 - claude.ai (web and desktop): download the plugin package from the latest Release and upload it.
-- Codex, Cursor, Gemini, Kimi, OpenCode, or a shared `.agents/skills` folder: use the sync script.
+- Codex, Cursor, Gemini, Kimi, OpenCode, or a shared `.agents/skills` folder: copy the skill folders into the tool's skills folder.
 - WorkBuddy and other platforms that accept a single skill zip: use the `dev-pdca` suite package.
 
 With the first two routes the six skills are installed separately and each triggers from its own description, which gives the sharpest triggering from a cold start. The suite package puts all six inside one skill; its entry routes requests and keeps the hand-off rules in force for the whole session.
 
-In Claude Code, do not use both routes, or each skill appears twice (`tasker` and `dev-pdca:tasker`). The sync script also writes to `~/.claude/skills` whenever it detects Claude; if you installed the plugin, you can delete those six folders under `~/.claude/skills` after running the script.
+Use one route per tool, or each skill appears twice (for example `tasker` and `dev-pdca:tasker`).
 
 ### Option 1: Claude Code plugin marketplace
 
@@ -74,47 +74,11 @@ To update: `/plugin marketplace update tealun`. You can also turn on auto-update
 
 Keep one install route per tool, or each skill appears twice. If you uploaded planner, tasker, bugfixer, auditor and evolver as separate skills before, delete those five in your skill settings first, then install the plugin. When a new plugin version is released, download it and upload it again.
 
-### Option 2: sync script
+### Option 2: copy into other agent tools
 
-Sync the skills from this repository into the `skills` folders of your local agent tools. Check which targets will be written first, preview with a dry run, then sync for real.
-
-#### Windows
-
-```powershell
-git clone https://github.com/tealun/tealun-dev-pdca.git
-cd tealun-dev-pdca
-.\sync-skills.ps1 --list-targets
-$env:DRY_RUN = '1'
-.\sync-skills.ps1
-Remove-Item Env:\DRY_RUN
-.\sync-skills.ps1
-```
-
-#### macOS / Linux
-
-```bash
-git clone https://github.com/tealun/tealun-dev-pdca.git
-cd tealun-dev-pdca
-bash ./sync-skills.sh --list-targets
-DRY_RUN=1 bash ./sync-skills.sh
-bash ./sync-skills.sh
-```
-
-#### Sync only some skills
-
-To install only a few skills, put their names at the end of the command:
-
-```powershell
-.\sync-skills.ps1 tasker planner
-```
-
-macOS / Linux:
-
-```bash
-bash ./sync-skills.sh tasker planner
-```
-
-After installing, reopen your agent CLI or start a new session so the tool reloads its skill folders.
+1. Open the [latest Release](https://github.com/tealun/tealun-dev-pdca/releases/latest), download `tealun-dev-pdca-<version>.zip` and unzip it.
+2. Copy the six folders under `skills/` (`planner`, `tasker`, `bugfixer`, `auditor`, `evolver`, `explainer`) into the tool's skills folder, for example `~/.codex/skills`, `~/.cursor/skills`, `~/.gemini/skills` or the shared `~/.agents/skills`. To use only some of them, copy only those folders.
+3. Reopen the tool or start a new session so it reloads its skills.
 
 ### Option 3: the dev-pdca suite package
 
@@ -196,40 +160,10 @@ Fuller install and troubleshooting steps are in [QUICKSTART.md](QUICKSTART.md) (
 | The same kind of problem keeps coming back and you want the lesson to stick | `evolver` | Verified lessons become rules, checks, ledger records or input for the next plan |
 | You cannot read the AI-written code and want to understand it before changing it | `explainer` | Never edits code; every conclusion cites a file path, and secrets, payments, user data and database structure are flagged separately |
 
-## Where the sync script installs
-
-The sync script detects compatible tools that are installed or configured on your machine and copies the skills into their `skills` folders. It currently covers:
-
-- Claude
-- Codex
-- Cursor
-- Gemini
-- Kimi
-- Kimi Desktop (Windows)
-- OpenCode
-- Shared agents (`~/.agents/skills`)
-
-The script copies over the existing content: skills from this repository are written into the target folder, and metadata files that exist only in the target folder are usually kept. Run it with `DRY_RUN=1` first to see where it will write.
-
 ## Updating
 
-Installed through the plugin marketplace: run `/plugin marketplace update tealun` in Claude Code.
-
-Installed with the sync script: pull the latest version and run the script again.
-
-macOS / Linux:
-
-```bash
-git pull
-bash ./sync-skills.sh
-```
-
-Windows:
-
-```powershell
-git pull
-.\sync-skills.ps1
-```
+- Installed through the Claude Code plugin marketplace: run `/plugin marketplace update tealun`.
+- Uploaded to claude.ai or copied into another tool: download the new version from the [latest Release](https://github.com/tealun/tealun-dev-pdca/releases/latest) and upload it again, or copy it over the old folders.
 
 ## Repository layout
 
@@ -243,10 +177,8 @@ git pull
 ├── planner/          # Early project planning
 ├── tasker/           # General task-execution discipline
 ├── suite/dev-pdca/   # Suite package entry: PDCA routing rules
-├── scripts/          # build_suite.py: builds the dev-pdca suite package
-├── docs/             # Instruction snippet, case studies, this repo's evolution ledger
-├── sync-skills.ps1   # Windows sync script
-└── sync-skills.sh    # macOS / Linux / WSL sync script
+├── scripts/          # Build and checks: build_plugin.py (plugin), build_suite.py (dev-pdca suite package)
+└── docs/             # Instruction snippet, plans, this repo's evolution ledger
 ```
 
 ## Troubleshooting
@@ -254,8 +186,8 @@ git pull
 Check three things first:
 
 1. Does your agent tool support folder-based `SKILL.md` skills?
-2. Does `--list-targets` find the target folder?
-3. Did you reopen the agent CLI or start a new session after syncing?
+2. Are the skill folders in the folder your tool actually reads (each folder holding its `SKILL.md` directly)?
+3. Did you reopen the tool or start a new session after installing?
 
 More in [SUPPORT.md](SUPPORT.md). To contribute, see [CONTRIBUTING.md](CONTRIBUTING.md). For security issues, follow [SECURITY.md](SECURITY.md).
 
