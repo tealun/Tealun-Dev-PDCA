@@ -40,12 +40,12 @@ Tealun Dev PDCA 用 PDCA（计划、执行、检查、改进）的方法组织 A
 
 - 用 Claude Code：推荐走插件市场，两条命令装好，以后一条命令更新。
 - 用 claude.ai（网页、桌面端）：从 Release 下载插件包，上传即可安装。
-- 用 Codex、Cursor、Gemini、Kimi、OpenCode 或共享 `.agents/skills` 目录：用同步脚本。
+- 用 Codex、Cursor、Gemini、Kimi、OpenCode 或共享 `.agents/skills` 目录：把技能文件夹复制到工具的技能目录。
 - 用 WorkBuddy 等只能上传单个技能压缩包的平台：用套件包 `dev-pdca`。
 
 前两种方式下，6 个技能独立安装，各自按描述自动触发，冷启动时触发最精准。套件包把 6 个技能放进一个技能里，由入口统一分派，联动规则在整个会话里生效。
 
-Claude Code 里不要两种方式都装，否则同一个技能会出现两份（`tasker` 和 `dev-pdca:tasker`）。同步脚本只要检测到 Claude 也会写入 `~/.claude/skills`，已经用插件安装的话，跑完脚本后可以删掉 `~/.claude/skills` 下这六个目录。
+同一个工具里只用一种方式，否则同一个技能会出现两份（例如 `tasker` 和 `dev-pdca:tasker`）。
 
 ### 方式一：Claude Code 插件市场
 
@@ -74,47 +74,11 @@ claude plugin install dev-pdca@tealun
 
 同一个工具里只保留一种安装方式，否则技能会出现两份。如果之前单独上传过 planner、tasker、bugfixer、auditor、evolver 这五个技能，先在技能设置里删掉它们，再装插件。插件发布新版本后，重新下载并上传。
 
-### 方式二：同步脚本
+### 方式二：复制到其他 Agent 工具
 
-把仓库里的技能同步到本机 Agent 工具的 `skills` 目录。建议先查看会写入哪些目标，再 dry run 预览一次，确认无误后正式同步。
-
-#### Windows
-
-```powershell
-git clone https://github.com/tealun/tealun-dev-pdca.git
-cd tealun-dev-pdca
-.\sync-skills.ps1 --list-targets
-$env:DRY_RUN = '1'
-.\sync-skills.ps1
-Remove-Item Env:\DRY_RUN
-.\sync-skills.ps1
-```
-
-#### macOS / Linux
-
-```bash
-git clone https://github.com/tealun/tealun-dev-pdca.git
-cd tealun-dev-pdca
-bash ./sync-skills.sh --list-targets
-DRY_RUN=1 bash ./sync-skills.sh
-bash ./sync-skills.sh
-```
-
-#### 只同步指定技能
-
-如果你只想安装某几个技能，把技能名放到命令末尾：
-
-```powershell
-.\sync-skills.ps1 tasker planner
-```
-
-macOS / Linux：
-
-```bash
-bash ./sync-skills.sh tasker planner
-```
-
-安装后，重新打开你的 Agent CLI 或新建会话，让工具重新加载技能目录。
+1. 打开 [最新 Release](https://github.com/tealun/tealun-dev-pdca/releases/latest)，下载 `tealun-dev-pdca-<版本>.zip` 并解压。
+2. 把里面 `skills/` 下的六个文件夹（`planner`、`tasker`、`bugfixer`、`auditor`、`evolver`、`explainer`）复制到工具的技能目录，例如 `~/.codex/skills`、`~/.cursor/skills`、`~/.gemini/skills` 或共享的 `~/.agents/skills`。只想用其中几个，就只复制那几个文件夹。
+3. 重新打开工具或新建会话，让它重新加载技能目录。
 
 ### 方式三：套件包 dev-pdca
 
@@ -196,40 +160,10 @@ bash ./sync-skills.sh tasker planner
 | 同类问题反复出现，想把教训留住 | `evolver` | 把已验证经验变成规则、检查、台账或下一轮计划输入 |
 | 看不懂 AI 写的代码，改之前想先弄明白 | `explainer` | 只读不改代码；每条结论附文件路径，敏感区域（密钥、支付、用户数据、数据库结构）单独标出 |
 
-## 安装到哪里
-
-同步脚本会检测本机已经安装或配置过的兼容工具，把技能复制到对应的 `skills` 目录。当前覆盖：
-
-- Claude
-- Codex
-- Cursor
-- Gemini
-- Kimi
-- Kimi Desktop（Windows）
-- OpenCode
-- Shared agents (`~/.agents/skills`)
-
-脚本采用覆盖式复制：仓库里的技能内容会同步到目标目录；目标目录里仅本地存在的元数据文件通常会保留。同步前先跑 `DRY_RUN=1`，可以看到将要写入的位置。
-
 ## 更新技能
 
-插件市场安装的，在 Claude Code 里运行 `/plugin marketplace update tealun`。
-
-同步脚本安装的，拉取最新内容后重新运行同步脚本即可。
-
-macOS / Linux：
-
-```bash
-git pull
-bash ./sync-skills.sh
-```
-
-Windows：
-
-```powershell
-git pull
-.\sync-skills.ps1
-```
+- Claude Code 插件市场安装的：运行 `/plugin marketplace update tealun`。
+- claude.ai 上传或复制到其他工具的：从 [最新 Release](https://github.com/tealun/tealun-dev-pdca/releases/latest) 下载新版，重新上传，或重新复制覆盖原来的文件夹。
 
 ## 项目结构
 
@@ -243,10 +177,8 @@ git pull
 ├── planner/          # 项目前期规划技能
 ├── tasker/           # 通用任务执行纪律技能
 ├── suite/dev-pdca/   # 套件包入口：PDCA 分派规则
-├── scripts/          # build_suite.py：构建 dev-pdca 套件包
-├── docs/             # 指令片段、本仓库的演进台账
-├── sync-skills.ps1   # Windows 同步脚本
-└── sync-skills.sh    # macOS / Linux / WSL 同步脚本
+├── scripts/          # 构建与校验：build_plugin.py（插件）、build_suite.py（dev-pdca 套件包）
+└── docs/             # 指令片段、规划、本仓库的演进台账
 ```
 
 ## 遇到问题
@@ -254,8 +186,8 @@ git pull
 先看三件事：
 
 1. 你的 Agent 工具是否支持目录型 `SKILL.md` 技能包。
-2. `--list-targets` 是否能找到目标目录。
-3. 同步后是否重新打开了 Agent CLI 或新建会话。
+2. 技能文件夹是否放在了工具实际读取的技能目录里（每个文件夹里直接是 `SKILL.md`）。
+3. 安装后是否重新打开了工具或新建会话。
 
 更多排查方式见 [SUPPORT.md](SUPPORT.md)。想贡献改进可以看 [CONTRIBUTING.md](CONTRIBUTING.md)。安全相关问题请按 [SECURITY.md](SECURITY.md) 处理。
 
