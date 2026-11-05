@@ -16,7 +16,7 @@
 - **用户已决定**（2026-11-04）：
   - 图标用 `assets/dev-pdca-avatar.png`；
   - 首版 `1.0.0`，S1–S5 做完、auditor 审计通过、CI 全绿后，直接合并并推送 `v1.0.0`；
-  - 开发者门户跟踪 `main`，发布时手动点 Publish；
+  - 开发者门户跟踪 `main`，发布时手动点 Publish（2026-11-05 改为跟踪 `plugin` 分支，见 `plugin-branch-20261105.md`）；
   - 目录提交由用户本人在 claude.ai/directory/manage 完成。
 
 ## 2. 契约
