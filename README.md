@@ -52,14 +52,14 @@ Tealun Dev PDCA 用 PDCA（计划、执行、检查、改进）的方法组织 A
 在 Claude Code 会话里输入：
 
 ```text
-/plugin marketplace add tealun/claude-plugins
+/plugin marketplace add tealun/tealun-plugins
 /plugin install dev-pdca@tealun
 ```
 
 也可以在终端里执行同样的操作：
 
 ```bash
-claude plugin marketplace add tealun/claude-plugins
+claude plugin marketplace add tealun/tealun-plugins
 claude plugin install dev-pdca@tealun
 ```
 
@@ -67,7 +67,7 @@ claude plugin install dev-pdca@tealun
 
 更新：`/plugin marketplace update tealun`。也可以在 `/plugin` 的 Marketplaces 里给这个市场打开自动更新。
 
-插件市场 `tealun` 的清单放在 [tealun/claude-plugins](https://github.com/tealun/claude-plugins)。2026-11-05 之前用 `tealun/tealun-dev-pdca` 添加过市场的，先运行 `/plugin marketplace remove tealun`，再按上面的命令重新添加和安装。
+插件市场 `tealun` 的清单放在 [tealun/tealun-plugins](https://github.com/tealun/tealun-plugins)。2026-11-05 之前用 `tealun/tealun-dev-pdca` 添加过市场的，先运行 `/plugin marketplace remove tealun`，再按上面的命令重新添加和安装。
 
 ### claude.ai 一键安装
 
