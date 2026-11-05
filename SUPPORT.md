@@ -6,25 +6,13 @@
 
 1. 你的 Agent 工具是否支持目录型 `SKILL.md` 技能包。
 2. 你是否已经重新打开 Agent CLI 或新建会话。
-3. 同步脚本是否把技能复制到了正确的 `skills` 目录。
-
-可以先运行：
-
-```bash
-./sync-skills.sh --list-targets
-```
-
-Windows：
-
-```powershell
-.\sync-skills.ps1 --list-targets
-```
+3. 技能文件夹是否放在了工具实际读取的技能目录里（每个文件夹里直接是 `SKILL.md`）。
 
 ## 提交问题时请附上
 
 - 操作系统：Windows、macOS、Linux 或 WSL
 - 使用的 Agent 工具及版本
-- 运行过的同步命令
+- 使用的安装方式（插件市场、claude.ai 上传、手动复制或套件包）
 - 期望发生什么
 - 实际发生什么
 - 相关报错或截图
@@ -33,7 +21,6 @@ Windows：
 
 ## 适合提交 issue 的情况
 
-- 同步脚本没有识别已安装工具
 - 某个技能的触发说明不清楚
 - 技能行为和文档描述不一致
 - 文档安装步骤不完整

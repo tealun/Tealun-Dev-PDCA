@@ -9,7 +9,7 @@
 ## 验证方式
 
 - [ ] 已检查相关文档链接
-- [ ] 已运行对应同步脚本或 dry run
+- [ ] 已运行 `python3 scripts/build_plugin.py --check` 与 `python3 -m unittest discover -s tests`
 - [ ] 不涉及脚本行为变更
 
 ## 备注

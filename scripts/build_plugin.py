@@ -52,6 +52,11 @@ NAME_PATTERN = re.compile(r"[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?")
 RESERVED_NAMES = {"claude", "anthropic", "official", "plugin", "mcp", "test"}
 RESERVED_PREFIXES = ("claude-", "anthropic-", "anthropics-", "cc-plugin-")
 README_MIN_WORDS = 40
+# The packaged README is the listing text; the directory flags clone-and-run or
+# pipe-to-shell install steps in it as an install-time risk (docs/claude-directory-rules.md).
+DOWNLOAD_AND_RUN = re.compile(
+    r"git clone|curl\s|wget\s|\birm\b|\biwr\b|Invoke-WebRequest|Invoke-Expression|\biex\b"
+    r"|\|\s*(ba|z)?sh\b|\bbash\s+\S+\.sh|\.ps1\b|\bnpx\s|\buvx\s|\bpipx\s", re.I)
 MAX_FILE_BYTES = 5 * 1024 * 1024          # stops validation
 MAX_TEXT_FILE_BYTES = 256 * 1024          # held for a reviewer (images and fonts exempt)
 MAX_FILES = 512                           # held for a reviewer
@@ -137,6 +142,11 @@ def check(repo: Path = REPO, tag: str | None = None, since: str | None = None) -
     words = len(re.sub(r"```.*?```", "", readme.read_text(encoding="utf-8"), flags=re.S).split()) if readme.is_file() else 0
     if words < README_MIN_WORDS:
         errors.append(f"README.md has {words} words outside code blocks; the directory needs {README_MIN_WORDS}")
+    if readme.is_file():
+        for n, line in enumerate(readme.read_text(encoding="utf-8").splitlines(), 1):
+            if DOWNLOAD_AND_RUN.search(line):
+                errors.append(f"README.md line {n}: download-and-run install step; the directory shows it "
+                              f"to users as an install-time risk")
     if not (repo / "LICENSE").is_file() and not manifest.get("license"):
         errors.append("no LICENSE file and no license in plugin.json")
     for missing in ("description", "author", "version"):
