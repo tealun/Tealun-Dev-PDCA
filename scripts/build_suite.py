@@ -37,13 +37,19 @@ SKILLS = ["planner", "tasker", "bugfixer", "auditor", "evolver", "explainer"]
 DESCRIPTION_LIMIT = 1024
 WORKBUDDY_TEXT_LIMITS = {"display_name_en": 60, "description_zh": 500, "description_en": 1000}
 MAX_EXAMPLES = 3  # per language, examples_zh / examples_en
+# category values seen on the WorkBuddy market (third-party schema, see docs/workbuddy-rules.md)
+WORKBUDDY_CATEGORIES = {
+    "productivity", "education", "media", "design", "data", "writing", "research", "finance",
+    "automation", "developer", "business", "marketing", "collaboration", "content-creation",
+    "productivity-tools", "image-video", "ecommerce-analytics", "bioinformatics", "legal", "manufacturing",
+}
 # Sub-skill frontmatter: the Agent Skills spec fields we use, the Claude Code
 # extensions we rely on, and a top-level version (WorkBuddy requires one; see
 # docs/workbuddy-rules.md). Decision: docs/88_planning/review-followup-2-20261104.md F7.
 SUBSKILL_FIELDS = {"name", "description", "argument-hint", "user-invocable", "disable-model-invocation", "version"}
 
 # Files that serve repository maintenance, not the agent at run time.
-EXCLUDE_PATTERNS = [re.compile(p) for p in (r"^RELEASE_.*\.md$", r"^INTRO\.md$", r"^__pycache__$", r"\.pyc$", r"^\.DS_Store$")]
+EXCLUDE_PATTERNS = [re.compile(p) for p in (r"^RELEASE_.*\.md$", r"^INTRO\.md$", r"^__pycache__$", r"\.pyc$", r"^\.DS_Store$", r"^\.git$", r"^node_modules$")]
 
 
 def frontmatter(path: Path) -> dict[str, str]:
@@ -99,6 +105,10 @@ def validate() -> str:
     # WorkBuddy limits, from upload errors and published skills' metadata.
     if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,39}", fm.get("name", "")):
         errors.append("name must match ^[a-z0-9][a-z0-9-]{0,39}$")
+    if fm.get("name", "").startswith("workbuddy-"):
+        errors.append("name must not start with workbuddy- (reserved on WorkBuddy)")
+    if fm.get("category") and fm["category"] not in WORKBUDDY_CATEGORIES:
+        errors.append(f"category {fm['category']!r} is not a known WorkBuddy category")
     for field, limit in WORKBUDDY_TEXT_LIMITS.items():
         if len(fm.get(field, "")) > limit:
             errors.append(f"{field} is {len(fm[field])} chars, WorkBuddy allows {limit}")
@@ -204,6 +214,8 @@ def validate_package(entries: list[tuple[str, Path]]) -> None:
     for rel, src in entries:
         if src.read_bytes().startswith(b"\xef\xbb\xbf"):
             errors.append(f"{rel} starts with a UTF-8 BOM")
+        if src.suffix in TEXT_SUFFIXES and b"\r" in content(rel, src):
+            errors.append(f"{rel} has CR line endings; WorkBuddy expects LF")
         if rel != "SKILL.md" and rel.endswith(".md"):
             if re.match(r"\A---\n(?:.*\n)*?name:", content(rel, src).decode("utf-8")):
                 errors.append(f"{rel} still carries skill frontmatter")

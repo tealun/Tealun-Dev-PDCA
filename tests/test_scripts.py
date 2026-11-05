@@ -178,6 +178,42 @@ class BuildSuiteTest(unittest.TestCase):
             build_suite.frontmatter = original
         self.assertIn("evolver/SKILL.md: frontmatter fields", str(caught.exception))
 
+    def validate_with_suite_fields(self, **changes) -> str:
+        original = build_suite.frontmatter
+
+        def patched(path):
+            fields = original(path)
+            if path == build_suite.SUITE_SRC / "SKILL.md":
+                fields.update(changes)
+            return fields
+
+        build_suite.frontmatter = patched
+        try:
+            with self.assertRaises(SystemExit) as caught:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    build_suite.validate()
+        finally:
+            build_suite.frontmatter = original
+        return str(caught.exception)
+
+    def test_reserved_name_prefix_rejected(self):
+        self.assertIn("reserved on WorkBuddy", self.validate_with_suite_fields(name="workbuddy-pdca"))
+
+    def test_unknown_category_rejected(self):
+        self.assertIn("not a known WorkBuddy category", self.validate_with_suite_fields(category="dev-tools"))
+
+    def test_git_and_node_modules_excluded(self):
+        self.assertTrue(build_suite.excluded(".git"))
+        self.assertTrue(build_suite.excluded("node_modules"))
+
+    def test_carriage_return_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp) / "notes.md"
+            src.write_bytes(b"line one\rline two\n")
+            with self.assertRaises(SystemExit) as caught:
+                build_suite.validate_package([("SKILL.md", build_suite.SUITE_SRC / "SKILL.md"), ("notes.md", src)])
+        self.assertIn("CR line endings", str(caught.exception))
+
 
 def plugin_fixture(tmp: Path) -> Path:
     """A copy of the plugin-relevant parts of the repository."""
@@ -318,6 +354,36 @@ class BuildPluginTest(unittest.TestCase):
         for forbidden in ("CLAUDE.md", "AGENTS.md", "docs/", "tests/", "/agents/", ".github/", "RELEASE_", "INTRO.md"):
             self.assertFalse(any(forbidden in n for n in names), forbidden)
         self.assertIn(packaged["icon"].lstrip("./"), names)
+
+
+class ReleaseGateTest(unittest.TestCase):
+    """The plugin directory tracks the plugin branch: only a tag whose Release succeeded may reach it."""
+
+    WORKFLOWS = REPO / ".github" / "workflows"
+
+    def test_plugin_branch_is_not_triggered_by_push(self):
+        text = (self.WORKFLOWS / "plugin-branch.yml").read_text(encoding="utf-8")
+        triggers = text.split("\non:\n", 1)[1].split("\n\n", 1)[0]
+        self.assertNotRegex(triggers, r"(?m)^  push:")
+        self.assertRegex(triggers, r"(?m)^  workflow_call:")
+        self.assertRegex(triggers, r"(?m)^  workflow_dispatch:\n    inputs:\n      tag:")
+
+    def test_plugin_branch_checks_the_release_and_the_tag(self):
+        text = (self.WORKFLOWS / "plugin-branch.yml").read_text(encoding="utf-8")
+        self.assertIn("ref: refs/tags/${{ inputs.tag }}", text)
+        self.assertIn('gh release view "$TAG"', text)
+        self.assertIn('build_plugin.py --check --tag "$TAG"', text)
+        self.assertLess(text.index("gh release view"), text.index("publish_plugin_branch.sh"))
+
+    def test_release_calls_plugin_branch_after_release(self):
+        text = (self.WORKFLOWS / "release.yml").read_text(encoding="utf-8")
+        job = text.split("\n  plugin-branch:\n", 1)[1]
+        self.assertRegex(job, r"^    needs: release\n")
+        self.assertIn("uses: ./.github/workflows/plugin-branch.yml", job)
+
+    def test_no_other_workflow_publishes_the_plugin_branch(self):
+        writers = [p.name for p in self.WORKFLOWS.glob("*.yml") if "publish_plugin_branch.sh" in p.read_text(encoding="utf-8")]
+        self.assertEqual(writers, ["plugin-branch.yml"])
 
 
 if __name__ == "__main__":

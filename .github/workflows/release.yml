@@ -49,3 +49,10 @@ jobs:
             dist/dev-pdca.zip \
             --title "Tealun Dev PDCA ${version}" \
             --notes-file "$RUNNER_TEMP/notes.md"
+
+  # The plugin directory tracks the plugin branch; only a tag whose release succeeded may reach it.
+  plugin-branch:
+    needs: release
+    uses: ./.github/workflows/plugin-branch.yml
+    with:
+      tag: ${{ github.ref_name }}

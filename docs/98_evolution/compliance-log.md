@@ -99,6 +99,11 @@
 | 2026-11-05 | 市场迁到 tealun/claude-plugins | G3 | 是 | 是 | `claude plugin validate`（新市场、打包后的插件）、`check_marketplace.py` 及其变异检查（加 version、去 ref 均报错）、隔离 HOME 里从新市场安装成功（装到 1.0.1）、`build_plugin.py --check --since v1.0.1`、unittest、旧安装命令残留为 0 | 自评 |
 | 2026-11-05 | 市场迁到 tealun/claude-plugins | G4 | 不适用 | — | 周期内没有检查失败 | 自评 |
 | 2026-11-05 | 市场迁到 tealun/claude-plugins | G5 | 是 | 是 | 规划 §3 列出用到的台账条目 EV-20261102-001、EV-20261102-003、EV-20261105-003 | 自评 |
+| 2026-11-05 | plugin 分支发布闸门与 WorkBuddy 规则补登 | G1 | 是 | 是 | bugfixer、planner、tasker、auditor、evolver 的 SKILL.md 都在对应动作之前读取（技能工具里没有 dev-pdca，按 AGENTS.md 读文件） | 自评 |
+| 2026-11-05 | plugin 分支发布闸门与 WorkBuddy 规则补登 | G2 | 是 | 是 | `release-gate-20261105.md` §2 写于第一次改工作流和脚本之前 | 自评 |
+| 2026-11-05 | plugin 分支发布闸门与 WorkBuddy 规则补登 | G3 | 是 | 是 | unittest 36 项、变异测试、actionlint、发布脚本 4 场景演练、包 sha256 对比的输出都附在收尾中 | 自评 |
+| 2026-11-05 | plugin 分支发布闸门与 WorkBuddy 规则补登 | G4 | 是 | 是 | 审计报告的问题按 bugfixer 处理：先在本地临时远端复现残留分支；新增 ReleaseGateTest 和 4 项套件检查测试，均做了撤掉修复后失败的变异测试 | 自评 |
+| 2026-11-05 | plugin 分支发布闸门与 WorkBuddy 规则补登 | G5 | 是 | 部分 | 规划 §3 列出 EV-20261105-003、EV-20261102-001、EV-20261102-003；只读了这几行，没有通读全部行的 Next Planning Input | 自评 |
 
 ## 统计
 
