@@ -52,20 +52,22 @@ Use one route per tool, or each skill appears twice (for example `tasker` and `d
 In a Claude Code session:
 
 ```text
-/plugin marketplace add tealun/tealun-dev-pdca
+/plugin marketplace add tealun/claude-plugins
 /plugin install dev-pdca@tealun
 ```
 
 The same from a terminal:
 
 ```bash
-claude plugin marketplace add tealun/tealun-dev-pdca
+claude plugin marketplace add tealun/claude-plugins
 claude plugin install dev-pdca@tealun
 ```
 
 Start a new session afterwards and all six skills load. Plugin skills carry a prefix, so to call one by hand you type `/dev-pdca:tasker`, `/dev-pdca:bugfixer` and so on. Automatic selection works the same as before.
 
 To update: `/plugin marketplace update tealun`. You can also turn on auto-update for this marketplace under Marketplaces in `/plugin`.
+
+The `tealun` marketplace list lives in [tealun/claude-plugins](https://github.com/tealun/claude-plugins). If you added the marketplace from `tealun/tealun-dev-pdca` before 2026-11-05, run `/plugin marketplace remove tealun` first, then add and install again with the commands above.
 
 ### claude.ai: one-click install
 
@@ -169,7 +171,7 @@ Fuller install and troubleshooting steps are in [QUICKSTART.md](QUICKSTART.md) (
 
 ```text
 .
-├── .claude-plugin/   # Claude Code plugin marketplace manifest (marketplace.json)
+├── .claude-plugin/   # Plugin manifest (plugin.json)
 ├── auditor/          # Evidence-led project audits
 ├── bugfixer/         # Symptom-driven repairs
 ├── evolver/          # Turns lessons into lasting guards

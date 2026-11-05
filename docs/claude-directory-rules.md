@@ -39,7 +39,7 @@
 | 应设置 `description`、`author`、`version`，缺少会给警告 | 清单 | 阻断：`check()` 要求三项都有 |
 | 名称只能用小写字母、数字、连字符，最长 64 字符，首尾必须是字母或数字；不能是保留名（`claude`、`anthropic`、`official`、`plugin`、`mcp`、`test`）；不能以 `claude-`、`anthropic-`、`anthropics-`、`cc-plugin-` 开头 | 清单 | 阻断：`check()` 的命名规则 |
 | 设了 `version` 就要在每次发布时升高；Claude Code 会固定使用这个版本，直到它改变 | 提交、参考 | 阻断：`--since <上一个 tag>`，技能有改动但版本没升高 |
-| `skills` 是相对插件根目录、以 `./` 开头的目录路径；本仓库的技能不在 `skills/` 下，所以显式列出 | 参考 | 阻断：`check()` 第 2、3 项（与 `marketplace.json` 一致，每个技能都有 `SKILL.md` 且名称对得上） |
+| `skills` 是相对插件根目录、以 `./` 开头的目录路径；本仓库的技能不在 `skills/` 下，所以显式列出 | 参考 | 阻断：`check()` 第 2、3 项（和根目录下含 `SKILL.md` 的文件夹一致，每个技能都有 `SKILL.md` 且名称对得上） |
 | 上架页的文字取自 `plugin.json` 和 README；上架后，名称和简短描述跟随线上版本 | 提交 | 不校验：属于文案内容 |
 | `icon` 是插件内图片文件的路径；Claude Code 不读它，目录在提交时读取 | 参考 | 阻断：`icon` 指向的文件必须存在 |
 | 图标规格：512–2048 px 正方形、小于 2 MB、不接受 SVG/WebP；只在第一次提交或保存时生效 | 方案 | 不校验：官方页面没找到原文。本仓库图标为 512×512 PNG，已满足上述说法 |

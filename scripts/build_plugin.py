@@ -35,7 +35,6 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 PLUGIN_JSON = REPO / ".claude-plugin" / "plugin.json"
-MARKETPLACE_JSON = REPO / ".claude-plugin" / "marketplace.json"
 DIST = REPO / "dist"
 # Package and release name. It carries the brand and differs from the plugin name in
 # plugin.json (dev-pdca), which is the short invocation prefix. See
@@ -103,18 +102,13 @@ def check(repo: Path = REPO, tag: str | None = None, since: str | None = None) -
     if version and not VERSION_PATTERN.fullmatch(version):
         errors.append(f"plugin.json version {version!r} is not x.y.z")
 
-    # 2. same skill set as marketplace.json
+    # 2. plugin.json lists exactly the top-level skill folders (the marketplace
+    #    list lives in tealun/claude-plugins, so this is the guard against a new
+    #    skill folder that never made it into the manifest)
     skills = skill_dirs(manifest)
-    try:
-        market = json.loads((repo / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
-        entry = next(p for p in market["plugins"] if p.get("name") == manifest.get("name"))
-        market_skills = [s.strip("./").rstrip("/") for s in entry.get("skills", [])]
-        if sorted(market_skills) != sorted(skills):
-            errors.append(f"skills differ: plugin.json {sorted(skills)} vs marketplace.json {sorted(market_skills)}")
-        if "version" in entry:
-            errors.append("marketplace.json plugin entry must not carry version (plugin.json is the only source)")
-    except (OSError, json.JSONDecodeError, KeyError, StopIteration) as exc:
-        errors.append(f"marketplace.json has no matching plugin entry: {exc}")
+    on_disk = sorted(p.parent.name for p in repo.glob("*/SKILL.md"))
+    if sorted(skills) != on_disk:
+        errors.append(f"skills differ: plugin.json {sorted(skills)} vs skill folders {on_disk}")
 
     # 3 and 4. each SKILL.md exists, name matches folder, referenced files exist
     for skill in skills:
@@ -339,7 +333,7 @@ def main() -> int:
         print("plugin check failed:\n  " + "\n  ".join(errors))
         return 1
     version = json.loads(PLUGIN_JSON.read_text(encoding="utf-8"))["version"]
-    print(f"ok: {NAME} {version}, plugin.json and marketplace.json agree, skill references resolve")
+    print(f"ok: {NAME} {version}, plugin.json matches the skill folders, skill references resolve")
     for warning in directory_warnings():
         print(f"warning (directory review): {warning}")
     if args.check:
