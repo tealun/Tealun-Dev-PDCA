@@ -263,6 +263,17 @@ class BuildPluginTest(unittest.TestCase):
         self.write_manifest(data)
         self.assertEqual(build_plugin.check(self.root, since=tag), [])
 
+    def test_export_must_match_stored_content(self):
+        git(self.root, "init", "-q")
+        (self.root / "crlf.ps1").write_bytes(b"line one\nline two\n")
+        (self.root / ".gitattributes").write_text("*.ps1 text eol=crlf\n", encoding="utf-8")
+        git(self.root, "add", "-A")
+        errors = build_plugin.check(self.root)
+        self.assertTrue(any("crlf.ps1 changes on git export" in e for e in errors), errors)
+        (self.root / ".gitattributes").write_text("*.ps1 -text\n", encoding="utf-8")
+        git(self.root, "add", "-A")
+        self.assertEqual(build_plugin.check(self.root), [])
+
     def test_directory_naming_rules(self):
         for bad in ("claude-tools", "Tealun", "plugin", "-x"):
             with self.subTest(name=bad):

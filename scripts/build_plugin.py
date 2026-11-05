@@ -27,6 +27,7 @@ import io
 import json
 import re
 import shutil
+import tarfile
 import subprocess
 import sys
 import zipfile
@@ -141,6 +142,7 @@ def check(repo: Path = REPO, tag: str | None = None, since: str | None = None) -
     for missing in ("description", "author", "version"):
         if not manifest.get(missing):
             errors.append(f"plugin.json should set {missing}")
+    errors += export_mismatches(repo)
     for f in tracked_files(repo):
         if f.is_symlink():
             errors.append(f"{f.relative_to(repo)} is a symlink; the directory refuses symlinks")
@@ -178,6 +180,33 @@ def release_notes(version: str, repo: Path = REPO) -> str:
     m = re.search(rf"^## {re.escape(NAME)} {re.escape(version)}\b.*?\n(.*?)(?=^## |\Z)",
                   path.read_text(encoding="utf-8"), re.M | re.S)
     return m.group(1).strip() if m else ""
+
+
+def export_mismatches(repo: Path) -> list[str]:
+    """The directory validates the repository as exported; it refuses a repository whose
+    export differs from what is stored (a .gitattributes eol, filter, export-ignore or
+    export-subst rule). Export the index with git archive and compare every file."""
+    run = lambda *a: subprocess.run(["git", "-C", str(repo), *a], capture_output=True)
+    tree = run("write-tree")
+    if tree.returncode != 0:
+        return []  # not a Git work tree: nothing is exported
+    archive = run("archive", tree.stdout.decode().strip())
+    if archive.returncode != 0:
+        return [f"git archive failed: {archive.stderr.decode().strip()}"]
+    exported = {}
+    with tarfile.open(fileobj=io.BytesIO(archive.stdout)) as tf:
+        for member in tf.getmembers():
+            if member.isfile():
+                exported[member.name] = tf.extractfile(member).read()
+    errors = []
+    listing = run("ls-files", "-z", "--cached").stdout.decode().split("\0")
+    for path in filter(None, listing):
+        stored = run("cat-file", "blob", f":{path}").stdout
+        if path not in exported:
+            errors.append(f"{path} is missing from the git export (export-ignore?); the directory cannot validate the repository")
+        elif exported[path] != stored:
+            errors.append(f"{path} changes on git export (.gitattributes eol/filter rule); the directory cannot validate the repository")
+    return errors
 
 
 def tracked_files(repo: Path) -> list[Path]:
