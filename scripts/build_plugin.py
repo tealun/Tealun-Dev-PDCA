@@ -103,7 +103,7 @@ def check(repo: Path = REPO, tag: str | None = None, since: str | None = None) -
         errors.append(f"plugin.json version {version!r} is not x.y.z")
 
     # 2. plugin.json lists exactly the top-level skill folders (the marketplace
-    #    list lives in tealun/claude-plugins, so this is the guard against a new
+    #    list lives in tealun/tealun-plugins, so this is the guard against a new
     #    skill folder that never made it into the manifest)
     skills = skill_dirs(manifest)
     on_disk = sorted(p.parent.name for p in repo.glob("*/SKILL.md"))
