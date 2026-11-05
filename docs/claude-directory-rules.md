@@ -49,7 +49,7 @@
 | 单个文件超过 5 MiB，校验会停止 | 清单 | 阻断：逐个检查被跟踪的文件 |
 | 不能有符号链接 | 清单 | 阻断：逐个检查被跟踪的文件 |
 | 不能有子模块和 LFS 指针 | 清单 | 不校验：仓库里没有 `.gitmodules`，也没有用 LFS |
-| 仓库导出（git archive）的内容必须和仓库存储的完全一致：`.gitattributes` 里不能有 `export-ignore`、`filter`（包括 LFS）或会改动换行的 `eol` 规则，也不能有 Git replace refs；文件名不能含冒号或反斜杠、不能以点或空格结尾、不能是 Windows 设备名、不能有只差大小写的同名文件 | 实测（2026-11-05 门户 Validate 报错原文） | 阻断：`export_mismatches()` 导出索引后逐个比对；文件名规则目前没有触发，暂不单独校验 |
+| 仓库导出（git archive）的内容必须和仓库存储的完全一致：`.gitattributes` 里不能有 `export-ignore`、`filter`（包括 LFS）或会改动换行的 `eol` 规则，也不能有 Git replace refs；文件名不能含冒号或反斜杠、不能以点或空格结尾、不能是 Windows 设备名、不能有只差大小写的同名文件 | 实测（2026-11-05 门户 Validate 报错原文） | 阻断：`content_rewriting_attributes()` 不允许 `.gitattributes` 出现任何会改写内容的属性（第一次只去掉 `eol=crlf`，Validate 仍报错；改为 `* -text` 后再验证）；`export_mismatches()` 导出索引后逐个比对；文件名规则目前没有触发，暂不单独校验 |
 | 图片和字体以外的文件超过 256 KiB，转人工审核 | 清单 | 提示：`directory_warnings()` |
 | 文件超过 512 个，转人工审核 | 清单 | 提示：`directory_warnings()`（目前 84 个） |
 | 只允许文本、SVG、PNG、JPEG、GIF、WebP 和字体；其他二进制文件（如 `.zip`、`.ico`、`.pdf`）转人工审核 | 清单 | 提示：`directory_warnings()`。目前没有命中：`dev-pdca.zip` 已于 2026-11-05 移出仓库，见下文“已解决的问题” |

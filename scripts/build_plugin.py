@@ -142,6 +142,7 @@ def check(repo: Path = REPO, tag: str | None = None, since: str | None = None) -
     for missing in ("description", "author", "version"):
         if not manifest.get(missing):
             errors.append(f"plugin.json should set {missing}")
+    errors += content_rewriting_attributes(repo)
     errors += export_mismatches(repo)
     for f in tracked_files(repo):
         if f.is_symlink():
@@ -180,6 +181,29 @@ def release_notes(version: str, repo: Path = REPO) -> str:
     m = re.search(rf"^## {re.escape(NAME)} {re.escape(version)}\b.*?\n(.*?)(?=^## |\Z)",
                   path.read_text(encoding="utf-8"), re.M | re.S)
     return m.group(1).strip() if m else ""
+
+
+# .gitattributes settings that make checked-out or exported bytes differ from the stored
+# ones on some platform. "-text" and "binary" switch conversion off and are allowed.
+REWRITING_ATTRIBUTES = ("text", "eol", "filter", "export-ignore", "export-subst", "ident",
+                        "working-tree-encoding", "crlf")
+
+
+def content_rewriting_attributes(repo: Path) -> list[str]:
+    errors = []
+    for path in sorted(repo.rglob(".gitattributes")):
+        if ".git" in path.relative_to(repo).parts[:-1]:
+            continue
+        for n, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            fields = line.split("#", 1)[0].split()
+            for attr in fields[1:]:
+                name = attr.split("=", 1)[0]
+                if name.startswith(("-", "!")) or name == "binary":
+                    continue
+                if name in REWRITING_ATTRIBUTES:
+                    errors.append(f"{path.relative_to(repo)} line {n}: '{attr}' rewrites content on some "
+                                  f"platform; the plugin directory cannot validate the repository")
+    return errors
 
 
 def export_mismatches(repo: Path) -> list[str]:

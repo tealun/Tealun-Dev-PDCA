@@ -274,6 +274,14 @@ class BuildPluginTest(unittest.TestCase):
         git(self.root, "add", "-A")
         self.assertEqual(build_plugin.check(self.root), [])
 
+    def test_content_rewriting_attributes_rejected(self):
+        for line, bad in (("*.md text", True), ("*.sh text eol=lf", True), ("*.bin filter=lfs", True),
+                          ("docs/ export-ignore", True), ("* -text", False), ("*.png binary", False)):
+            with self.subTest(line=line):
+                (self.root / ".gitattributes").write_text(line + "\n", encoding="utf-8")
+                errors = build_plugin.content_rewriting_attributes(self.root)
+                self.assertEqual(bool(errors), bad, errors)
+
     def test_directory_naming_rules(self):
         for bad in ("claude-tools", "Tealun", "plugin", "-x"):
             with self.subTest(name=bad):
