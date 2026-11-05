@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- 插件目录改为跟踪 `plugin` 分支（规划见 `docs/88_planning/plugin-branch-20261105.md`）。新增 `.github/workflows/plugin-branch.yml` 和 `scripts/publish_plugin_branch.sh`：推送版本 tag 或手动触发时，先校验并构建插件，再把打包结果追加提交到 `plugin` 分支。这个分支只包含技能、`plugin.json`、README、LICENSE 和图标，不含 CI、脚本、测试、文档和 CLAUDE.md。原因是目录把仓库根目录当作插件扫描，开发工具因此被报出 6 个 policy hold。`suite-package.yml` 不再在 `plugin` 分支上运行。
 - 第二次修复插件目录 Validate 被拒：只去掉 `*.ps1` 的 `eol=crlf` 仍然无法通过校验。`.gitattributes` 改为 `* -text`，所有文件都不再做换行转换，任何平台检出的都是仓库里存的原样内容（`.sh` 为 LF，`sync-skills.ps1` 为 CRLF，已逐个核对存储内容）。`build_plugin.py --check` 新增 `content_rewriting_attributes()`：只要 `.gitattributes` 里出现 `text`、`eol`、`filter`、`export-ignore`、`export-subst`、`ident`、`working-tree-encoding` 等会改写内容的属性，就报错。
 - 修复插件目录报 “Couldn't validate that repository” 的问题。原因是 `.gitattributes` 里有一条 `*.ps1 text eol=crlf`：`git archive` 导出时会把 `sync-skills.ps1` 的换行改成 CRLF，导出内容和仓库里存的不一样，目录因此无法按原样校验仓库。修正方法：这个文件直接以 CRLF 存进仓库，规则改为 `*.ps1 -text`，不再做换行转换；Windows 用户拿到的文件和以前一样。`build_plugin.py --check` 新增一项检查：把当前索引用 `git archive` 导出，逐个文件和仓库存储的内容比对，不一致就报错。同时补了单元测试。
 - `dev-pdca.zip` 不再提交进仓库（规划见 `docs/88_planning/suite-zip-out-20261105.md`）。原因：仓库根目录同时是 Claude 插件文件夹，官方提交清单写明，插件文件夹里的 `.zip` 会转人工审核。现在 `build_suite.py` 把包输出到 `dist/dev-pdca.zip`；`--check` 改为校验并在内存里构建，不再与仓库里提交的成品比对；`release.yml` 构建后把它附到 Release 上，附件名不变。WorkBuddy 用户改从 `releases/latest/download/dev-pdca.zip` 下载。包内容不变：重新构建出的包与 v1.0.1 Release 上的附件 sha256 一致（50365d88…）。

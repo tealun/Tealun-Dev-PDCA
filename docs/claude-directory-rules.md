@@ -66,6 +66,20 @@
 | claude.ai 的安装方式：Customize > Plugins > Add > Upload plugin，上传 zip；zip 根目录（或唯一的顶层目录）里要有 `.claude-plugin/plugin.json` | 构建 | 阻断：单元测试检查包的结构；发布流程用 CLI 校验解包后的 `dist/tealun-dev-pdca/` |
 | `.plugin` 后缀 | 方案 | 不校验：官方页面没有 `.plugin` 格式的说明。Release 同时附上内容完全相同的 `.zip` 和 `.plugin`，README 指导用户上传 `.zip` |
 
+## 扫描范围：插件目录跟踪 `plugin` 分支（2026-11-05 起）
+
+目录会把插件文件夹里的所有文件都当成插件来扫描。插件文件夹原本是仓库根目录，于是在 `main @ c83cb02` 上，开发工具被报出了 6 个 policy hold 和 5 个 warning：
+
+| 门户报出的项 | 级别 | 来源 | 处理方式 |
+| --- | --- | --- | --- |
+| Uses a credential from the user's machine | policy hold | `.github/workflows/release.yml` 的 `GH_TOKEN`（推断） | 不进入 `plugin` 分支 |
+| Image or font file that the plugin's code could run（5 处） | policy hold | 仓库里的脚本和测试（推断，详情没有展开） | 不进入 `plugin` 分支 |
+| Contains a download-and-run command（3 处） | warning | `release.yml` 的 `npx -y`、文档里的安装命令（推断） | 不进入 `plugin` 分支 |
+| CLAUDE.md at the plugin root isn't loaded | warning | 根目录的 `CLAUDE.md` | 不进入 `plugin` 分支 |
+| Field from another tool's manifest（`icon`） | warning | `plugin.json` | 页面说明不需要处理 |
+
+处理方式：由 `.github/workflows/plugin-branch.yml` 把打包好的插件（技能、`plugin.json`、README、LICENSE、图标）提交到 `plugin` 分支，插件目录改为跟踪这个分支，插件路径留空。用本地 CLI 对这个分支的内容做 validate，结果是 "These checks found nothing to report"，导出内容和存储内容一致。
+
 ## 已解决的问题
 
 **`dev-pdca.zip` 曾会让插件转人工审核（2026-11-05 已解决）。** 它是 WorkBuddy 套件包，按规划的非目标原样留在仓库根目录，而仓库根目录就是插件文件夹。按清单的规则，`.zip` 文件会转人工审核：不会被拒，但每个版本都要等审核员处理。另外，`claude plugin validate`（2.1.318）的目录检查没有报出这一条，说明它只覆盖了目录规则的一部分，以清单页面为准。用户决定把它移出：仓库不再跟踪这个文件，由 `release.yml` 构建后附到 Release 上，见 `docs/88_planning/suite-zip-out-20261105.md`。
